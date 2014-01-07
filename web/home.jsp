@@ -1,0 +1,83 @@
+<%-- 
+    Document   : index
+    Created on : Jan 5, 2014, 4:43:34 PM
+    Author     : paolo
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Student's Forum | Home</title>
+        <%@include file="include/head.jsp" %>
+    </head>
+    <body>
+        <div id="login-page" data-role="page">
+            <div data-role="header">
+                <a href="#panel" data-icon="bars">Menu</a>
+                <h2>Student's Forum | Home</h2>
+            </div>
+            <div data-role="content">
+                <ul data-role="listview" data-inset="true" data-split-icon="gear">
+                    <li data-role="list-divider" data-theme="b">
+                        You have new invites
+                    </li>
+                    <li>
+                        <a href="">
+                            <h2>Skyrim</h2>
+                        </a>
+                        <a href="#skyrim-popup" data-rel="popup"></a>
+                        <div data-role="popup" id="skyrim-popup" data-transition="pop">
+                            <div data-role="controlgroup" style="margin: 0px">
+                                <a href="" data-role="button" data-icon="check">Accept</a>
+                                <a href="" data-role="button" data-icon="delete">Decline</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="">
+                            <h2>Oblivion</h2>
+                        </a>
+                        <a href="#oblivion-popup" data-rel="popup"></a>
+                        <div data-role="popup" id="oblivion-popup" data-transition="pop">
+                            <div data-role="controlgroup" style="margin: 0px">
+                                <a href="" data-role="button" data-icon="check">Accept</a>
+                                <a href="" data-role="button" data-icon="delete">Decline</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="">
+                            <h2>Morrowind</h2>
+                        </a>
+                        <a href="#morrowind-popup" data-rel="popup"></a>
+                        <div data-role="popup" id="morrowind-popup" data-transition="pop">
+                            <div data-role="controlgroup" style="margin: 0px">
+                                <a href="" data-role="button" data-icon="check">Accept</a>
+                                <a href="" data-role="button" data-icon="delete">Decline</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                <ul data-role="listview" data-inset="true">
+                    <li data-role="list-divider" data-theme="b">
+                        News from your groups
+                    </li>
+                    <li>
+                        <a href="">
+                            <h2>The Elder Scrolls</h2>
+                            <span class="ui-li-count">4</span>
+                            <p>The Elder Scrolls is a series of action role-playing open world fantasy video games primarily developed by Bethesda Game Studios and published by Bethesda Softworks</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <%@include file="include/panel.jsp" %>
+        </div>
+    </body>
+</html>
