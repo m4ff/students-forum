@@ -18,6 +18,7 @@ public class User implements Serializable{
     
     private int id;
     private String name;
+    private boolean isModerator = false;
     
     public User(int id, String name) {
         this.id = id;
@@ -39,5 +40,9 @@ public class User implements Serializable{
         } else {
             return "/static/avatars/0.jpg";
         }
+    }
+    
+    public void setIfModerator(boolean mod) {
+        isModerator = mod;
     }
 }
