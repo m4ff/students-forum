@@ -18,7 +18,7 @@ public class User implements Serializable{
     
     private int id;
     private String name;
-    private boolean isModerator = false;
+    private boolean isModerator;
     
     public User(int id, String name) {
         this.id = id;
@@ -42,7 +42,7 @@ public class User implements Serializable{
         }
     }
     
-    public void setIfModerator(boolean mod) {
-        isModerator = mod;
+    public void getIfModerator() {
+        return isModerator;
     }
 }
