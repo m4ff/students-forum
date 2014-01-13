@@ -59,7 +59,7 @@ public class DBManager implements Serializable {
                 ResultSet res = stm.executeQuery();
                 try {
                     if (res.next()) {
-                        u = new User(res.getInt("user_id"), res.getString("user_name"));
+                        u = new User(res.getInt("user_id"), res.getString("user_name"), res.getBoolean("is_moderator"));
                     }
                 } finally {
                     res.close();
@@ -119,7 +119,7 @@ public class DBManager implements Serializable {
                                         res.getInt("post_id"),
                                         res.getString("post_text"),
                                         res.getDate("post_date"),
-                                        new User(res.getInt("user_id"), res.getString("user_name")),
+                                        new User(res.getInt("user_id"), res.getString("user_name"), res.getBoolean("is_moderator")),
                                         files,
                                         g
                                 )
@@ -293,7 +293,8 @@ public class DBManager implements Serializable {
                         u.add(
                                 new User(
                                         res.getInt("user_id"),
-                                        res.getString("user_name")
+                                        res.getString("user_name"),
+                                        res.getBoolean("is_moderator")
                                 )
                         );
                     }
@@ -322,7 +323,8 @@ public class DBManager implements Serializable {
                         u.add(
                                 new User(
                                         res.getInt("user_id"),
-                                        res.getString("user_name")
+                                        res.getString("user_name"),
+                                        res.getBoolean("is_moderator")
                                 )
                         );
                     }
@@ -351,7 +353,8 @@ public class DBManager implements Serializable {
                         u.add(
                                 new User(
                                         res.getInt("user_id"),
-                                        res.getString("user_name")
+                                        res.getString("user_name"),
+                                        res.getBoolean("is_moderator")
                                 )
                         );
                     }
@@ -587,7 +590,8 @@ public class DBManager implements Serializable {
                     if (res.next()) {
                         user = new User(
                                 res.getInt("user_id"),
-                                res.getString("user_name")
+                                res.getString("user_name"),
+                                res.getBoolean("is_moderator")
                         );
                     }
                 } finally {

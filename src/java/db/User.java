@@ -20,9 +20,10 @@ public class User implements Serializable{
     private String name;
     private boolean isModerator;
     
-    public User(int id, String name) {
+    public User(int id, String name, boolean isModerator) {
         this.id = id;
         this.name = name;
+        this.isModerator = isModerator;
     }
     
     public int getId() {
@@ -42,7 +43,7 @@ public class User implements Serializable{
         }
     }
     
-    public void getIfModerator() {
+    public boolean getIfModerator() {
         return isModerator;
     }
 }
