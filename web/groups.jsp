@@ -28,7 +28,7 @@
                     <li>
                         <a href="">
                             <h2>The Elder Scrolls</h2>
-                            <span class="ui-li-count">4</span>
+                            <span class="ui-li-count"><%= postNumber %></span>
                         </a>
                     </li>
                     <li>

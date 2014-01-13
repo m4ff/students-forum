@@ -136,6 +136,30 @@ public class DBManager implements Serializable {
         }
         return p;
     }
+    
+    public int getPostsNumber(Group g) {
+        int count = 0;
+        try {
+            String query = "COUNT * FROM \"post\" WHERE group_id = ?";
+            PreparedStatement stm = connection.prepareStatement(query);
+            try {
+                stm.setInt(1, g.getId());
+                ResultSet res = stm.executeQuery();
+                try {
+                    while (res.next()) {
+                        count = Integer.parseInt(res.getString(query));
+                    }
+                } finally {
+                    res.close();
+                }
+            } finally {
+                stm.close();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return count;
+    }
 
     public HashMap<String, GroupFile> getPostFiles(Post p) {
         HashMap<String, GroupFile> f = new HashMap<>();

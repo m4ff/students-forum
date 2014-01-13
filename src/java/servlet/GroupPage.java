@@ -5,7 +5,12 @@
  */
 package servlet;
 
+import db.DBManager;
+import db.Group;
+import db.User;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -33,8 +38,17 @@ public class GroupPage extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        DBManager manager = (DBManager) getServletContext().getAttribute("dbmanager");
+        User logged = (User) request.getSession().getAttribute("user");
         try {
-            request.getRequestDispatcher("groups.jsp").forward(request, response);
+            LinkedList<Group> groups = manager.getUserGroups(logged);
+            Iterator i = groups.iterator();
+            
+            while(i.hasNext()){
+                int countPosts = manager.getPostsNumber((Group) i.next());
+                
+                request.getRequestDispatcher("groups.jsp").forward(request, response);
+            }
         } catch (ServletException | IOException ex) {
             Logger.getLogger(GroupPage.class.getName()).log(Level.SEVERE, null, ex);
         }
