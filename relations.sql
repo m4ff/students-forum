@@ -8,6 +8,7 @@ CREATE TABLE "user" (
 user_id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
 user_name VARCHAR(50),
 user_password VARCHAR(50),
+user_moderator BOOLEAN,
 PRIMARY KEY (user_id),
 UNIQUE (user_name)
 );

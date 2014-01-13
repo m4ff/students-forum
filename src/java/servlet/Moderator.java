@@ -36,6 +36,7 @@ public class Moderator extends HttpServlet {
             throws ServletException, IOException {
         try{
             request.getRequestDispatcher("/Moderator.jsp").forward(request, response);
+            
         } catch(ServletException | IOException ex) {
             Logger.getLogger(Moderator.class.getName()).log(Level.SEVERE, null, ex);
         }
