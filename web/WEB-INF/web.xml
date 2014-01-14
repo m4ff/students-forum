@@ -44,12 +44,6 @@
         <servlet-name>Account</servlet-name>
         <url-pattern>/account</url-pattern>
     </servlet-mapping>
-<<<<<<< HEAD
-    <servlet-mapping>
-        <servlet-name>GroupManager</servlet-name>
-        <url-pattern>/group-manager</url-pattern>
-    </servlet-mapping>
-=======
     
     <filter>
         <filter-name>
@@ -68,7 +62,6 @@
         </url-pattern>
     </filter-mapping>
     
->>>>>>> d638cf13bdc5b9a1c85a36c9178dea5bde6eecce
     <session-config>
         <session-timeout>
             30
