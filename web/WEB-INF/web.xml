@@ -4,7 +4,6 @@
         <description>contextListener</description>
         <listener-class>listener.ContextListener</listener-class>
     </listener>
-    
     <welcome-file-list>
         <welcome-file>forum</welcome-file>
     </welcome-file-list>
@@ -24,7 +23,10 @@
         <servlet-name>Account</servlet-name>
         <servlet-class>servlet.Account</servlet-class>
     </servlet>
-    
+    <servlet>
+        <servlet-name>GroupManager</servlet-name>
+        <servlet-class>servlet.GroupManager</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/forum</url-pattern>
@@ -41,7 +43,10 @@
         <servlet-name>Account</servlet-name>
         <url-pattern>/account</url-pattern>
     </servlet-mapping>
-    
+    <servlet-mapping>
+        <servlet-name>GroupManager</servlet-name>
+        <url-pattern>/group-manager</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
