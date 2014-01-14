@@ -41,14 +41,17 @@ public class GroupPage extends HttpServlet {
         DBManager manager = (DBManager) getServletContext().getAttribute("dbmanager");
         User logged = (User) request.getSession().getAttribute("user");
         try {
+            int[] postNumber = null; 
             LinkedList<Group> groups = manager.getUserGroups(logged);
             Iterator i = groups.iterator();
-            
-            while(i.hasNext()){
-                int countPosts = manager.getPostsNumber((Group) i.next());
-                request.setAttribute("postNum", countPosts);
-                request.getRequestDispatcher("groups.jsp").forward(request, response);
-            }
+            int k = 1;
+            do {
+                postNumber[k] = manager.getPostsNumber((Group)i.next());
+                k++;
+            } while(i.hasNext());
+            request.setAttribute("postNumber", postNumber);
+            request.setAttribute("groupList", groups);
+            request.getRequestDispatcher("groups.jsp").forward(request, response);
         } catch (ServletException | IOException ex) {
             Logger.getLogger(GroupPage.class.getName()).log(Level.SEVERE, null, ex);
         }

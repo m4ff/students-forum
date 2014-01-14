@@ -25,12 +25,14 @@
                     <li data-role="list-divider" data-theme="b">
                         Your groups
                     </li>
+                    <c:forEach var="g" items="${groupList}">
                     <li>
                         <a href="">
-                            <h2>The Elder Scrolls</h2>
-                            <span class="ui-li-count"><%=session.getAttribute("postNum")%></span>
+                            <h2><c:out value="g.getName()"></h2>
+                                <span class="ui-li-count"><c:out value="postNumber."></span>
                         </a>
                     </li>
+                    </c:forEach>
                     <li>
                         <a href="">
                             <h2>Other games?</h2>
