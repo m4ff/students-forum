@@ -6,6 +6,8 @@
 
 package servlet;
 
+import db.DBManager;
+import db.User;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,6 +33,11 @@ public class Login extends HttpServlet{
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+        DBManager dbmanager = (DBManager) getServletContext().getAttribute("dbmanager");
+        User user = dbmanager.authenticate(request.getParameter("name"), request.getParameter("password"));
+        if(user != null) {
+            
+        }
         doGet(request, response);
     }
 }
