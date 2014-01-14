@@ -62,8 +62,7 @@ public class Login extends HttpServlet{
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            request.setAttribute("error", "1");
-            request.setAttribute("error_msg", "Login incorrect");
+            request.setAttribute("error", "Login incorrect");
             doGet(request, response);
         }
     }
