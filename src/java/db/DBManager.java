@@ -140,7 +140,7 @@ public class DBManager implements Serializable {
     public int getPostsNumber(Group g) {
         int count = 0;
         try {
-            String query = "COUNT * FROM \"post\" WHERE group_id = ?";
+            String query = "SELECT COUNT('post_id') FROM \"group\" NATURAL JOIN \"post\" WHERE group_id = ?";
             PreparedStatement stm = connection.prepareStatement(query);
             try {
                 stm.setInt(1, g.getId());

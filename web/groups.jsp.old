@@ -28,7 +28,7 @@
                     <li>
                         <a href="">
                             <h2>The Elder Scrolls</h2>
-                            <span class="ui-li-count"><%= postNumber %></span>
+                            <span class="ui-li-count"><%=session.getAttribute("postNum")%></span>
                         </a>
                     </li>
                     <li>

@@ -46,7 +46,7 @@ public class GroupPage extends HttpServlet {
             
             while(i.hasNext()){
                 int countPosts = manager.getPostsNumber((Group) i.next());
-                
+                request.setAttribute("postNum", countPosts);
                 request.getRequestDispatcher("groups.jsp").forward(request, response);
             }
         } catch (ServletException | IOException ex) {
