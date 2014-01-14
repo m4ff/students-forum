@@ -22,6 +22,7 @@ public class Home extends HttpServlet{
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        request.setAttribute("title", "hola22");
         try {
             request.getRequestDispatcher("/home.jsp").forward(request, response);
         } catch (ServletException | IOException ex) {
