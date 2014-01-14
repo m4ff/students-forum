@@ -28,8 +28,8 @@
                     <c:forEach var="g" items="${groupList}">
                     <li>
                         <a href="">
-                            <h2><c:out value="g.getName()"></h2>
-                                <span class="ui-li-count"><c:out value="postNumber."></span>
+                            <h2><c:out value="${g.getName()}"/></h2>
+                                <span class="ui-li-count"><c:out value="${g.getPostCount()}"/></span>
                         </a>
                     </li>
                     </c:forEach>
