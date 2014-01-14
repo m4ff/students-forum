@@ -6,6 +6,7 @@
 
 package servlet;
 
+import db.DBManager;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,22 +32,32 @@ public class Register extends HttpServlet{
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+        DBManager dbmanager = (DBManager) getServletContext().getAttribute("dbmanager");
         String email = request.getParameter("email");
         String password = request.getParameter("password1");
         String username = request.getParameter("username");
+        String error = null;
         if("".equals(password)) {
-            request.setAttribute("error", "1");
-            request.setAttribute("error_msq", "Please provide a password");
+            error = "Please provide a password";
         } else if(!password.equals(request.getParameter("password2"))) {
-            request.setAttribute("error", "1");
-            request.setAttribute("error_msq", "Passwords don't match");
+            error = "Passwords don't match";
         } else if("".equals(email)) {
-            request.setAttribute("error", "1");
-            request.setAttribute("error_msq", "Please provide an email");
+            error = "Please provide an email";
         } else if("".equals(username)) {
-            request.setAttribute("error", "1");
-            request.setAttribute("error_msq", "Please provide a user name");
+            error = "Please provide a user name";
+        } else {
+            dbmanager.addUser(email, username, password);
+            try {
+                request.getRequestDispatcher("/login").forward(request, response);
+            } catch (ServletException ex) {
+                Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        doGet(request, response);
+        if(error != null) {
+            request.setAttribute("error", error);
+            doGet(request, response);
+        }
     }
 }

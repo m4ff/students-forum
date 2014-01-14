@@ -72,7 +72,25 @@ public class DBManager implements Serializable {
         }
         return u;
     }
+    
+    public void addUser(String email, String username, String password) {
+        try {
+            String query = "INSERT INTO \"user\"(user_email, user_name, user_password) VALUES(?, ?, ?)";
+            PreparedStatement stm = connection.prepareStatement(query);
+            try {
+                stm.setString(1, email);
+                stm.setString(2, username);
+                stm.setString(3, password);
+                stm.executeUpdate();
+            } finally {
+                stm.close();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
+    
     public LinkedList<Group> getUserGroups(User u) {
         LinkedList<Group> g = new LinkedList<>();
         try {

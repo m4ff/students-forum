@@ -20,8 +20,8 @@
                 <h2>Student's Forum | Login</h2>
             </div>
             <div data-role="content">
-                <c:if var="1" test="${error}">
-                <c:out value="${error_msg}"/>
+                <c:if test="${error != null}">
+                <c:out value="${error}"/>
                 </c:if>
                 <form>
                     <ul data-role="listview" data-inset="true">
@@ -41,8 +41,8 @@
                     <button data-inline="true" type="submit">Log in</button>
                     <a href="/register">Register</a>
                     
-                    <c:if var="redirect" test="1">
-                    <input type="hidden" name="redirect" value="<c:out value="${redirect_ur}"/>">
+                    <c:if test="${redirect != null}">
+                    <input type="hidden" name="redirect" value="<c:out value="${redirect}"/>">
                     </c:if>
                 </form>
             </div>

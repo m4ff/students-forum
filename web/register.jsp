@@ -20,6 +20,9 @@
                 <h2>Student's Forum | Register</h2>
             </div>
             <div data-role="content">
+                <c:if test="${error != null}">
+                <c:out value="${error}"/>
+                </c:if>
                 <form enctype="multipart/form-data" data-ajax="false">
                     <ul data-role="listview" data-inset="true">
                         <li data-role="fieldcontain">
