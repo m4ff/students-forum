@@ -18,12 +18,13 @@ public class Group {
     private String name;
     private int id;
     private int creator;
-
+    private int postCount;
     
-    public Group(int id, String name, int creator) {
+    public Group(int id, String name, int creator, int count) {
         this.name = name;
         this.id = id;
         this.creator = creator;
+        this.postCount = count;
     }
     
     public String getName() {
@@ -36,6 +37,10 @@ public class Group {
     
     public int getCreator() {
         return creator;
+    }
+    
+    public int getPostCount() {
+        return postCount;
     }
     
     public String getFilesRealPath(HttpServletRequest request) {
