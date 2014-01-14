@@ -31,6 +31,22 @@ public class Register extends HttpServlet{
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+        String email = request.getParameter("email");
+        String password = request.getParameter("password1");
+        String username = request.getParameter("username");
+        if("".equals(password)) {
+            request.setAttribute("error", "1");
+            request.setAttribute("error_msq", "Please provide a password");
+        } else if(!password.equals(request.getParameter("password2"))) {
+            request.setAttribute("error", "1");
+            request.setAttribute("error_msq", "Passwords don't match");
+        } else if("".equals(email)) {
+            request.setAttribute("error", "1");
+            request.setAttribute("error_msq", "Please provide an email");
+        } else if("".equals(username)) {
+            request.setAttribute("error", "1");
+            request.setAttribute("error_msq", "Please provide a user name");
+        }
         doGet(request, response);
     }
 }

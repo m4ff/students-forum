@@ -20,6 +20,9 @@
                 <h2>Student's Forum | Login</h2>
             </div>
             <div data-role="content">
+                <c:if var="1" test="${error}">
+                <c:out value="${error_msg}"/>
+                </c:if>
                 <form>
                     <ul data-role="listview" data-inset="true">
                         <li data-role="fieldcontain">
@@ -30,9 +33,17 @@
                             <label for="login-password">Password</label>
                             <input type="password" id="login-password" name="password">
                         </li>
+                        <li data-role="fieldcontain">
+                            <label for="login-remember">Keep me logged in</label>
+                            <input type="checkbox" id="login-remembre" name="remember" value="1">
+                        </li>
                     </ul>
                     <button data-inline="true" type="submit">Log in</button>
                     <a href="/register">Register</a>
+                    
+                    <c:if var="redirect" test="1">
+                    <input type="hidden" name="redirect" value="<c:out value="${redirect_ur}"/>">
+                    </c:if>
                 </form>
             </div>
         </div>

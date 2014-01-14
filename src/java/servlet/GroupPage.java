@@ -42,13 +42,8 @@ public class GroupPage extends HttpServlet {
         User logged = (User) request.getSession().getAttribute("user");
         try {
             LinkedList<Group> groups = manager.getUserGroups(logged);
-            Iterator i = groups.iterator();
-            
-            while(i.hasNext()){
-                int countPosts = manager.getPostsNumber((Group) i.next());
-                
-                request.getRequestDispatcher("groups.jsp").forward(request, response);
-            }
+            request.setAttribute("groupList", groups);
+            request.getRequestDispatcher("groups.jsp").forward(request, response);
         } catch (ServletException | IOException ex) {
             Logger.getLogger(GroupPage.class.getName()).log(Level.SEVERE, null, ex);
         }

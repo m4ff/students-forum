@@ -76,7 +76,7 @@ public class DBManager implements Serializable {
     public LinkedList<Group> getUserGroups(User u) {
         LinkedList<Group> g = new LinkedList<>();
         try {
-            String query = "SELECT * FROM \"user_group\" NATURAL JOIN \"group\" WHERE user_id = ?";
+            String query = "SELECT COUNT(group_id) AS group_post_count, * FROM \"user_group\" NATURAL JOIN \"group\" WHERE user_id = ?";
             PreparedStatement stm = connection.prepareStatement(query);
             try {
                 stm.setInt(1, u.getId());
@@ -87,7 +87,8 @@ public class DBManager implements Serializable {
                                 new Group(
                                         res.getInt("group_id"),
                                         res.getString("group_name"),
-                                        res.getInt("creator_id")
+                                        res.getInt("creator_id"),
+                                        res.getInt("group_post_count")
                                 )
                         );
                     }
@@ -140,7 +141,7 @@ public class DBManager implements Serializable {
     public int getPostsNumber(Group g) {
         int count = 0;
         try {
-            String query = "COUNT * FROM \"post\" WHERE group_id = ?";
+            String query = "SELECT COUNT('post_id') FROM \"group\" NATURAL JOIN \"post\" WHERE group_id = ?";
             PreparedStatement stm = connection.prepareStatement(query);
             try {
                 stm.setInt(1, g.getId());
@@ -250,7 +251,7 @@ public class DBManager implements Serializable {
     public Group getGroup(int groupId) {
         Group target = null;
         try {
-            String query = "SELECT * FROM \"group\" WHERE group_id = ?";
+            String query = "SELECT COUNT(*) AS group_post_count, * FROM \"group\" WHERE group_id = ?";
             PreparedStatement stm = connection.prepareStatement(query);
             try {
                 stm.setInt(1, groupId);
@@ -261,7 +262,8 @@ public class DBManager implements Serializable {
                         target = new Group(
                                 res.getInt("group_id"),
                                 res.getString("group_name"),
-                                res.getInt("creator_id")
+                                res.getInt("creator_id"),
+                                res.getInt("group_post_count")
                         );
                     }
                 } finally {
@@ -289,7 +291,8 @@ public class DBManager implements Serializable {
                                 new Group(
                                         res.getInt("group_id"),
                                         res.getString("group_name"),
-                                        res.getInt("creator_id")
+                                        res.getInt("creator_id"),
+                                        0
                                 )
                         );
                     }
@@ -407,7 +410,8 @@ public class DBManager implements Serializable {
                     u = new Group(
                             res.getInt("group_id"),
                             res.getString("group_name"),
-                            res.getInt("creator_id")
+                            res.getInt("creator_id"),
+                            0
                     );
                 } finally {
                     res.close();
@@ -628,6 +632,10 @@ public class DBManager implements Serializable {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return user;
+    }
+    
+    public User getUser(String userId) {
+        return getUser(Integer.parseInt(userId));
     }
 
     public boolean checkIfUserCanAccessGroup(int userId, int groupId) {

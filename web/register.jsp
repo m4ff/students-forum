@@ -20,7 +20,7 @@
                 <h2>Student's Forum | Register</h2>
             </div>
             <div data-role="content">
-                <form>
+                <form enctype="multipart/form-data" data-ajax="false">
                     <ul data-role="listview" data-inset="true">
                         <li data-role="fieldcontain">
                             <label for="register-email">E-mail</label>
