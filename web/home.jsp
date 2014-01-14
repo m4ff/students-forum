@@ -5,8 +5,8 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
-<%@taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -24,6 +24,7 @@
                 <ul data-role="listview" data-inset="true" data-split-icon="gear">
                     <li data-role="list-divider" data-theme="b">
                         You have new invites
+                        <c:out value="${title}"/>
                     </li>
                     <li>
                         <a href="">
