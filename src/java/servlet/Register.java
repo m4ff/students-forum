@@ -11,6 +11,8 @@ import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 import db.DBManager;
 import java.io.File;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -52,6 +54,11 @@ public class Register extends HttpServlet{
         } else if(username == null || "".equals(username)) {
             error = "Please provide a user name";
         } else {
+            try {
+                password = new String(MessageDigest.getInstance("SHA-256").digest(password.getBytes("UTF-8")));
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
+            }
             if(dbmanager.addUser(email, username, password)) {
                 try {
                     response.sendRedirect("/login");

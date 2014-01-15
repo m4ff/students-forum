@@ -40,7 +40,7 @@ public class Login extends HttpServlet{
         DBManager dbmanager = (DBManager) getServletContext().getAttribute("dbmanager");
         User user = dbmanager.authenticate(request.getParameter("username"), request.getParameter("password"));
         boolean rememberMe = request.getParameter("remember") != null;
-        String redirect = request.getParameter("redirect");
+        String redirect = (String) request.getAttribute("redirect");
         if(user != null) {
             Cookie loginTime = new Cookie("loginTime", new Date().getTime() + "");
             loginTime.setMaxAge(MAX_LOGIN_TIME_COOKIE_AGE);
@@ -52,6 +52,8 @@ public class Login extends HttpServlet{
             userCookie.setPath("/");
             userCookie.setHttpOnly(true);
             
+            response.addCookie(userCookie);
+            response.addCookie(loginTime);
             try {
                 if(redirect != null) {
                     response.sendRedirect(redirect);

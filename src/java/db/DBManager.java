@@ -8,6 +8,9 @@ package db;
 import com.oreilly.servlet.MultipartRequest;
 import java.io.File;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -52,20 +55,19 @@ public class DBManager implements Serializable {
         User u = null;
         try {
             String query = "SELECT * FROM \"user\" WHERE user_name = ? AND user_password = ?";
-            PreparedStatement stm = connection.prepareStatement(query);
-            try {
+            try (PreparedStatement stm = connection.prepareStatement(query)) {
+                try {
+                    password = new String(MessageDigest.getInstance("SHA-256").digest(password.getBytes("UTF-8")));
+                } catch (UnsupportedEncodingException | NoSuchAlgorithmException ex) {
+                    Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 stm.setString(1, userName);
                 stm.setString(2, password);
-                ResultSet res = stm.executeQuery();
-                try {
+                try (ResultSet res = stm.executeQuery()) {
                     if (res.next()) {
                         u = new User(res.getInt("user_id"), res.getString("user_name"), res.getBoolean("user_moderator"));
                     }
-                } finally {
-                    res.close();
                 }
-            } finally {
-                stm.close();
             }
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
