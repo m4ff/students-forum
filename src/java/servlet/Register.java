@@ -6,7 +6,10 @@
 
 package servlet;
 
+import com.oreilly.servlet.MultipartRequest;
+import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 import db.DBManager;
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,28 +34,32 @@ public class Register extends HttpServlet{
     }
     
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DBManager dbmanager = (DBManager) getServletContext().getAttribute("dbmanager");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password1");
-        String username = request.getParameter("username");
+        String avatarsPath = getServletContext().getRealPath("/") + ".." + File.separator;
+        MultipartRequest multipart = new MultipartRequest(request, avatarsPath, 1 * 1024 * 1024, "UTF-8");
+        String email = multipart.getParameter("email");
+        String password = multipart.getParameter("password1");
+        String username = multipart.getParameter("username");
+        System.out.println(email + " " + password + " " + username + " " + avatarsPath);
         String error = null;
-        if("".equals(password)) {
+        if(password == null || "".equals(password)) {
             error = "Please provide a password";
-        } else if(!password.equals(request.getParameter("password2"))) {
+        } else if(!password.equals(multipart.getParameter("password2"))) {
             error = "Passwords don't match";
-        } else if("".equals(email)) {
+        } else if(email == null || "".equals(email)) {
             error = "Please provide an email";
-        } else if("".equals(username)) {
+        } else if(username == null || "".equals(username)) {
             error = "Please provide a user name";
         } else {
-            dbmanager.addUser(email, username, password);
-            try {
-                request.getRequestDispatcher("/login").forward(request, response);
-            } catch (ServletException ex) {
-                Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
+            if(dbmanager.addUser(email, username, password)) {
+                try {
+                    response.sendRedirect("/login");
+                } catch (IOException ex) {
+                    Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                error = "An error occured, please try again later";
             }
         }
         if(error != null) {

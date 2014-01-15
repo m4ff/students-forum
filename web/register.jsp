@@ -23,7 +23,7 @@
                 <c:if test="${error != null}">
                 <c:out value="${error}"/>
                 </c:if>
-                <form enctype="multipart/form-data" data-ajax="false">
+                <form action="/register" method="post" enctype="multipart/form-data" data-ajax="false">
                     <ul data-role="listview" data-inset="true">
                         <li data-role="fieldcontain">
                             <label for="register-email">E-mail</label>
@@ -46,7 +46,7 @@
                             <input type="password" id="register-password-conf" name="password2">
                         </li>
                     </ul>
-                    <button data-inline="true" type="submit">Log in</button>
+                    <button data-inline="true" type="submit">Register</button>
                     <a href="/login">Login</a>
                 </form>
             </div>

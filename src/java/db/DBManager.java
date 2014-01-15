@@ -37,7 +37,7 @@ public class DBManager implements Serializable {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        this.connection = DriverManager.getConnection("jdbc:derby://localhost:1527/SimpleForum", "nan", "nan");
+        this.connection = DriverManager.getConnection("jdbc:derby://localhost:1527/students_forum", "students_forum", "password");
     }
 
     public static void shutdown() {
@@ -73,7 +73,7 @@ public class DBManager implements Serializable {
         return u;
     }
     
-    public void addUser(String email, String username, String password) {
+    public boolean addUser(String email, String username, String password) {
         try {
             String query = "INSERT INTO \"user\"(user_email, user_name, user_password) VALUES(?, ?, ?)";
             PreparedStatement stm = connection.prepareStatement(query);
@@ -81,13 +81,14 @@ public class DBManager implements Serializable {
                 stm.setString(1, email);
                 stm.setString(2, username);
                 stm.setString(3, password);
-                stm.executeUpdate();
+                return stm.executeUpdate() == 1;
             } finally {
                 stm.close();
             }
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return false;
     }
 
     
