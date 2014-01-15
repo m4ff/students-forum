@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package filter;
 
 import db.DBManager;
@@ -26,18 +25,20 @@ public class LoginFilter extends HttpFilter {
         DBManager dbmanager = (DBManager) request.getServletContext().getAttribute("dbmanager");
         Cookie[] cookies = request.getCookies();
         User user = null;
-        for (Cookie cookie : cookies) {
-            if("userId".equals(cookie.getName())) {
-                user = dbmanager.getUser(cookie.getValue());
-                if(user != null) {
-                    //reset cookie max age
-                    cookie.setMaxAge(servlet.Login.MAX_COOKIE_AGE);
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("userId".equals(cookie.getName())) {
+                    user = dbmanager.getUser(cookie.getValue());
+                    if (user != null) {
+                        //reset cookie max age
+                        cookie.setMaxAge(servlet.Login.MAX_COOKIE_AGE);
+                    }
+                    break;
                 }
-                break;
             }
         }
         request.setAttribute("user", user);
         chain.doFilter(request, response);
     }
- 
+
 }
