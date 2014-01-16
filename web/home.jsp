@@ -33,8 +33,8 @@
                             <a href="#-popup" data-rel="popup"></a>
                             <div data-role="popup" id="-popup" data-transition="pop">
                                 <div data-role="controlgroup" style="margin: 0px">
-                                    <a href="/invites?id=${g.getId()}&accptd=1" data-role="button" data-icon="check">Accept</a>
-                                    <a href="/invites?id=${g.getId()}&accptd=0" data-role="button" data-icon="delete">Decline</a>
+                                    <a href="/invites?id=${g.getId()}&accepted=1" data-role="button" data-icon="check">Accept</a>
+                                    <a href="/invites?id=${g.getId()}&accepted=0" data-role="button" data-icon="delete">Decline</a>
                                 </div>
                             </div>
                         </li>

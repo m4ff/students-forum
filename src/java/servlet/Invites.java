@@ -30,14 +30,14 @@ public class Invites extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int groupId = Integer.parseInt(request.getParameter("id"));
-        boolean accepted = Boolean.parseBoolean(request.getParameter("accptd"));
+        int accepted = Integer.parseInt(request.getParameter("accepted"));
         User logged = (User) request.getAttribute("user");
         DBManager manager = (DBManager) getServletContext().getAttribute("dbmanager");
         if (logged != null) {
             int userId = logged.getId();
-            if (accepted) {
+            if (accepted == 1) {
                 manager.acceptInvitesFromGroups(groupId, userId);
-            } else if (!accepted){
+            } else if (accepted == 0){
                 manager.declineInvitesFromGroups(groupId, userId);
             }
         }
