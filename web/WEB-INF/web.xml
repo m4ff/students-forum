@@ -7,7 +7,6 @@
     <welcome-file-list>
         <welcome-file>forum</welcome-file>
     </welcome-file-list>
-    
     <servlet>
         <servlet-name>Home</servlet-name>
         <servlet-class>servlet.Home</servlet-class>
@@ -27,6 +26,10 @@
     <servlet>
         <servlet-name>GroupManager</servlet-name>
         <servlet-class>servlet.GroupManager</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>servlet.Logout</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
@@ -48,7 +51,6 @@
         <servlet-name>GroupManager</servlet-name>
         <url-pattern>/group-manager</url-pattern>
     </servlet-mapping>
-    
     <filter>
         <filter-name>
             LoginFilter
@@ -65,7 +67,10 @@
             /*
         </url-pattern>
     </filter-mapping>
-    
+    <servlet-mapping>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
