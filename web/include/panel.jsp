@@ -30,11 +30,13 @@
                 My account
             </a>
         </li>
-        <li>
-            <a href="/moderation">
-                Moderation
-            </a>
-        </li>
+        <c:if test="${isModerator == true}">
+            <li>
+                <a href="/moderation">
+                    Moderation
+                </a>
+            </li>
+        </c:if>
         <c:if test="${user == null}">
             <li data-theme="b">
                 <a href="/login">

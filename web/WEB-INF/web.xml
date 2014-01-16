@@ -51,6 +51,7 @@
         <servlet-name>GroupManager</servlet-name>
         <url-pattern>/group-manager</url-pattern>
     </servlet-mapping>
+    
     <filter>
         <filter-name>
             LoginFilter
@@ -67,6 +68,24 @@
             /*
         </url-pattern>
     </filter-mapping>
+    
+    <filter>
+        <filter-name>
+            ModerationFilter
+        </filter-name>
+        <filter-class>
+            filter.Moderation
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>
+            ModerationFilter
+        </filter-name>
+        <url-pattern>
+            /moderation*
+        </url-pattern>
+    </filter-mapping>
+    
     <servlet-mapping>
         <servlet-name>Logout</servlet-name>
         <url-pattern>/logout</url-pattern>
