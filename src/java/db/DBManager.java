@@ -98,7 +98,7 @@ public class DBManager implements Serializable {
     public LinkedList<Group> getUserGroups(User u) {
         LinkedList<Group> g = new LinkedList<>();
         try {
-            String query = "SELECT COUNT(group_id)" /*AS group_post_count*/+", * FROM \"user_group\" NATURAL JOIN \"group\" NATURAL JOIN \"post\" WHERE user_id = ?";
+            String query = "SELECT * FROM \"user_group\" NATURAL JOIN \"group\" WHERE user_id = ?";
             PreparedStatement stm = connection.prepareStatement(query);
             try {
                 stm.setInt(1, u.getId());
@@ -110,7 +110,7 @@ public class DBManager implements Serializable {
                                         res.getInt("group_id"),
                                         res.getString("group_name"),
                                         res.getInt("creator_id"),
-                                        res.getInt("group_post_count")
+                                        0
                                 )
                         );
                     }
@@ -163,7 +163,7 @@ public class DBManager implements Serializable {
     public int getPostsNumber(Group g) {
         int count = 0;
         try {
-            String query = "SELECT COUNT('post_id') FROM \"group\" NATURAL JOIN \"post\" WHERE group_id = ?";
+            String query = "SELECT COUNT(post_id) FROM \"post\" WHERE group_id = ?";
             PreparedStatement stm = connection.prepareStatement(query);
             try {
                 stm.setInt(1, g.getId());
@@ -273,7 +273,7 @@ public class DBManager implements Serializable {
     public Group getGroup(int groupId) {
         Group target = null;
         try {
-            String query = "SELECT COUNT(*) AS group_post_count, * FROM \"group\" WHERE group_id = ?";
+            String query = "SELECT group_id, group_name, creator_id FROM \"group\" WHERE group_id = ?";
             PreparedStatement stm = connection.prepareStatement(query);
             try {
                 stm.setInt(1, groupId);
@@ -285,7 +285,7 @@ public class DBManager implements Serializable {
                                 res.getInt("group_id"),
                                 res.getString("group_name"),
                                 res.getInt("creator_id"),
-                                res.getInt("group_post_count")
+                                0
                         );
                     }
                 } finally {
