@@ -47,7 +47,7 @@ CREATE TABLE "file" (
 post_id INTEGER,
 file_name VARCHAR(50),
 file_mime VARCHAR(50),
-file_size INTEGER,
+file_size INTEGER DEFAULT 0,
 PRIMARY KEY (post_id, file_name)
 );
 
@@ -64,14 +64,14 @@ INSERT INTO "user"(user_name, user_password, user_email) VALUES('user8', '5e8848
 INSERT INTO "user"(user_name, user_password, user_email) VALUES('user9', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'simone.giuditta@gmail.com');
 INSERT INTO "user"(user_name, user_password, user_email) VALUES('user10', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'maffonline@icloud.com');
 
-# GROUPS #
+/* GROUPS */
 INSERT INTO "group"(group_name, creator_id) VALUES('Analisi', 3);
 INSERT INTO "group"(group_name, creator_id) VALUES('Algoritmi', 4);
 INSERT INTO "group"(group_name, creator_id) VALUES('Statistica', 5);
 INSERT INTO "group"(group_name, creator_id) VALUES('Reti', 6);
 INSERT INTO "group"(group_name, creator_id, group_closed) VALUES('Web', 7, TRUE);
 
-# GROUP MEMBERS #
+/* GROUP MEMBERS */
 INSERT INTO "user_group"(group_id, user_id, group_accepted) VALUES(1, 1, TRUE);
 INSERT INTO "user_group"(group_id, user_id, group_accepted) VALUES(1, 2, TRUE);
 INSERT INTO "user_group"(group_id, user_id, group_accepted) VALUES(1, 3, TRUE);
@@ -102,7 +102,7 @@ INSERT INTO "user_group"(group_id, user_id, group_accepted) VALUES(5, 8, TRUE);
 INSERT INTO "user_group"(group_id, user_id, group_accepted) VALUES(5, 9, TRUE);
 INSERT INTO "user_group"(group_id, user_id, group_accepted) VALUES(5, 10, TRUE);
 
-# GROUP POSTS #
+/* GROUP POSTS */
 INSERT INTO "post"(group_id, user_id, post_text) VALUES(1, 1, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
 INSERT INTO "post"(group_id, user_id, post_text) VALUES(1, 2, 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.');
 INSERT INTO "post"(group_id, user_id, post_text) VALUES(1, 3, 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.');
@@ -157,3 +157,29 @@ INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 10, 'Quibus rebus add
 INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 8, 'Flumen est Arar, quod per fines Haeduorum et Sequanorum in Rhodanum influit, incredibili lenitate, ita ut oculis in utram partem fluat iudicari non possit.');
 INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 7, 'Id Helvetii ratibus ac lintribus iunctis transibant.');
 INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 6, 'Ubi per exploratores Caesar certior factus est tres iam partes copiarum Helvetios id lumen traduxisse, quartam vero partem citra flumen Ararim reliquam esse, de tertia vigilia cum legionibus tribus e castris profectus ad eam partem pervenit quae nondum flumen transierat.');
+
+/* GROUP FILES */
+INSERT INTO "file"(post_id, file_name, file_mime) VALUES(1, 'img1', 'image/jpeg');
+INSERT INTO "file"(post_id, file_name, file_mime) VALUES(2, 'img2', 'image/jpeg');
+INSERT INTO "file"(post_id, file_name, file_mime) VALUES(3, 'img3', 'image/jpeg');
+INSERT INTO "file"(post_id, file_name, file_mime) VALUES(4, 'img4', 'image/jpeg');
+
+INSERT INTO "file"(post_id, file_name, file_mime) VALUES(11, 'img1', 'image/jpeg');
+INSERT INTO "file"(post_id, file_name, file_mime) VALUES(12, 'img2', 'image/jpeg');
+INSERT INTO "file"(post_id, file_name, file_mime) VALUES(13, 'img3', 'image/jpeg');
+INSERT INTO "file"(post_id, file_name, file_mime) VALUES(14, 'img4', 'image/jpeg');
+
+INSERT INTO "file"(post_id, file_name, file_mime) VALUES(21, 'img1', 'image/jpeg');
+INSERT INTO "file"(post_id, file_name, file_mime) VALUES(22, 'img2', 'image/jpeg');
+INSERT INTO "file"(post_id, file_name, file_mime) VALUES(23, 'img3', 'image/jpeg');
+INSERT INTO "file"(post_id, file_name, file_mime) VALUES(24, 'img4', 'image/jpeg');
+
+INSERT INTO "file"(post_id, file_name, file_mime) VALUES(31, 'img1', 'image/jpeg');
+INSERT INTO "file"(post_id, file_name, file_mime) VALUES(32, 'img2', 'image/jpeg');
+INSERT INTO "file"(post_id, file_name, file_mime) VALUES(33, 'img3', 'image/jpeg');
+INSERT INTO "file"(post_id, file_name, file_mime) VALUES(34, 'img4', 'image/jpeg');
+
+INSERT INTO "file"(post_id, file_name, file_mime) VALUES(41, 'img1', 'image/jpeg');
+INSERT INTO "file"(post_id, file_name, file_mime) VALUES(42, 'img2', 'image/jpeg');
+INSERT INTO "file"(post_id, file_name, file_mime) VALUES(43, 'img3', 'image/jpeg');
+INSERT INTO "file"(post_id, file_name, file_mime) VALUES(44, 'img4', 'image/jpeg');
