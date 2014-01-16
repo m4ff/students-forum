@@ -20,7 +20,7 @@ public class ModerationFilter extends HttpFilter {
 
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        if(!(boolean)request.getAttribute("moderator")) {
+        if(!(boolean)request.getAttribute("isModerator")) {
             response.sendError(404, "You no moderator!");
         } else {
             chain.doFilter(request, response);
