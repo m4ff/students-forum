@@ -23,45 +23,22 @@
             <div data-role="content">
                 <ul data-role="listview" data-inset="true" data-split-icon="gear">
                     <li data-role="list-divider" data-theme="b">
-                        You have new invites
-                        <c:out value="${title}"/>
+                        ${notificationsTitle}
                     </li>
-                    <li>
-                        <a href="">
-                            <h2>Skyrim</h2>
-                        </a>
-                        <a href="#skyrim-popup" data-rel="popup"></a>
-                        <div data-role="popup" id="skyrim-popup" data-transition="pop">
-                            <div data-role="controlgroup" style="margin: 0px">
-                                <a href="" data-role="button" data-icon="check">Accept</a>
-                                <a href="" data-role="button" data-icon="delete">Decline</a>
+                    <c:forEach var="g" items="${invitingGroups}">
+                        <li>
+                            <a href="">
+                                <h2>${g.getName()}</h2>
+                            </a>
+                            <a href="#-popup" data-rel="popup"></a>
+                            <div data-role="popup" id="-popup" data-transition="pop">
+                                <div data-role="controlgroup" style="margin: 0px">
+                                    <a href="/invites?id=${g.getId()}&accptd=1" data-role="button" data-icon="check">Accept</a>
+                                    <a href="/invites?id=${g.getId()}&accptd=0" data-role="button" data-icon="delete">Decline</a>
+                                </div>
                             </div>
-                        </div>
-                    </li>
-                    <li>
-                        <a href="">
-                            <h2>Oblivion</h2>
-                        </a>
-                        <a href="#oblivion-popup" data-rel="popup"></a>
-                        <div data-role="popup" id="oblivion-popup" data-transition="pop">
-                            <div data-role="controlgroup" style="margin: 0px">
-                                <a href="" data-role="button" data-icon="check">Accept</a>
-                                <a href="" data-role="button" data-icon="delete">Decline</a>
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <a href="">
-                            <h2>Morrowind</h2>
-                        </a>
-                        <a href="#morrowind-popup" data-rel="popup"></a>
-                        <div data-role="popup" id="morrowind-popup" data-transition="pop">
-                            <div data-role="controlgroup" style="margin: 0px">
-                                <a href="" data-role="button" data-icon="check">Accept</a>
-                                <a href="" data-role="button" data-icon="delete">Decline</a>
-                            </div>
-                        </div>
-                    </li>
+                        </li>
+                    </c:forEach>
                 </ul>
 
                 <ul data-role="listview" data-inset="true">
