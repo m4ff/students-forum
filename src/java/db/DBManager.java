@@ -9,6 +9,7 @@ import com.oreilly.servlet.MultipartRequest;
 import java.io.File;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -57,7 +58,7 @@ public class DBManager implements Serializable {
             String query = "SELECT * FROM \"user\" WHERE user_name = ? AND user_password = ?";
             try (PreparedStatement stm = connection.prepareStatement(query)) {
                 try {
-                    password = new String(MessageDigest.getInstance("SHA-256").digest(password.getBytes("UTF-8")));
+                    password = new BigInteger(1, MessageDigest.getInstance("SHA-256").digest(password.getBytes("UTF-8"))).toString(16);
                 } catch (UnsupportedEncodingException | NoSuchAlgorithmException ex) {
                     Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
                 }

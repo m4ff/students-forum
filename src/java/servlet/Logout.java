@@ -34,6 +34,7 @@ public class Logout extends HttpServlet {
                 if ("userId".equals(cookie.getName())) {
                     //set cookie to be removed
                     cookie.setMaxAge(0);
+                    response.addCookie(cookie);
                     break;
                 }
             }

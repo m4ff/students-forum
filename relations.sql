@@ -7,7 +7,7 @@ DROP TABLE "file";
 CREATE TABLE "user" (
 user_id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
 user_name VARCHAR(50),
-user_password CHAR(64),
+user_password VARCHAR(64),
 user_moderator BOOLEAN DEFAULT FALSE,
 user_email VARCHAR(50),
 user_tmp_code VARCHAR(50),
