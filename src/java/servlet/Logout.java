@@ -39,12 +39,7 @@ public class Logout extends HttpServlet {
                 }
             }
         }
-        String redirect = request.getParameter("redirect");
-        if (redirect != null) {
-            response.sendRedirect(redirect);
-        } else {
-            response.sendRedirect("/");
-        }
+        response.sendRedirect("/");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

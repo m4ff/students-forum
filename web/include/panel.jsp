@@ -49,7 +49,7 @@
         </c:if>
         <c:if test="${user != null}">
             <li data-theme="b">
-                <a href="/logout">
+                <a href="/logout" data-ajax="false">
                     Log out
                 </a>
             </li>
