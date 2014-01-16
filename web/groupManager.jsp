@@ -20,8 +20,8 @@
                 <h2>Student's Forum | Group Manager</h2>
             </div>
             <div data-role="content">
-                <form action="/forum/create" data-ajax="false" method="POST">
-                    <input type="hidden" name="id" value="groupIddacambiare">                           
+                <form action="/group-manager" data-ajax="false" method="post">
+                    <input type="hidden" name="id" value="${groupId}">                           
                     <table data-role="table" id="groups-table" class="ui-dbody-d table-stripe ui-responsive">
                         <thead>
                             <tr class="ui-bar-d">

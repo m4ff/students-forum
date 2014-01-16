@@ -53,7 +53,7 @@ public class Group {
     }
     
     //create the directory where to store the uploaded files
-    public static boolean createFilesDirecotry(ServletContext context, int groupId) {
+    public static boolean createFilesDirectory(ServletContext context, int groupId) {
         String filesPath = context.getRealPath("/static/files");
         return new File(filesPath + File.separator + groupId).mkdir();
     }
