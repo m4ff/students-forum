@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package servlet;
 
 import java.io.IOException;
@@ -29,22 +28,21 @@ public class Logout extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if ("userId".equals(cookie.getName())) {
-                        //set cookie to be removed
-                        cookie.setMaxAge(0);
-                        break;
-                    }
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("userId".equals(cookie.getName())) {
+                    //set cookie to be removed
+                    cookie.setMaxAge(0);
+                    break;
                 }
             }
-            String redirect = request.getParameter("redirect");
-            if(redirect != null) {
-                response.sendRedirect(redirect);
-            } else {
-                response.sendRedirect("/");
-            }
+        }
+        String redirect = request.getParameter("redirect");
+        if (redirect != null) {
+            response.sendRedirect(redirect);
+        } else {
+            response.sendRedirect("/");
         }
     }
 
