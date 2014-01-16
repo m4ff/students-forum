@@ -126,7 +126,7 @@ INSERT INTO "post"(group_id, user_id, post_text) VALUES(2, 5, 'Belgae ab extremi
 INSERT INTO "post"(group_id, user_id, post_text) VALUES(2, 6, 'Aquitania a Garunna flumine ad Pyrenaeos montes et eam partem Oceani, quae est ad Hispaniam, pertinet, spectat inter occasum solis et septentriones.');
 
 INSERT INTO "post"(group_id, user_id, post_text) VALUES(3, 3, 'Apud Helvetios longe nobilissimus fuit et ditissimus Orgetorix. is M. Messala [et P.] M. Pisone consulibus regni, cupiditate inductus coniurationem nobilitatis fecit et civitati persuasit, ut de finibus suis cum omnibus copiis exirent: perfacile esse, cum virtute omnibus praestarent, totius Galliae imperio potiri.');
-INSERT INTO "post"(group_id, user_id, post_text) VALUES(3, 4, 'Id hoc facilius iis persuasit, quod undique loci natura Helvetii continentur: una ex parte flumine Rheno latissimo atque altissimo, qui agrum Helvetium a Germanis dividit, altera ex parte monte Iura altissimo, qui est inter Sequanos et Helvetios, tertia lacu Lemanno et flumine Rhodano, qui provinciam nostram ab Helvetiis dividit. ');
+INSERT INTO "post"(group_id, user_id, post_text) VALUES(3, 4, 'Id hoc facilius iis persuasit, quod undique loci natura Helvetii continentur: una ex parte flumine Rheno latissimo atque altissimo, qui agrum Helvetium a Germanis dividit, altera ex parte monte Iura altissimo, qui est inter Sequanos et Helvetios, tertia lacu Lemanno et flumine Rhodano, qui provinciam nostram ab Helvetiis dividit.');
 INSERT INTO "post"(group_id, user_id, post_text) VALUES(3, 5, 'His rebus fiebat ut et minus late vagarentur et minus facile finitimis bellum inferre possent; qua ex parte homines bellandi cupidi magno dolore adficiebantur.');
 INSERT INTO "post"(group_id, user_id, post_text) VALUES(3, 6, 'Pro multitudine autem hominum et pro gloria belli atque fortitudinis angustos se fines habere arbitrabantur, qui in longitudinem milia passuum ccxl, in latitudinem clxxx patebant.');
 INSERT INTO "post"(group_id, user_id, post_text) VALUES(3, 7, 'Ea res est Helvetiis per indicium enuntiata. ');
@@ -138,22 +138,22 @@ INSERT INTO "post"(group_id, user_id, post_text) VALUES(3, 7, 'Eo opere perfecto
 
 INSERT INTO "post"(group_id, user_id, post_text) VALUES(4, 4, 'Ubi ea dies quam constituerat cum legatis, venit et legati ad eum reverterunt, negat se more et exemplo populi Romani posse iter ulli per provinciam dare et, si vim facere conentur, prohibiturum ostendit');
 INSERT INTO "post"(group_id, user_id, post_text) VALUES(4, 5, 'Helvetii ea spe deiecti navibus iunctis ratibusque compluribus factis, alii vadis Rhodani, qua minima altitudo fluminis erat, nonnumquam interdiu, saepius noctu si perrumpere possent conati, operis munitione et militum concursu et telis repulsi hoc conatu destiterunt');
-INSERT INTO "post"(group_id, user_id, post_text) VALUES(4, 6, '');
-INSERT INTO "post"(group_id, user_id, post_text) VALUES(4, 7, '');
-INSERT INTO "post"(group_id, user_id, post_text) VALUES(4, 8, '');
-INSERT INTO "post"(group_id, user_id, post_text) VALUES(4, 4, '');
-INSERT INTO "post"(group_id, user_id, post_text) VALUES(4, 5, '');
-INSERT INTO "post"(group_id, user_id, post_text) VALUES(4, 6, '');
-INSERT INTO "post"(group_id, user_id, post_text) VALUES(4, 7, '');
-INSERT INTO "post"(group_id, user_id, post_text) VALUES(4, 8, '');
+INSERT INTO "post"(group_id, user_id, post_text) VALUES(4, 6, 'Relinquebatur una per Sequanos via, qua Sequanis invitis propter angustias ire non poterant.');
+INSERT INTO "post"(group_id, user_id, post_text) VALUES(4, 7, 'His cum sua sponte persuadere non possent, legatos ad Dumnorigem Haeduum mittunt, ut eo deprecatore a Sequanis impetrarent.');
+INSERT INTO "post"(group_id, user_id, post_text) VALUES(4, 8, 'Dumnorix gratia et largitione apud Sequanos plurimum poterat et Helvetiis erat amicus, quod ex ea civitate Orgetorigis filiam in matrimonium duxerat, et cupiditate regni adductus novis rebus studebat et quam plurimas civitates suo beneficio habere obstrictas volebat.');
+INSERT INTO "post"(group_id, user_id, post_text) VALUES(4, 4, 'Itaque rem suscipit et a Sequanis impetrat, ut per fines suos Helvetios ire patiantur, obsidesque uti inter sese dent perficit: Sequani, ne itinere Helvetios prohibeant, Helvetii, ut sine maleficio et iniuria transeant.');
+INSERT INTO "post"(group_id, user_id, post_text) VALUES(4, 5, 'Caesari nuntiatur Helvetiis esse in animo per agrum Sequanorum et Haeduorum iter in Santonum fines facere, qui non longe a Tolosatium finibus absunt, quae civitas est in provincia.');
+INSERT INTO "post"(group_id, user_id, post_text) VALUES(4, 6, 'Id si fieret, intellegebat magno cum periculo provinciae futurum, ut homines bellicosos, populi Romani inimicos, locis patentibus maximeque frumentariis finitimos haberet.');
+INSERT INTO "post"(group_id, user_id, post_text) VALUES(4, 7, 'Ob eas causas ei munitioni, quam fecerat, T. Labienum legatum praefecit; ipse in Italiam magnis itineribus contendit duasque ibi legiones conscribit et tres, quae circum Aquileiam hiemabant, ex hibernis educit et, qua proximum iter in ulteriorem Galliam per Alpes erat, cum his quinque legionibus ire contendit.');
+INSERT INTO "post"(group_id, user_id, post_text) VALUES(4, 8, 'Ibi Ceutrones et Graioceli et Caturiges locis superioribus occupatis itinere exercitum prohibere conantur.');
 
-INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 6, '');
-INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 7, '');
-INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 8, '');
-INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 9, '');
-INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 10, '');
-INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 9, '');
-INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 10, '');
-INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 8, '');
-INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 7, '');
-INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 6, '');
+INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 6, 'Compluribus his proeliis pulsis ab Ocelo, quod est citerioris provinciae extremum, in fines Vocontiorum ulterioris provinciae die septimo pervenit; inde in Allobrogum fines, ab Allobrogibus in Segusiavos exercitum ducit.');
+INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 7, 'Hi sunt extra provinciam trans Rhodanum primi');
+INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 8, 'Helvetii iam per angustias et fines Sequanorum suas copias traduxerant et in Haeduorum fines pervenerant eorumque agros populabantur.');
+INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 9, 'Haedui cum se suaque ab iis defendere non possent, legatos ad Caesarem mittunt rogatum auxilium: ita se omni tempore de populo Romano meritos esse, ut paene in conspectu exercitus nostri agri vastari, liberi eorum in servitutem abduci, oppida expugnari non debuerint. ');
+INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 10, 'Eodem tempore Ambarri, necessarii et consanguinei Haeduorum, Caesarem certiorem faciunt sese depopulatis agris non facile ab oppidis vim hostium prohibere.');
+INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 9, 'Item Allobroges qui trans Rhodanum vicos possessionesque habebant, fuga se ad Caesarem recipiunt et demonstrant sibi praeter agri solum nihil esse reliqui.');
+INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 10, 'Quibus rebus adductus Caesar non exspectandum sibi statuit, dum omnibus fortunis sociorum consumptis in Santonos Helvetii pervenirent.');
+INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 8, 'Flumen est Arar, quod per fines Haeduorum et Sequanorum in Rhodanum influit, incredibili lenitate, ita ut oculis in utram partem fluat iudicari non possit.');
+INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 7, 'Id Helvetii ratibus ac lintribus iunctis transibant.');
+INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 6, 'Ubi per exploratores Caesar certior factus est tres iam partes copiarum Helvetios id lumen traduxisse, quartam vero partem citra flumen Ararim reliquam esse, de tertia vigilia cum legionibus tribus e castris profectus ad eam partem pervenit quae nondum flumen transierat.');
