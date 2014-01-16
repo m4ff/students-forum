@@ -25,12 +25,12 @@
                     <table data-role="table" id="groups-table" class="ui-dbody-d table-stripe ui-responsive">
                         <thead>
                             <tr class="ui-bar-d">
-                                <th><c:out value="${groupTitle}"/></th>
+                                <th><c:out value="${titleString}"/></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td> <input name="change_group_name" type="text" value="nameStringdacambiare"> </td>
+                                <td> <input name="change_group_name" type="text" value="<c:out value="${nameString}"/>"> </td>
                             </tr>
                         </tbody>
                     </table>
@@ -39,6 +39,7 @@
                     <table data-role="table" id="user-table" class="ui-dbody-d table-stripe ui-responsive">
                         <thead>
                             <tr class=ui-bar-d>
+                                <th>Name</th>
                                 <th>Invite</th>
                                 <th>Visible</th>
                                 <th>Invisible</th>
@@ -75,7 +76,7 @@
                     <input type="submit" value="submit" data-inline="true">
                 </form>
             </div>
+            <%@include file="include/panel.jsp" %>
         </div>
-        <%@include file="include/panel.jsp" %>
     </body>
 </html>

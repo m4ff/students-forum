@@ -39,10 +39,11 @@ public class GroupPage extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         DBManager manager = (DBManager) getServletContext().getAttribute("dbmanager");
-        User logged = (User) request.getSession().getAttribute("user");
+        User logged = (User) request.getAttribute("user");
         try {
             LinkedList<Group> groups = manager.getUserGroups(logged);
             request.setAttribute("groupList", groups);
+            request.setAttribute("dbmanager", manager);
             request.getRequestDispatcher("groups.jsp").forward(request, response);
         } catch (ServletException | IOException ex) {
             Logger.getLogger(GroupPage.class.getName()).log(Level.SEVERE, null, ex);

@@ -26,19 +26,13 @@
                         Your groups
                     </li>
                     <c:forEach var="g" items="${groupList}">
-                    <li>
-                        <a href="">
-                            <h2><c:out value="${g.getName()}"/></h2>
-                                <span class="ui-li-count"><c:out value="${g.getPostCount()}"/></span>
-                        </a>
-                    </li>
+                        <li>
+                            <a href="">
+                                <h2><c:out value="${g.getName()}"/></h2>
+                                <span class="ui-li-count"><c:out value="${dbmanager.getPostsNumber(g)}"/></span>
+                            </a>
+                        </li>
                     </c:forEach>
-                    <li>
-                        <a href="">
-                            <h2>Other games?</h2>
-                            <span class="ui-li-count">2</span>
-                        </a>
-                    </li>
                 </ul>
             </div>
 

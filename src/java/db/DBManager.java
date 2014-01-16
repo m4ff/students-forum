@@ -163,14 +163,14 @@ public class DBManager implements Serializable {
     public int getPostsNumber(Group g) {
         int count = 0;
         try {
-            String query = "SELECT COUNT(post_id) FROM \"post\" WHERE group_id = ?";
+            String query = "SELECT COUNT(post_id) AS count FROM \"post\" WHERE group_id = ?";
             PreparedStatement stm = connection.prepareStatement(query);
             try {
                 stm.setInt(1, g.getId());
                 ResultSet res = stm.executeQuery();
                 try {
                     while (res.next()) {
-                        count = Integer.parseInt(res.getString(query));
+                        count = res.getInt("count");
                     }
                 } finally {
                     res.close();

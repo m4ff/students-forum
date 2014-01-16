@@ -63,7 +63,8 @@ public class GroupManager extends HttpServlet {
             request.setAttribute("visibleFollowinUsers", visibleFollowinUsers);
             request.setAttribute("notVisibleFollowinUsers", notVisibleFollowinUsers);
             request.setAttribute("otherUsers", otherUsers);
-            request.setAttribute("groupTitle", titleString);
+            request.setAttribute("titleString", titleString);
+            request.setAttribute("nameString", nameString);
             request.getRequestDispatcher("/groupManager.jsp").forward(request, response);
         } catch (ServletException | IOException ex) {
             Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
