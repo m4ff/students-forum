@@ -37,11 +37,11 @@ public class Invites extends HttpServlet {
             int userId = logged.getId();
             if (accepted == 1) {
                 manager.acceptInvitesFromGroups(groupId, userId);
-            } else if (accepted == 0){
+            } else if (accepted == 0) {
                 manager.declineInvitesFromGroups(groupId, userId);
             }
         }
-            response.sendRedirect("/");
+        response.sendRedirect("/");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
