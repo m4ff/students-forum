@@ -97,7 +97,7 @@ public class DBManager implements Serializable {
     public LinkedList<Group> getUserGroups(User u) {
         LinkedList<Group> g = new LinkedList<>();
         try {
-            String query = "SELECT COUNT(group_id)" /*AS group_post_count*/+", * FROM \"user_group\" NATURAL JOIN \"group\" NATURAL JOIN \"post\" WHERE user_id = ?";
+            String query = "SELECT COUNT('group_id'), FROM \"user_group\" NATURAL JOIN \"group\" NATURAL JOIN \"post\" WHERE user_id = ?";
             PreparedStatement stm = connection.prepareStatement(query);
             try {
                 stm.setInt(1, u.getId());
