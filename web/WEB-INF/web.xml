@@ -7,7 +7,6 @@
     <welcome-file-list>
         <welcome-file>forum</welcome-file>
     </welcome-file-list>
-    
     <servlet>
         <servlet-name>Home</servlet-name>
         <servlet-class>servlet.Home</servlet-class>
@@ -27,6 +26,18 @@
     <servlet>
         <servlet-name>GroupManager</servlet-name>
         <servlet-class>servlet.GroupManager</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GroupPage</servlet-name>
+        <servlet-class>servlet.GroupPage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>servlet.Logout</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Invites</servlet-name>
+        <servlet-class>servlet.Invites</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
@@ -48,7 +59,10 @@
         <servlet-name>GroupManager</servlet-name>
         <url-pattern>/group-manager</url-pattern>
     </servlet-mapping>
-    
+    <servlet-mapping>
+        <servlet-name>GroupPage</servlet-name>
+        <url-pattern>/groups</url-pattern>
+    </servlet-mapping>
     <filter>
         <filter-name>
             LoginFilter
@@ -65,7 +79,46 @@
             /*
         </url-pattern>
     </filter-mapping>
-    
+    <filter>
+        <filter-name>
+            ModerationFilter
+        </filter-name>
+        <filter-class>
+            filter.ModerationFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>
+            ModerationFilter
+        </filter-name>
+        <url-pattern>
+            /moderation*
+        </url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>
+            AdministrationFilter
+        </filter-name>
+        <filter-class>
+            filter.AdministrationFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>
+            AdministrationFilter
+        </filter-name>
+        <url-pattern>
+            /group-manager*
+        </url-pattern>
+    </filter-mapping>
+    <servlet-mapping>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Invites</servlet-name>
+        <url-pattern>/invites</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

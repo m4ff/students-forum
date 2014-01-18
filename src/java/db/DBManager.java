@@ -9,6 +9,7 @@ import com.oreilly.servlet.MultipartRequest;
 import java.io.File;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -57,7 +58,7 @@ public class DBManager implements Serializable {
             String query = "SELECT * FROM \"user\" WHERE user_name = ? AND user_password = ?";
             try (PreparedStatement stm = connection.prepareStatement(query)) {
                 try {
-                    password = new String(MessageDigest.getInstance("SHA-256").digest(password.getBytes("UTF-8")));
+                    password = new BigInteger(1, MessageDigest.getInstance("SHA-256").digest(password.getBytes("UTF-8"))).toString(16);
                 } catch (UnsupportedEncodingException | NoSuchAlgorithmException ex) {
                     Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -74,7 +75,7 @@ public class DBManager implements Serializable {
         }
         return u;
     }
-    
+
     public boolean addUser(String email, String username, String password) {
         try {
             String query = "INSERT INTO \"user\"(user_email, user_name, user_password) VALUES(?, ?, ?)";
@@ -93,11 +94,14 @@ public class DBManager implements Serializable {
         return false;
     }
 
-    
     public LinkedList<Group> getUserGroups(User u) {
         LinkedList<Group> g = new LinkedList<>();
         try {
+<<<<<<< HEAD
             String query = "SELECT COUNT('group_id'), FROM \"user_group\" NATURAL JOIN \"group\" NATURAL JOIN \"post\" WHERE user_id = ?";
+=======
+            String query = "SELECT * FROM \"user_group\" NATURAL JOIN \"group\" WHERE user_id = ? AND group_accepted = TRUE";
+>>>>>>> 544012b034adb1e48067654e60debc02520ef1ec
             PreparedStatement stm = connection.prepareStatement(query);
             try {
                 stm.setInt(1, u.getId());
@@ -109,7 +113,7 @@ public class DBManager implements Serializable {
                                         res.getInt("group_id"),
                                         res.getString("group_name"),
                                         res.getInt("creator_id"),
-                                        res.getInt("group_post_count")
+                                        0
                                 )
                         );
                     }
@@ -158,18 +162,18 @@ public class DBManager implements Serializable {
         }
         return p;
     }
-    
+
     public int getPostsNumber(Group g) {
         int count = 0;
         try {
-            String query = "SELECT COUNT('post_id') FROM \"group\" NATURAL JOIN \"post\" WHERE group_id = ?";
+            String query = "SELECT COUNT(post_id) AS count FROM \"post\" WHERE group_id = ?";
             PreparedStatement stm = connection.prepareStatement(query);
             try {
                 stm.setInt(1, g.getId());
                 ResultSet res = stm.executeQuery();
                 try {
                     while (res.next()) {
-                        count = Integer.parseInt(res.getString(query));
+                        count = res.getInt("count");
                     }
                 } finally {
                     res.close();
@@ -213,7 +217,7 @@ public class DBManager implements Serializable {
         }
         return f;
     }
-    
+
     public HashMap<String, GroupFile> getGroupFiles(Group g) {
         HashMap<String, GroupFile> f = new HashMap<>();
         try {
@@ -272,7 +276,7 @@ public class DBManager implements Serializable {
     public Group getGroup(int groupId) {
         Group target = null;
         try {
-            String query = "SELECT COUNT(*) AS group_post_count, * FROM \"group\" WHERE group_id = ?";
+            String query = "SELECT group_id, group_name, creator_id FROM \"group\" WHERE group_id = ?";
             PreparedStatement stm = connection.prepareStatement(query);
             try {
                 stm.setInt(1, groupId);
@@ -284,7 +288,7 @@ public class DBManager implements Serializable {
                                 res.getInt("group_id"),
                                 res.getString("group_name"),
                                 res.getInt("creator_id"),
-                                res.getInt("group_post_count")
+                                0
                         );
                     }
                 } finally {
@@ -597,33 +601,36 @@ public class DBManager implements Serializable {
         }
     }
 
-    public void acceptInvitesFromGroups(Map<String, String[]> m, int user) {
+    public void acceptInvitesFromGroups(int group, int user) {
         try {
             String query = "UPDATE \"user_group\" SET group_accepted = TRUE WHERE group_id = ? AND user_id = ?";
             PreparedStatement stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             try {
-                for (Map.Entry<String, String[]> entry : m.entrySet()) {
-                    String key = entry.getKey();
-                    try {
-                        int groupId = Integer.parseInt(key);
-                        String[] value = entry.getValue();
-                        switch (value[0]) {
-                            case "accepted":
-                                stm.setInt(1, groupId);
-                                stm.setInt(2, user);
-                                stm.executeUpdate();
-                                break;
-                        }
-                    } catch (NumberFormatException | SQLException e) {
-                        Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
-                    }
-
-                }
+                stm.setInt(1, group);
+                stm.setInt(2, user);
+                stm.executeUpdate();
             } finally {
                 stm.close();
             }
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void declineInvitesFromGroups(int group, int user) {
+        try {
+            String query = "DELETE FROM \"user_group\" WHERE group_id = ? AND user_id = ?";
+            PreparedStatement stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            try {
+                stm.setInt(1, group);
+                stm.setInt(2, user);
+                stm.executeUpdate();
+            } finally {
+                stm.close();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -648,13 +655,15 @@ public class DBManager implements Serializable {
                 }
             } finally {
                 stm.close();
+
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DBManager.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return user;
     }
-    
+
     public User getUser(String userId) {
         return getUser(Integer.parseInt(userId));
     }
@@ -668,9 +677,11 @@ public class DBManager implements Serializable {
                 stm.setInt(2, groupId);
                 ResultSet res = stm.executeQuery();
                 x = res.next();
+
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DBManager.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return x;
     }

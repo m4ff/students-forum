@@ -25,11 +25,13 @@ public class LoginFilter extends HttpFilter {
         DBManager dbmanager = (DBManager) request.getServletContext().getAttribute("dbmanager");
         Cookie[] cookies = request.getCookies();
         User user = null;
+        boolean isModerator = false;
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if ("userId".equals(cookie.getName())) {
                     user = dbmanager.getUser(cookie.getValue());
                     if (user != null) {
+                        isModerator = user.getIfModerator();
                         //reset cookie max age
                         cookie.setMaxAge(servlet.Login.MAX_COOKIE_AGE);
                     }
@@ -37,6 +39,7 @@ public class LoginFilter extends HttpFilter {
                 }
             }
         }
+        request.setAttribute("isModerator", isModerator);
         request.setAttribute("user", user);
         chain.doFilter(request, response);
     }
