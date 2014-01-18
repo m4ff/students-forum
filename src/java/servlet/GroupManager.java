@@ -65,7 +65,7 @@ public class GroupManager extends HttpServlet {
             request.setAttribute("otherUsers", otherUsers);
             request.setAttribute("titleString", titleString);
             request.setAttribute("nameString", nameString);
-            request.setAttribute("groupId",groupId);
+            request.setAttribute("groupId", groupId);
             request.getRequestDispatcher("/groupManager.jsp").forward(request, response);
         } catch (ServletException | IOException ex) {
             Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
