@@ -7,23 +7,23 @@ package servlet;
 
 import db.DBManager;
 import db.Group;
-import db.User;
+import db.Post;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Pier DAgostino
  */
-@WebServlet(name = "GroupPage", urlPatterns = {"/group"})
-public class GroupPage extends HttpServlet {
+@WebServlet(name = "GroupPosts", urlPatterns = {"/group-posts"})
+public class GroupPosts extends HttpServlet {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -37,13 +37,15 @@ public class GroupPage extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        DBManager manager = (DBManager) getServletContext().getAttribute("dbmanager");
-        User logged = (User) request.getAttribute("user");
+        DBManager dbmanager = (DBManager) request.getServletContext().getAttribute("dbmanager");
         try {
-            LinkedList<Group> groups = manager.getUserGroups(logged);
-            request.setAttribute("groupList", groups);
-            request.setAttribute("dbmanager", manager);
-            request.getRequestDispatcher("groups.jsp").forward(request, response);
+            String groupIdParam = request.getParameter("id");
+            int groupId = groupIdParam != null ? Integer.parseInt(groupIdParam) : 0;
+            Group viewing = dbmanager.getGroup(groupId);
+            LinkedList<Post> groupPosts = dbmanager.getGroupPosts(viewing);
+            request.setAttribute("posts", groupPosts);
+            request.setAttribute("groupId", groupId);
+            request.getRequestDispatcher("group-posts.jsp").forward(request, response);
         } catch (ServletException | IOException ex) {
             Logger.getLogger(GroupPage.class.getName()).log(Level.SEVERE, null, ex);
         }

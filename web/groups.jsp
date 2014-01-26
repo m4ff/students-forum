@@ -27,9 +27,9 @@
                     </li>
                     <c:forEach var="g" items="${groupList}">
                         <li>
-                            <a href="">
+                            <a href="/group-posts?id=${g.getId()}">
                                 <h2><c:out value="${g.getName()}"/></h2>
-                                <span class="ui-li-count"><c:out value="${dbmanager.getPostsNumber(g)}"/></span>
+                                <span class="ui-li-count"><c:out value="${dbmanager.getPostsNumber(g,user)}"/></span>
                             </a>
                             <c:if test="${user != null && user.getId() == g.getCreator()}">
                                 <a href="/group-manager?id=${g.getId()}">

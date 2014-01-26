@@ -39,6 +39,10 @@
         <servlet-name>Invites</servlet-name>
         <servlet-class>servlet.Invites</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PostPage</servlet-name>
+        <servlet-class>servlet.PostPage</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/forum</url-pattern>
@@ -118,6 +122,10 @@
     <servlet-mapping>
         <servlet-name>Invites</servlet-name>
         <url-pattern>/invites</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PostPage</servlet-name>
+        <url-pattern>/post</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

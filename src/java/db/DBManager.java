@@ -97,11 +97,7 @@ public class DBManager implements Serializable {
     public LinkedList<Group> getUserGroups(User u) {
         LinkedList<Group> g = new LinkedList<>();
         try {
-<<<<<<< HEAD
-            String query = "SELECT COUNT('group_id'), FROM \"user_group\" NATURAL JOIN \"group\" NATURAL JOIN \"post\" WHERE user_id = ?";
-=======
             String query = "SELECT * FROM \"user_group\" NATURAL JOIN \"group\" WHERE user_id = ? AND group_accepted = TRUE";
->>>>>>> 544012b034adb1e48067654e60debc02520ef1ec
             PreparedStatement stm = connection.prepareStatement(query);
             try {
                 stm.setInt(1, u.getId());
@@ -163,13 +159,14 @@ public class DBManager implements Serializable {
         return p;
     }
 
-    public int getPostsNumber(Group g) {
+    public int getPostsNumber(Group g, User logged) {
         int count = 0;
         try {
-            String query = "SELECT COUNT(post_id) AS count FROM \"post\" WHERE group_id = ?";
+            String query = "SELECT COUNT(post_id) AS count FROM \"post\" NATURAL JOIN \"group\" WHERE group_id = ? AND user_id = ?";
             PreparedStatement stm = connection.prepareStatement(query);
             try {
                 stm.setInt(1, g.getId());
+                stm.setInt(2, logged.getId());
                 ResultSet res = stm.executeQuery();
                 try {
                     while (res.next()) {
