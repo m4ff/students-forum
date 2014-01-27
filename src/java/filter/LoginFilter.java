@@ -34,6 +34,7 @@ public class LoginFilter extends HttpFilter {
                         isModerator = user.getIfModerator();
                         //reset cookie max age
                         cookie.setMaxAge(servlet.Login.MAX_COOKIE_AGE);
+                        response.addCookie(cookie);
                     }
                     break;
                 }
