@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Date;
 
 /**
  *
@@ -628,6 +629,24 @@ public class DBManager implements Serializable {
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class
                     .getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void updateTime(int user) {
+        Date time = new Date();
+        String query = "UPDATE \"user\" SET user_last_time = ? WHERE user_id = ?";
+        PreparedStatement stm;
+        try {
+            stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            try {
+                stm.setDate(1, (java.sql.Date) time);
+                stm.setInt(2, user);
+                stm.executeUpdate();
+            } finally {
+                stm.close();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

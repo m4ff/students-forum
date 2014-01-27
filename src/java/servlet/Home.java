@@ -27,7 +27,7 @@ public class Home extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         DBManager manager = (DBManager) getServletContext().getAttribute("dbmanager");
         User logged = (User) request.getAttribute("user");
-        LinkedList<Group> invitingGroups = null;
+        LinkedList<Group> invitingGroups = new LinkedList();
         String notificationsTitle = "You are not logged in";
         if (logged != null) {
             invitingGroups = manager.getInvites(logged);
