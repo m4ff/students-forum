@@ -16,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.sql.Date;
 
 /**
  *
@@ -30,13 +31,16 @@ public class Home extends HttpServlet {
         LinkedList<Group> invitingGroups = new LinkedList();
         String notificationsTitle = "You are not logged in";
         if (logged != null) {
+            Date lastTime = manager.getTime(logged.getId());
+            manager.updateTime(logged.getId());
+            
             invitingGroups = manager.getInvites(logged);
             request.setAttribute("invitingGroups", invitingGroups);
             request.setAttribute("dbmanager", manager);
             notificationsTitle = "You have new invites";
         }
         try {
-            request.setAttribute("notificationsTitle", notificationsTitle );
+            request.setAttribute("notificationsTitle", notificationsTitle);
             request.getRequestDispatcher("/home.jsp").forward(request, response);
         } catch (ServletException | IOException ex) {
             Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);

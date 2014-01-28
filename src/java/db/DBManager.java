@@ -632,6 +632,32 @@ public class DBManager implements Serializable {
         }
     }
 
+    public java.sql.Date getTime(int user) {
+        Date time = null;
+        String query = "SELECT user_last_time FROM \"user\" WHERE user_id = ?";
+        PreparedStatement stm;
+        try {
+            stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            try {
+                stm.setInt(1, user);
+                ResultSet res = stm.executeQuery();
+                try{
+                    res.next();
+                    time = res.getDate("user_last_time");
+                }
+                finally{
+                    res.close();
+                }
+            } finally {
+                stm.close();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return time;
+    }
+    
+    
     public void updateTime(int user) {
         Date time = new Date();
         String query = "UPDATE \"user\" SET user_last_time = ? WHERE user_id = ?";
