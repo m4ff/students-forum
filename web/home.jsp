@@ -42,27 +42,35 @@
                         </c:forEach>
                     </ul>
                 </c:if>
-                <c:if test="${!postFromLastTime.isEmpty()}">
-                    <div data-role="collapsible-set" data-theme="c" data-content-theme="d">
-                        <c:forEach var="p" items="${postFromLastTime}" varStatus="s">
-                            <c:if test="${s.index == 0}">
-                                <div data-role="collapsible">
-                                    <h3>${p.getGroup().getName()}</h3>
-                                    <p>${p.getText()}</p>
-                                </c:if>
-                                <c:if test="${postFromLastTime[s.index-1].getGroup() == p.getGroup()}"> 
-                                    <p>I'm the collapsible set content for section 1.<p>
-                                    </c:if>
-                                    <c:if test="${postFromLastTime[s.index-1].getGroup() != postFromLastTime[s.index].getGroup()}">
+                <c:if test="${!postFromLastTime.isEmpty() && logged}">
+                    <div data-role="listview" data-inset="true">
+                        <li data-role="list-divider" data-theme="b">
+                            News from your groups
+                        </li>
+                        <li data-theme="b" style="padding-top: 0px; padding-bottom: 0px">
+                            <div data-role="collapsible-set" data-inset="false" style="margin: 0px">
+                                <div data-role="collapsible" data-theme="b">
+                                    <h3 style="margin: 0px">${postFromLastTime[0].getGroup().getName()}</h3>
+                                    <ul data-role="listview">
+                                        <c:forEach var="p" items="${postFromLastTime}" varStatus="s">
+                                            <c:if test="${s.index > 0 && (postFromLastTime[s.index-1].getGroup().getId() != postFromLastTime[s.index].getGroup().getId())}">
+                                            </ul>
+                                        </div>
+                                        <div data-role="collapsible" data-theme="b">
+                                            <h3 style="margin: 0px">${p.getGroup().getName()}</h3>
+                                            <ul data-role="listview">
+                                            </c:if>
+                                            <li>
+                                                <h3>${p.getCreator().getName()}</h3>
+                                                <p>${p.getText()}</p>
+                                            </li>
+                                        </c:forEach>
+                                    </ul>
                                 </div>
-                                <div data-role="collapsible">
-                                    <h3>${p.getGroup().getName()}</h3>
-                                    <p>${p.getText()}</p>
-                                </c:if>
-                            </c:forEach>
-                        </div>
-                    </div>
-                </c:if>
+                            </div>
+                        </li>
+                    </c:if>
+                </div>
                 <%@include file="include/panel.jsp" %>
             </div>
     </body>

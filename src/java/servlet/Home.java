@@ -31,16 +31,18 @@ public class Home extends HttpServlet {
         User logged = (User) request.getAttribute("user");
         LinkedList<Group> invitingGroups = new LinkedList();
         String notificationsTitle = "You are not logged in";
+        boolean isLogged = false;
         if (logged != null) {
+            isLogged = true;
             Date lastTime = manager.getTime(logged.getId());
-            manager.updateTime(logged.getId());
+            //manager.updateTime(logged.getId());
             LinkedList<Post> postFromLastTime = manager.getPostsFromDate(lastTime);
             
             invitingGroups = manager.getInvites(logged);
             request.setAttribute("postFromLastTime", postFromLastTime);
             request.setAttribute("invitingGroups", invitingGroups);
             request.setAttribute("dbmanager", manager);
-            
+            request.setAttribute("logged",isLogged);
             notificationsTitle = "You have new invites";
         }
         try {
