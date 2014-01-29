@@ -44,6 +44,15 @@ public class DBManager implements Serializable {
 
         this.connection = DriverManager.getConnection("jdbc:derby://localhost:1527/students_forum", "students_forum", "password");
     }
+    
+    public static String hashPassword(String password) {
+        try {
+            return new BigInteger(1, MessageDigest.getInstance("SHA-256").digest(password.getBytes("UTF-8"))).toString(16);
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
 
     public static void shutdown() {
         try {
@@ -58,11 +67,7 @@ public class DBManager implements Serializable {
         try {
             String query = "SELECT * FROM \"user\" WHERE user_name = ? AND user_password = ?";
             try (PreparedStatement stm = connection.prepareStatement(query)) {
-                try {
-                    password = new BigInteger(1, MessageDigest.getInstance("SHA-256").digest(password.getBytes("UTF-8"))).toString(16);
-                } catch (UnsupportedEncodingException | NoSuchAlgorithmException ex) {
-                    Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                password = hashPassword(password);
                 stm.setString(1, userName);
                 stm.setString(2, password);
                 try (ResultSet res = stm.executeQuery()) {
@@ -83,6 +88,7 @@ public class DBManager implements Serializable {
             String query = "INSERT INTO \"user\"(user_email, user_name, user_password) VALUES(?, ?, ?)";
             PreparedStatement stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             try {
+                password = hashPassword(password);
                 stm.setString(1, email);
                 stm.setString(2, username);
                 stm.setString(3, password);
@@ -100,6 +106,25 @@ public class DBManager implements Serializable {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return userId;
+    }
+    
+    public boolean updateUserPassword(User user, String password) {
+        int userId = 0;
+        password = hashPassword(password);
+        try {
+            String query = "UPDATE \"user\" SET user_password = ? WHERE user_id = ?";
+            PreparedStatement stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            try {
+                stm.setString(1, password);
+                stm.setInt(2, user.getId());
+                return stm.executeUpdate() == 1;
+            } finally {
+                stm.close();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 
     public LinkedList<Group> getUserGroups(User u) {

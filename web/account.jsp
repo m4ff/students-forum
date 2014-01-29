@@ -15,7 +15,17 @@
                 <h2>Student's Forum | Account</h2>
             </div>
             <div data-role="content">
-                <form>
+                <c:if test="${error != null}">
+                    <div class="ui-body ui-body-b ui-corner-all">
+                        ${error}
+                    </div>
+                </c:if>
+                <c:if test="${error == null && success == true}">
+                    <div class="ui-body ui-body-a  ui-corner-all">
+                        Your account was updated
+                    </div>
+                </c:if>
+                <form method="post" enctype="multipart/form-data" data-ajax="false" onsubmit="var b = $('#account-password').val() == $('#account-password-conf').val(); if(!b) alert('Password check failed'); return b;">
                     <ul data-role="listview" data-inset="true">
                         <li data-role="fieldcontain">
                             <img src="/avatar?id=${user.getId()}" style="height: 100%; width: auto">
@@ -37,9 +47,8 @@
                     </ul>
                     <button data-inline="true" type="submit" data-theme="b">Update</button>
                     <span>
-                        Fields marked with * are required
+                        Fields marked with * are required. The avatar must be a JPEG file and must not exceed 1MB
                     </span>
-                    
                 </form>
             </div>
             

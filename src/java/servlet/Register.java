@@ -14,11 +14,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -26,7 +23,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import utils.RenamePolicy;
 
 /**
  *
@@ -63,11 +59,6 @@ public class Register extends HttpServlet {
         } else if (username == null || "".equals(username)) {
             error = "Please provide a user name";
         } else {
-            try {
-                password = new BigInteger(1, MessageDigest.getInstance("SHA-256").digest(password.getBytes("UTF-8"))).toString(16);
-            } catch (NoSuchAlgorithmException ex) {
-                Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
-            }
             int userId = dbmanager.addUser(email, username, password);
             if (userId != 0) {
                 Files.move(multipart.getFile("avatar").toPath(), new File(avatarsPath + File.separator + userId + ".jpg").toPath(), StandardCopyOption.REPLACE_EXISTING);
