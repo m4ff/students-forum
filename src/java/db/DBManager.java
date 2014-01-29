@@ -632,7 +632,7 @@ public class DBManager implements Serializable {
         }
     }
 
-    public java.sql.Date getTime(int user) {
+    public Date getTime(int user) {
         Date time = null;
         String query = "SELECT user_last_time FROM \"user\" WHERE user_id = ?";
         PreparedStatement stm;
