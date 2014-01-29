@@ -45,7 +45,7 @@ public class GroupPosts extends HttpServlet {
             LinkedList<Post> groupPosts = dbmanager.getGroupPosts(viewing);
             request.setAttribute("posts", groupPosts);
             request.setAttribute("groupId", groupId);
-            request.getRequestDispatcher("group-posts.jsp").forward(request, response);
+            request.getRequestDispatcher("groupPosts.jsp").forward(request, response);
         } catch (ServletException | IOException ex) {
             Logger.getLogger(GroupPage.class.getName()).log(Level.SEVERE, null, ex);
         }
