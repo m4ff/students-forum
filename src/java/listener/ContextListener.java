@@ -31,14 +31,9 @@ public class ContextListener implements ServletContextListener{
         }
         
         //Creates the directory where to store the uploaded files
-        String contextPath = sce.getServletContext().getRealPath("/static");
-        File groupFilesDirectory = new File(contextPath + File.separator + "files");
-        groupFilesDirectory.mkdir();
-        
-        String avatarsDir = sce.getServletContext().getRealPath("/") + ".." + File.separator + "avatars";
-        String avatarsTmpDir = sce.getServletContext().getRealPath("/") + ".." + File.separator + "avatarsTmp";
-        new File(avatarsDir).mkdir();
-        new File(avatarsTmpDir).mkdir();
+        String projectDir = sce.getServletContext().getRealPath("/") + ".." + File.separator + ".." + File.separator;
+        String avatarsDir = projectDir + "avatars";
+        String avatarsTmpDir = projectDir + "avatarsTmp";
         sce.getServletContext().setAttribute("avatarsDir", avatarsDir);
         sce.getServletContext().setAttribute("avatarsTmpDir", avatarsTmpDir);
     }
