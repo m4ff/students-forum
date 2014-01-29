@@ -71,6 +71,10 @@
         <servlet-name>Avatar</servlet-name>
         <url-pattern>/avatar</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GroupPage</servlet-name>
+        <url-pattern>/groups</url-pattern>
+    </servlet-mapping>
     <filter>
         <filter-name>
             LoginFilter
