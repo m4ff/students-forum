@@ -17,6 +17,7 @@
     <body>
         <div id="register-page" data-role="page">
             <div data-role="header">
+                <a href="/" data-icon="home">Home</a>
                 <h2>Student's Forum | Register</h2>
             </div>
             <div data-role="content">
@@ -46,7 +47,7 @@
                             <input type="password" id="register-password-conf" name="password2">
                         </li>
                     </ul>
-                    <button data-inline="true" type="submit">Register</button>
+                    <button data-inline="true" type="submit" data-theme="b">Register</button>
                     <a href="/login">Login</a>
                 </form>
             </div>

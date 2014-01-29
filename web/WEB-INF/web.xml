@@ -28,6 +28,10 @@
         <servlet-class>servlet.GroupManager</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>Avatar</servlet-name>
+        <servlet-class>servlet.Avatar</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>GroupPage</servlet-name>
         <servlet-class>servlet.GroupPage</servlet-class>
     </servlet>
@@ -64,8 +68,8 @@
         <url-pattern>/group-manager</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>GroupPage</servlet-name>
-        <url-pattern>/groups</url-pattern>
+        <servlet-name>Avatar</servlet-name>
+        <url-pattern>/avatar</url-pattern>
     </servlet-mapping>
     <filter>
         <filter-name>

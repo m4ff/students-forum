@@ -18,6 +18,7 @@
                 <form>
                     <ul data-role="listview" data-inset="true">
                         <li data-role="fieldcontain">
+                            <img src="/avatar?id=${user.getId()}" style="height: 100%; width: auto">
                             <label for="account-avatar">Avatar</label>
                             <input type="file" id="account-avatar" name="avatar">
                         </li>

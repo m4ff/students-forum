@@ -7,8 +7,8 @@
 package db;
 
 import java.io.Serializable;
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import javax.servlet.ServletContext;
 
 /**
  *
@@ -34,8 +34,8 @@ public class User implements Serializable{
         return name;
     }
     
-    public String getAvatar(HttpServletRequest request) {
-        File f = new File(request.getServletContext().getRealPath("/static/avatars") + File.separator + id + ".jpg");
+    public String getAvatar(ServletContext ctx) {
+        File f = new File(ctx.getAttribute("avatarsDir") + File.separator  + id + ".jpg");
         if(f.exists()) {
             return "/static/avatars/" + id + ".jpg";
         } else {

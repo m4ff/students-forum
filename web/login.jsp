@@ -17,6 +17,7 @@
     <body>
         <div id="login-page" data-role="page">
             <div data-role="header">
+                <a href="/" data-icon="home">Home</a>
                 <h2>Student's Forum | Login</h2>
             </div>
             <div data-role="content">
@@ -38,7 +39,7 @@
                         <input type="checkbox" id="login-remembre" name="remember" value="1">
                         Keep me logged in
                     </label>
-                    <button data-inline="true" type="submit">Login</button>
+                    <button data-inline="true" type="submit" data-theme="b">Login</button>
                     <a href="/register">Register</a>
 
                     <c:if test="${redirect != null}">

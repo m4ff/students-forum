@@ -22,6 +22,7 @@ public class Account extends HttpServlet{
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        //request.setAttribute("avatarsDir", );
         try {
             request.getRequestDispatcher("/account.jsp").forward(request, response);
         } catch (ServletException | IOException ex) {

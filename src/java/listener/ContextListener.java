@@ -11,6 +11,7 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -33,6 +34,10 @@ public class ContextListener implements ServletContextListener{
         String contextPath = sce.getServletContext().getRealPath("/static");
         File groupFilesDirectory = new File(contextPath + File.separator + "files");
         groupFilesDirectory.mkdir();
+        
+        String avatarsDir = sce.getServletContext().getRealPath("/") + ".." + File.separator + "avatars";
+        new File(avatarsDir).mkdir();
+        sce.getServletContext().setAttribute("avatarsDir", avatarsDir);
     }
 
     @Override
