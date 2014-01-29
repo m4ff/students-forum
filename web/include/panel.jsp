@@ -25,11 +25,13 @@
                 My groups
             </a>
         </li>
+        <c:if test="${user != null}">
         <li>
             <a href="/account">
                 My account
             </a>
         </li>
+        </c:if>
         <c:if test="${isModerator == true}">
             <li>
                 <a href="/moderation">
