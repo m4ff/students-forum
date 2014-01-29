@@ -8,6 +8,13 @@ package utils;
 
 import com.oreilly.servlet.multipart.FileRenamePolicy;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,8 +30,13 @@ public class RenamePolicy implements FileRenamePolicy{
 
     @Override
     public File rename(File file) {
-        file.renameTo(new File(path));
-        return file;
+        try {
+            Path p = Files.move(file.toPath(), new File(path).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            return p.toFile();
+        } catch (IOException ex) {
+            Logger.getLogger(RenamePolicy.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
     
 }

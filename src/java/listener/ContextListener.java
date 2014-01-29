@@ -36,8 +36,11 @@ public class ContextListener implements ServletContextListener{
         groupFilesDirectory.mkdir();
         
         String avatarsDir = sce.getServletContext().getRealPath("/") + ".." + File.separator + "avatars";
+        String avatarsTmpDir = sce.getServletContext().getRealPath("/") + ".." + File.separator + "avatarsTmp";
         new File(avatarsDir).mkdir();
+        new File(avatarsTmpDir).mkdir();
         sce.getServletContext().setAttribute("avatarsDir", avatarsDir);
+        sce.getServletContext().setAttribute("avatarsTmpDir", avatarsTmpDir);
     }
 
     @Override

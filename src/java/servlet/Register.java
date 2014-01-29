@@ -6,6 +6,7 @@
 package servlet;
 
 import com.oreilly.servlet.MultipartRequest;
+import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 import db.DBManager;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
@@ -43,8 +46,9 @@ public class Register extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         DBManager dbmanager = (DBManager) getServletContext().getAttribute("dbmanager");
+        String avatarsTmpPath = (String) getServletContext().getAttribute("avatarsTmpDir");
         String avatarsPath = (String) getServletContext().getAttribute("avatarsDir");
-        MultipartRequest multipart = new MultipartRequest(request, avatarsPath, 1 * 1024 * 1024, new RenamePolicy(avatarsPath));
+        MultipartRequest multipart = new MultipartRequest(request, avatarsTmpPath, 1 * 1024 * 1024, new DefaultFileRenamePolicy());
         String email = multipart.getParameter("email");
         String password = multipart.getParameter("password1");
         String username = multipart.getParameter("username");
@@ -64,7 +68,9 @@ public class Register extends HttpServlet {
             } catch (NoSuchAlgorithmException ex) {
                 Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
             }
-            if (dbmanager.addUser(email, username, password)) {
+            int userId = dbmanager.addUser(email, username, password);
+            if (userId != 0) {
+                Files.move(multipart.getFile("avatar").toPath(), new File(avatarsPath + File.separator + userId + ".jpg").toPath(), StandardCopyOption.REPLACE_EXISTING);
                 response.sendRedirect("/login");
             } else {
                 error = "An error occured, please try again later";
