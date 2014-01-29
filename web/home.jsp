@@ -42,21 +42,28 @@
                         </c:forEach>
                     </ul>
                 </c:if>
-                <ul data-role="listview" data-inset="true">
-                    <li data-role="list-divider" data-theme="b">
-                        News from your groups
-                    </li>
-                    <li>
-                        <a href="">
-                            <h2>The Elder Scrolls</h2>
-                            <span class="ui-li-count">4</span>
-                            <p>The Elder Scrolls is a series of action role-playing open world fantasy video games primarily developed by Bethesda Game Studios and published by Bethesda Softworks</p>
-                        </a>
-                    </li>
-                </ul>
+                <c:if test="${!postFromLastTime.isEmpty()}">
+                    <div data-role="collapsible-set" data-theme="c" data-content-theme="d">
+                        <c:forEach var="p" items="${postFromLastTime}" varStatus="s">
+                            <c:if test="${s.index == 0}">
+                                <div data-role="collapsible">
+                                    <h3>${p.getGroup().getName()}</h3>
+                                    <p>${p.getText()}</p>
+                                </c:if>
+                                <c:if test="${postFromLastTime[s.index-1].getGroup() == p.getGroup()}"> 
+                                    <p>I'm the collapsible set content for section 1.<p>
+                                    </c:if>
+                                    <c:if test="${postFromLastTime[s.index-1].getGroup() != postFromLastTime[s.index].getGroup()}">
+                                </div>
+                                <div data-role="collapsible">
+                                    <h3>${p.getGroup().getName()}</h3>
+                                    <p>${p.getText()}</p>
+                                </c:if>
+                            </c:forEach>
+                        </div>
+                    </div>
+                </c:if>
+                <%@include file="include/panel.jsp" %>
             </div>
-
-            <%@include file="include/panel.jsp" %>
-        </div>
     </body>
 </html>

@@ -159,7 +159,8 @@ public class DBManager implements Serializable {
         }
         return p;
     }
-
+    
+    
     public int getPostsNumber(Group g, User logged) {
         int count = 0;
         try {
@@ -665,7 +666,7 @@ public class DBManager implements Serializable {
         try {
             stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             try {
-                stm.setDate(1, (java.sql.Date) time);
+                stm.setTimestamp(1, new Timestamp(time.getTime()));
                 stm.setInt(2, user);
                 stm.executeUpdate();
             } finally {
@@ -726,5 +727,39 @@ public class DBManager implements Serializable {
                     .getName()).log(Level.SEVERE, null, ex);
         }
         return x;
+    }
+
+public LinkedList<Post> getPostsFromDate(Date d) {
+        LinkedList<Post> p = new LinkedList<>();
+        try {
+            String query = "SELECT * FROM \"post\" NATURAL JOIN \"user\" WHERE post_date >= ? ORDER BY group_id ASC, post_date DESC";
+            PreparedStatement stm = connection.prepareStatement(query);
+            try {
+                stm.setDate(1, (java.sql.Date) d);
+                ResultSet res = stm.executeQuery();
+                try {
+                    while (res.next()) {
+                        Group g = getGroup(res.getInt("group_id"));
+                        p.add(
+                                new Post(
+                                        res.getInt("post_id"),
+                                        res.getString("post_text"),
+                                        res.getDate("post_date"),
+                                        new User(res.getInt("user_id"), res.getString("user_name"), res.getBoolean("user_moderator")),
+                                        null,
+                                        g
+                                )
+                        );
+                    }
+                } finally {
+                    res.close();
+                }
+            } finally {
+                stm.close();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return p;
     }
 }

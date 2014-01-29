@@ -20,6 +20,9 @@ public class Post {
     private String text;
     private Date date;
     private User creator;
+    private Group group;
+
+   
     
     public Post(int id, String text, Date date, User creator, HashMap<String, GroupFile> groupFiles, Group group) {
         text = text.replaceAll("<", "&lt;");
@@ -43,6 +46,11 @@ public class Post {
         this.text = text;
         this.date = date;
         this.creator = creator;
+        this.group = group;
+    }
+    
+    public Group getGroup() {
+        return group;
     }
     
     public int getId() {

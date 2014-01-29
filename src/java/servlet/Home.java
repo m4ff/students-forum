@@ -7,6 +7,7 @@ package servlet;
 
 import db.DBManager;
 import db.Group;
+import db.Post;
 import db.User;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -33,10 +34,13 @@ public class Home extends HttpServlet {
         if (logged != null) {
             Date lastTime = manager.getTime(logged.getId());
             manager.updateTime(logged.getId());
+            LinkedList<Post> postFromLastTime = manager.getPostsFromDate(lastTime);
             
             invitingGroups = manager.getInvites(logged);
+            request.setAttribute("postFromLastTime", postFromLastTime);
             request.setAttribute("invitingGroups", invitingGroups);
             request.setAttribute("dbmanager", manager);
+            
             notificationsTitle = "You have new invites";
         }
         try {
