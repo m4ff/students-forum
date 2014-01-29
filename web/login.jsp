@@ -23,7 +23,7 @@
                 <c:if test="${error != null}">
                     <c:out value="${error}"/>
                 </c:if>
-                <form method="post">
+                <form method="post" data-ajax="false">
                     <ul data-role="listview" data-inset="true">
                         <li data-role="fieldcontain">
                             <label for="login-username">User name</label>
