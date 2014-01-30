@@ -34,13 +34,8 @@ public class User implements Serializable{
         return name;
     }
     
-    public String getAvatar(ServletContext ctx) {
-        File f = new File(ctx.getAttribute("avatarsDir") + File.separator  + id + ".jpg");
-        if(f.exists()) {
-            return "/static/avatars/" + id + ".jpg";
-        } else {
-            return "/static/avatars/0.jpg";
-        }
+    public String getAvatar() {
+        return "/avatar?id=" + this.id;
     }
     
     public boolean getIfModerator() {
