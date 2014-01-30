@@ -711,4 +711,25 @@ public LinkedList<Post> getPostsFromDate(Date d, User user) {
         }
         return p;
     }
+
+ public boolean emailInDatabase(String email) {
+        boolean exists = false;
+        try {
+            String query = "SELECT * FROM \"user\" WHERE user_mail = ?";
+            try (PreparedStatement stm = connection.prepareStatement(query)) {
+                stm.setString(1, email);
+                try (ResultSet res = stm.executeQuery()) {
+                    if (res.next()) {
+                        exists = true;
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+        return exists;
+    }
+
+
 }

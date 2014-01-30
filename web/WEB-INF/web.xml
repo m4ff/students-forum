@@ -51,6 +51,10 @@
         <servlet-name>Moderation</servlet-name>
         <servlet-class>servlet.Moderation</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PasswordResetRequest</servlet-name>
+        <servlet-class>servlet.PasswordResetRequest</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/forum</url-pattern>
@@ -142,6 +146,10 @@
     <servlet-mapping>
         <servlet-name>PostPage</servlet-name>
         <url-pattern>/post</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PasswordResetRequest</servlet-name>
+        <url-pattern>/password-reset-request</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
