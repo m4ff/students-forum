@@ -42,35 +42,42 @@
                         </c:forEach>
                     </ul>
                 </c:if>
-                <c:if test="${!postFromLastTime.isEmpty() && logged}">
+                <c:if test="${isLogged}">
                     <div data-role="listview" data-inset="true">
-                        <li data-role="list-divider" data-theme="b">
-                            News from your groups
-                        </li>
-                        <li data-theme="b" style="padding-top: 0px; padding-bottom: 0px">
-                            <div data-role="collapsible-set" data-inset="false" style="margin: 0px">
-                                <div data-role="collapsible" data-theme="b">
-                                    <h3 style="margin: 0px">${postFromLastTime[0].getGroup().getName()}</h3>
-                                    <ul data-role="listview">
-                                        <c:forEach var="p" items="${postFromLastTime}" varStatus="s">
-                                            <c:if test="${s.index > 0 && (postFromLastTime[s.index-1].getGroup().getId() != postFromLastTime[s.index].getGroup().getId())}">
-                                            </ul>
-                                        </div>
-                                        <div data-role="collapsible" data-theme="b">
-                                            <h3 style="margin: 0px">${p.getGroup().getName()}</h3>
-                                            <ul data-role="listview">
-                                            </c:if>
-                                            <li>
-                                                <h3>${p.getCreator().getName()}</h3>
-                                                <p>${p.getText()}</p>
-                                            </li>
-                                        </c:forEach>
-                                    </ul>
+                        <c:if test="${postFromLastTime.isEmpty()}">
+                            <li data-role="list-divider" data-theme="b">
+                                No news from your groups
+                            </li>
+                        </c:if>      
+                        <c:if test="${!postFromLastTime.isEmpty()}">
+                            <li data-role="list-divider" data-theme="b">
+                                News from your groups
+                            </li>
+                            <li data-theme="b" style="padding-top: 0px; padding-bottom: 0px">
+                                <div data-role="collapsible-set" data-inset="false" style="margin: 0px">
+                                    <div data-role="collapsible" data-theme="b">
+                                        <h3 style="margin: 0px">${postFromLastTime[0].getGroup().getName()}</h3>
+                                        <ul data-role="listview">
+                                            <c:forEach var="p" items="${postFromLastTime}" varStatus="s">
+                                                <c:if test="${s.index > 0 && (postFromLastTime[s.index-1].getGroup().getId() != postFromLastTime[s.index].getGroup().getId())}">
+                                                </ul>
+                                            </div>
+                                            <div data-role="collapsible" data-theme="b">
+                                                <h3 style="margin: 0px">${p.getGroup().getName()}</h3>
+                                                <ul data-role="listview">
+                                                </c:if>
+                                                <li>
+                                                    <h3>${p.getCreator().getName()}</h3>
+                                                    <p>${p.getText()}</p>
+                                                </li>
+                                            </c:forEach>
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div>
-                        </li>
-                    </c:if>
-                </div>
+                            </li>
+                        </c:if>
+                    </div>
+                </c:if>
                 <%@include file="include/panel.jsp" %>
             </div>
     </body>

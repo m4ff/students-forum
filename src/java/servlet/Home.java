@@ -35,17 +35,17 @@ public class Home extends HttpServlet {
         if (logged != null) {
             isLogged = true;
             Date lastTime = manager.getTime(logged.getId());
-            //manager.updateTime(logged.getId());
-            LinkedList<Post> postFromLastTime = manager.getPostsFromDate(lastTime,logged);
-            
+            manager.updateTime(logged.getId());
+            LinkedList<Post> postFromLastTime = manager.getPostsFromDate(lastTime, logged);
+
             invitingGroups = manager.getInvites(logged);
             request.setAttribute("postFromLastTime", postFromLastTime);
             request.setAttribute("invitingGroups", invitingGroups);
             request.setAttribute("dbmanager", manager);
-            request.setAttribute("logged",isLogged);
             notificationsTitle = "You have new invites";
         }
         try {
+            request.setAttribute("isLogged", isLogged);
             request.setAttribute("notificationsTitle", notificationsTitle);
             request.getRequestDispatcher("/home.jsp").forward(request, response);
         } catch (ServletException | IOException ex) {
