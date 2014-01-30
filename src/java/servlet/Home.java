@@ -34,9 +34,7 @@ public class Home extends HttpServlet {
         boolean isLogged = false;
         if (logged != null) {
             isLogged = true;
-            Date lastTime = manager.getTime(logged.getId());
-            manager.updateTime(logged.getId());
-            LinkedList<Post> postFromLastTime = manager.getPostsFromDate(lastTime, logged);
+            LinkedList<Post> postFromLastTime = manager.getPostsFromDate((Date) request.getAttribute("lastTime"), logged);
 
             invitingGroups = manager.getInvites(logged);
             request.setAttribute("postFromLastTime", postFromLastTime);
