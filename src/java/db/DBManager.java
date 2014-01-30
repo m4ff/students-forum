@@ -303,8 +303,7 @@ public class DBManager implements Serializable {
                         target = new Group(
                                 res.getInt("group_id"),
                                 res.getString("group_name"),
-                                res.getInt("creator_id"),
-                                0
+                                res.getInt("creator_id")
                         );
                     }
                 }
@@ -328,8 +327,7 @@ public class DBManager implements Serializable {
                                 new Group(
                                         res.getInt("group_id"),
                                         res.getString("group_name"),
-                                        res.getInt("creator_id"),
-                                        0
+                                        res.getInt("creator_id")
                                 )
                         );
                     }
@@ -427,8 +425,7 @@ public class DBManager implements Serializable {
                     u = new Group(
                             res.getInt("group_id"),
                             res.getString("group_name"),
-                            res.getInt("creator_id"),
-                            0
+                            res.getInt("creator_id")
                     );
                 }
             }

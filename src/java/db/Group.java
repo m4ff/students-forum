@@ -19,8 +19,9 @@ public class Group {
     private final int id;
     private final int creator;
     private final int postsCount;
-    private boolean pub = false;
-    private int userCount = 0;
+    private final boolean pub;
+    private final int userCount;
+    private final boolean closed;
     
     public Group(int id, String name, int creator, int postsCount, int userCount, boolean pub, boolean closed) {
         this.name = name;
@@ -29,13 +30,17 @@ public class Group {
         this.postsCount = postsCount;
         this.pub = pub;
         this.userCount = userCount;
+        this.closed = closed;
     }
     
-    public Group(int id, String name, int creator, int count) {
+    public Group(int id, String name, int creator) {
         this.name = name;
         this.id = id;
         this.creator = creator;
-        this.postsCount = count;
+        this.postsCount = 0;
+        this.pub = false;
+        this.userCount = 0;
+        this.closed = false;
     }
     
     public String getName() {
@@ -48,6 +53,10 @@ public class Group {
     
     public boolean isPublic() {
         return pub;
+    }
+    
+    public boolean isClosed() {
+        return closed;
     }
     
     public int getId() {
