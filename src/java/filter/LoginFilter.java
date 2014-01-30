@@ -29,18 +29,21 @@ public class LoginFilter extends HttpFilter {
         boolean isModerator = false;
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if ("userId".equals(cookie.getName())) {
-                    user = dbmanager.getUser(cookie.getValue());
-                    if (user != null) {
-                        isModerator = user.getIfModerator();
-                        Date lastTime = dbmanager.getTime(user.getId());
-                        if(lastTime == null) {
-                            lastTime = new Date();
-                        }
-                        request.setAttribute("lastTime", lastTime);
-                        dbmanager.updateTime(user.getId());
-                    }
-                    break;
+                switch (cookie.getName()) {
+                    case "userId":
+                        user = dbmanager.getUser(cookie.getValue());
+                        if (user != null) {
+                            isModerator = user.getIfModerator();
+                            Date lastTime = dbmanager.getTime(user.getId());
+                            if(lastTime == null) {
+                                lastTime = new Date();
+                            }
+                            request.setAttribute("lastTime", lastTime);
+                            dbmanager.updateTime(user.getId());
+                        }  break;
+                    case "loginTime":
+                        request.setAttribute("loginTime", new Date(Long.parseLong(cookie.getValue())));
+                        break;
                 }
             }
         }

@@ -22,11 +22,11 @@ public class Group {
     private boolean pub = false;
     private int userCount = 0;
     
-    public Group(int id, String name, int creator, int count, int userCount, boolean pub) {
+    public Group(int id, String name, int creator, int postsCount, int userCount, boolean pub, boolean closed) {
         this.name = name;
         this.id = id;
         this.creator = creator;
-        this.postsCount = count;
+        this.postsCount = postsCount;
         this.pub = pub;
         this.userCount = userCount;
     }

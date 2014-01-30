@@ -135,7 +135,8 @@ public class DBManager implements Serializable {
                                         res.getInt("creator_id"),
                                         res.getInt("post_count"),
                                         res.getInt("user_count"),
-                                        res.getBoolean("group_public")
+                                        res.getBoolean("group_public"),
+                                        res.getBoolean("group_closed")
                                 )
                         );
                     }
@@ -150,7 +151,7 @@ public class DBManager implements Serializable {
     public LinkedList<Group> getUserGroups(User u) {
         LinkedList<Group> g = new LinkedList<>();
         try {
-            String query = "SELECT * FROM \"user_group\" NATURAL JOIN \"group\" WHERE user_id = ? AND group_accepted = TRUE";
+            String query = "SELECT * FROM (SELECT group_id, COUNT(post_id) AS post_count, COUNT(DISTINCT user_id) AS user_count  FROM \"group\" NATURAL JOIN \"post\" GROUP BY group_id) t NATURAL JOIN \"group\" NATURAL JOIN \"user_group\" WHERE user_id = ? AND group_accepted = TRUE";
             try (PreparedStatement stm = connection.prepareStatement(query)) {
                 stm.setInt(1, u.getId());
                 try (ResultSet res = stm.executeQuery()) {
@@ -160,7 +161,10 @@ public class DBManager implements Serializable {
                                         res.getInt("group_id"),
                                         res.getString("group_name"),
                                         res.getInt("creator_id"),
-                                        0
+                                        res.getInt("post_count"),
+                                        res.getInt("user_count"),
+                                        res.getBoolean("group_public"),
+                                        res.getBoolean("group_closed")
                                 )
                         );
                     }
@@ -533,8 +537,7 @@ public class DBManager implements Serializable {
         Enumeration<String> files = multipart.getFileNames();
         try {
             String query = "INSERT INTO \"file\"(post_id, file_name, file_mime, file_size) VALUES(?, ?, ?, ?)";
-            PreparedStatement stm = connection.prepareStatement(query);
-            try {
+            try (PreparedStatement stm = connection.prepareStatement(query)) {
                 while (files.hasMoreElements()) {
                     String name = files.nextElement();
                     System.out.println(name);
@@ -551,8 +554,6 @@ public class DBManager implements Serializable {
                         stm.executeUpdate();
                     }
                 }
-            } finally {
-                stm.close();
             }
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
