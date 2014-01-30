@@ -14,9 +14,9 @@ import java.io.Serializable;
  */
 public class User implements Serializable{
     
-    private int id;
-    private String name;
-    private boolean isModerator;
+    private final int id;
+    private final String name;
+    private final boolean isModerator;
     
     public User(int id, String name, boolean isModerator) {
         this.id = id;
