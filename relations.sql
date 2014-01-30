@@ -11,9 +11,10 @@ user_password VARCHAR(64),
 user_moderator BOOLEAN DEFAULT FALSE,
 user_email VARCHAR(50),
 user_tmp_code VARCHAR(50),
-user_last_time TIMESTAMP DEFAULT NULL,
+user_tmp_code_time TIMESTAMP,
+user_last_time TIMESTAMP,
 PRIMARY KEY (user_id),
-UNIQUE (user_name)
+UNIQUE (user_name, user_email)
 );
 
 CREATE TABLE "group" (
