@@ -35,7 +35,7 @@ public class AdministrationFilter extends HttpFilter {
                 }
             }
         }
-        response.sendError(404, "You no administrator!");
+        response.sendError(403);
     }
     
 }

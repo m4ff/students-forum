@@ -116,7 +116,7 @@
             ModerationFilter
         </filter-name>
         <url-pattern>
-            /moderation*
+            /moderation
         </url-pattern>
     </filter-mapping>
     <filter>

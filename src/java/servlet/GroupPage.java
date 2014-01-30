@@ -25,7 +25,6 @@ import java.util.logging.Logger;
 @WebServlet(name = "GroupPage", urlPatterns = {"/group"})
 public class GroupPage extends HttpServlet {
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -40,9 +39,8 @@ public class GroupPage extends HttpServlet {
         DBManager manager = (DBManager) getServletContext().getAttribute("dbmanager");
         User logged = (User) request.getAttribute("user");
         try {
-            LinkedList<Group> groups = manager.getUserGroups(logged);
+            LinkedList<Group> groups = logged != null ? manager.getUserGroups(logged): null;
             request.setAttribute("groupList", groups);
-            request.setAttribute("dbmanager", manager);
             request.getRequestDispatcher("groups.jsp").forward(request, response);
         } catch (ServletException | IOException ex) {
             Logger.getLogger(GroupPage.class.getName()).log(Level.SEVERE, null, ex);
@@ -61,15 +59,5 @@ public class GroupPage extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
     }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
 
 }

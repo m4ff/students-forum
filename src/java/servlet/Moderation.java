@@ -55,7 +55,16 @@ public class Moderation extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+        DBManager dbmanager = (DBManager) getServletContext().getAttribute("dbmanager");
+        Group g = dbmanager.getGroup(Integer.parseInt(request.getParameter("group")));
+        String error = null;
+        if(g != null) {
+            if(!dbmanager.closeGroup(g)) {
+                error = "An error occurred, please try again later";
+            }
+        }
+        request.setAttribute("error", error);
+        doGet(request, response);
     }
 
 }

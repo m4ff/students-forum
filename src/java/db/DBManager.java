@@ -447,6 +447,19 @@ public class DBManager implements Serializable {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public boolean closeGroup(Group group) {
+        try {
+            String query = "UPDATE \"group\" SET group_closed = TRUE WHERE group_id = ?";
+            try (PreparedStatement stm = connection.prepareStatement(query)) {
+                stm.setInt(1, group.getId());
+                return stm.executeUpdate() == 1;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
 
     public void updateMyGroupValues(int group, Map<String, String[]> m) {
         try {
