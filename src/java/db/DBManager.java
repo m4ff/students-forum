@@ -627,7 +627,7 @@ public class DBManager implements Serializable {
         String query = "UPDATE \"user\" SET user_last_time = ? WHERE user_id = ?";
         PreparedStatement stm;
         try {
-            stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            stm = connection.prepareStatement(query);
             try {
                 stm.setTimestamp(1, new Timestamp(time.getTime()));
                 stm.setInt(2, user);
