@@ -10,13 +10,25 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Student's Forum | Post List</title>
+        <title>Student's Forum | ${groupName} </title>
         <%@include file="include/head.jsp" %>
     </head>
     <body>
         <c:forEach var="p" items="${posts}">
-            <img style="max-width: 100%; height: auto" src="${p.getCreator()}">
-            <c:out value="${p.getText()}"/>
+            <table id="table_id" dataTables_wrapper="sWrapper">
+                <thead>
+                    <tr>
+                        <th>avatar</th>
+                        <th>post</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><img style="max-width: 100%; height: auto" src="${p.getCreator().getAvatar()}"></td>
+                        <td><c:out value="${p.getText()}"/></td>
+                    </tr>
+                </tbody>
+            </table>
         </c:forEach>
         <a href="/post?id=${groupId}" data-role="button" data-inline="true" data-theme="b" type="submit">Add Post</a>
     </body>
