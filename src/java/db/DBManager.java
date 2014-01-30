@@ -728,7 +728,7 @@ public LinkedList<Post> getPostsFromDate(Date d, User user) {
  public boolean emailInDatabase(String email) {
         boolean exists = false;
         try {
-            String query = "SELECT * FROM \"user\" WHERE user_mail = ?";
+            String query = "SELECT * FROM \"user\" WHERE user_email = ?";
             try (PreparedStatement stm = connection.prepareStatement(query)) {
                 stm.setString(1, email);
                 try (ResultSet res = stm.executeQuery()) {

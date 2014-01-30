@@ -21,6 +21,11 @@
                 <h2>Student's Forum | Login</h2>
             </div>
             <div data-role="content">
+                <c:if test="${error != null}">
+                    <div class="ui-body ui-body-b ui-corner-all">
+                        ${error}
+                    </div>
+                </c:if>
                 <form method="post" data-ajax="false">
                     <ul data-role="listview" data-inset="true">
                         <li data-role="fieldcontain">
