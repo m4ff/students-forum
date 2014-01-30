@@ -6,8 +6,11 @@
 
 package servlet;
 
+import db.DBManager;
+import db.Group;
 import java.util.logging.Logger;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,10 +22,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Pier DAgostino
  */
-@WebServlet(name = "Moderator", urlPatterns = {"/moderator"})
-public class Moderator extends HttpServlet {
+public class Moderation extends HttpServlet {
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -32,13 +33,15 @@ public class Moderator extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        DBManager dbmanager = (DBManager) getServletContext().getAttribute("dbmanager");
+        LinkedList<Group> groups = dbmanager.getGroups();
+        request.setAttribute("dbmanager", dbmanager);
+        request.setAttribute("groups", groups);
         try{
-            request.getRequestDispatcher("/Moderator.jsp").forward(request, response);
-            
+            request.getRequestDispatcher("/moderation.jsp").forward(request, response);
         } catch(ServletException | IOException ex) {
-            Logger.getLogger(Moderator.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Moderation.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -51,18 +54,8 @@ public class Moderator extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
     }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
 
 }

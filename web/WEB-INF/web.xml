@@ -47,6 +47,10 @@
         <servlet-name>PostPage</servlet-name>
         <servlet-class>servlet.PostPage</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Moderation</servlet-name>
+        <servlet-class>servlet.Moderation</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/forum</url-pattern>
@@ -74,6 +78,10 @@
     <servlet-mapping>
         <servlet-name>GroupPage</servlet-name>
         <url-pattern>/groups</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Moderation</servlet-name>
+        <url-pattern>/moderation</url-pattern>
     </servlet-mapping>
     <filter>
         <filter-name>

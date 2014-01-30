@@ -15,20 +15,39 @@ import javax.servlet.ServletContext;
  * @author paolo
  */
 public class Group {
-    private String name;
-    private int id;
-    private int creator;
-    private int postCount;
+    private final String name;
+    private final int id;
+    private final int creator;
+    private final int postsCount;
+    private boolean pub = false;
+    private int userCount = 0;
+    
+    public Group(int id, String name, int creator, int count, int userCount, boolean pub) {
+        this.name = name;
+        this.id = id;
+        this.creator = creator;
+        this.postsCount = count;
+        this.pub = pub;
+        this.userCount = userCount;
+    }
     
     public Group(int id, String name, int creator, int count) {
         this.name = name;
         this.id = id;
         this.creator = creator;
-        this.postCount = count;
+        this.postsCount = count;
     }
     
     public String getName() {
         return name;
+    }
+    
+    public int getUserCount() {
+        return userCount;
+    }
+    
+    public boolean isPublic() {
+        return pub;
     }
     
     public int getId() {
@@ -39,8 +58,8 @@ public class Group {
         return creator;
     }
     
-    public int getPostCount() {
-        return postCount;
+    public int getPostsCount() {
+        return postsCount;
     }
     
     public String getFilesRealPath(HttpServletRequest request) {

@@ -120,6 +120,32 @@ public class DBManager implements Serializable {
         }
         return false;
     }
+    
+    public LinkedList<Group> getGroups() {
+        LinkedList<Group> g = new LinkedList<>();
+        try {
+            String query = "SELECT * FROM (SELECT group_id, COUNT(post_id) AS post_count, COUNT(DISTINCT user_id) AS user_count  FROM \"group\" NATURAL JOIN \"post\" GROUP BY group_id) t NATURAL JOIN \"group\"";
+            try (PreparedStatement stm = connection.prepareStatement(query)) {
+                try (ResultSet res = stm.executeQuery()) {
+                    while (res.next()) {
+                        g.add(
+                                new Group(
+                                        res.getInt("group_id"),
+                                        res.getString("group_name"),
+                                        res.getInt("creator_id"),
+                                        res.getInt("post_count"),
+                                        res.getInt("user_count"),
+                                        res.getBoolean("group_public")
+                                )
+                        );
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return g;
+    }
 
     public LinkedList<Group> getUserGroups(User u) {
         LinkedList<Group> g = new LinkedList<>();
