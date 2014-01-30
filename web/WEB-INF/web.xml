@@ -55,6 +55,10 @@
         <servlet-name>PasswordResetRequest</servlet-name>
         <servlet-class>servlet.PasswordResetRequest</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GroupPosts</servlet-name>
+        <servlet-class>servlet.GroupPosts</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/forum</url-pattern>
@@ -150,6 +154,10 @@
     <servlet-mapping>
         <servlet-name>PasswordResetRequest</servlet-name>
         <url-pattern>/password-reset-request</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GroupPosts</servlet-name>
+        <url-pattern>/group-posts</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

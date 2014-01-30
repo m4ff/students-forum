@@ -15,6 +15,7 @@
     </head>
     <body>
         <c:forEach var="p" items="${posts}">
+            <img style="max-width: 100%; height: auto" src="${p.getCreator()}">
             <c:out value="${p.getText()}"/>
         </c:forEach>
         <a href="/post?id=${groupId}" data-role="button" data-inline="true" data-theme="b" type="submit">Add Post</a>
