@@ -576,7 +576,7 @@ public class DBManager implements Serializable {
     public void acceptInvitesFromGroups(int group, int user) {
         try {
             String query = "UPDATE \"user_group\" SET group_accepted = TRUE WHERE group_id = ? AND user_id = ?";
-            try (PreparedStatement stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement stm = connection.prepareStatement(query)) {
                 stm.setInt(1, group);
                 stm.setInt(2, user);
                 stm.executeUpdate();
@@ -589,7 +589,7 @@ public class DBManager implements Serializable {
     public void declineInvitesFromGroups(int group, int user) {
         try {
             String query = "DELETE FROM \"user_group\" WHERE group_id = ? AND user_id = ?";
-            try (PreparedStatement stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement stm = connection.prepareStatement(query)) {
                 stm.setInt(1, group);
                 stm.setInt(2, user);
                 stm.executeUpdate();
@@ -605,7 +605,7 @@ public class DBManager implements Serializable {
         String query = "SELECT user_last_time FROM \"user\" WHERE user_id = ?";
         PreparedStatement stm;
         try {
-            stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            stm = connection.prepareStatement(query);
             try {
                 stm.setInt(1, user);
                 try(ResultSet res = stm.executeQuery()) {

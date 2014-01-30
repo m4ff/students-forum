@@ -43,6 +43,7 @@
                     </ul>
                 </c:if>
                 <c:if test="${isLogged}">
+                   <!-- You have last logged on ${loginTime} -->
                     <div data-role="listview" data-inset="true">
                         <c:if test="${postFromLastTime.isEmpty()}">
                             <li data-role="list-divider" data-theme="b">
