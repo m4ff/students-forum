@@ -115,9 +115,9 @@
         <filter-name>
             ModerationFilter
         </filter-name>
-        <url-pattern>
-            /moderation
-        </url-pattern>
+        <servlet-name>
+            Moderation
+        </servlet-name>
     </filter-mapping>
     <filter>
         <filter-name>
@@ -131,9 +131,9 @@
         <filter-name>
             AdministrationFilter
         </filter-name>
-        <url-pattern>
-            /group-manager*
-        </url-pattern>
+        <servlet-name>
+            GroupManager
+        </servlet-name>
     </filter-mapping>
     <servlet-mapping>
         <servlet-name>Logout</servlet-name>
