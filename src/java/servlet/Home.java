@@ -36,7 +36,7 @@ public class Home extends HttpServlet {
             isLogged = true;
             Date lastTime = manager.getTime(logged.getId());
             //manager.updateTime(logged.getId());
-            LinkedList<Post> postFromLastTime = manager.getPostsFromDate(lastTime);
+            LinkedList<Post> postFromLastTime = manager.getPostsFromDate(lastTime,logged);
             
             invitingGroups = manager.getInvites(logged);
             request.setAttribute("postFromLastTime", postFromLastTime);

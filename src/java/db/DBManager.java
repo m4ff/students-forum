@@ -659,12 +659,13 @@ public class DBManager implements Serializable {
         return x;
     }
 
-public LinkedList<Post> getPostsFromDate(Date d) {
+public LinkedList<Post> getPostsFromDate(Date d, User user) {
         LinkedList<Post> p = new LinkedList<>();
         try {
-            String query = "SELECT * FROM \"post\" NATURAL JOIN \"user\" WHERE post_date >= ? ORDER BY group_id ASC, post_date DESC";
+            String query = "SELECT * FROM (SELECT * FROM (SELECT post_id, group_id, post_text, post_date, user_id AS poster_id FROM \"post\") t NATURAL JOIN \"user_group\" WHERE user_id = ? AND group_accepted = TRUE AND post_date >= ? ORDER BY group_id ASC, post_date DESC) t1 JOIN \"user\" ON \"user\".user_id = poster_id";
             try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setDate(1, (java.sql.Date) d);
+                stm.setInt(1, user.getId());
+                stm.setTimestamp(2, new Timestamp(d.getTime()));
                 try (ResultSet res = stm.executeQuery()) {
                     while (res.next()) {
                         Group g = getGroup(res.getInt("group_id"));
@@ -673,7 +674,7 @@ public LinkedList<Post> getPostsFromDate(Date d) {
                                         res.getInt("post_id"),
                                         res.getString("post_text"),
                                         res.getDate("post_date"),
-                                        new User(res.getInt("user_id"), res.getString("user_name"), res.getBoolean("user_moderator")),
+                                        new User(res.getInt("poster_id"), res.getString("user_name"), res.getBoolean("user_moderator")),
                                         null,
                                         g
                                 )
