@@ -299,26 +299,6 @@ public class DBManager implements Serializable {
         return p;
     }
 
-    /*
-     public int getPostsNumber(Group g, User logged) {
-     int count = 0;
-     try {
-     String query = "SELECT COUNT(post_id) AS count FROM \"post\" NATURAL JOIN \"group\" WHERE group_id = ? AND user_id = ?";
-     try (PreparedStatement stm = connection.prepareStatement(query)) {
-     stm.setInt(1, g.getId());
-     stm.setInt(2, logged.getId());
-     try (ResultSet res = stm.executeQuery()) {
-     while (res.next()) {
-     count = res.getInt("count");
-     }
-     }
-     }
-     } catch (SQLException ex) {
-     Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
-     }
-     return count;
-     }
-     */
     /**
      * Ritorna una HashMap con i nomi dei file come chiavi e {@link GroupFile}
      * come valore, i file sono relativi al {@link Post} passato come paramentro
@@ -666,16 +646,16 @@ public class DBManager implements Serializable {
     /**
      * Cambia il flag del gruppo a pubblico o privato
      *
-     * @param group
+     * @param groupId
      * @param isPublic
      * @return
      */
-    public boolean setPublicFlag(Group group, boolean isPublic) {
+    public boolean setPublicFlag(int groupId, boolean isPublic) {
         try {
             String query = "UPDATE \"group\" SET group_public = ? WHERE group_id = ?";
             try (PreparedStatement stm = connection.prepareStatement(query)) {
                 stm.setBoolean(1, isPublic);
-                stm.setInt(2, group.getId());
+                stm.setInt(2, groupId);
                 return stm.executeUpdate() == 1;
             }
         } catch (SQLException ex) {
@@ -1089,15 +1069,16 @@ public class DBManager implements Serializable {
         return exists;
     }
 
-    public void updateVerificationCodeTime(String email) {
+    public void updateVerificationCodeAndTime(String code, String email) {
         Date time = new Date();
-        String query = "UPDATE \"user\" SET user_tmp_code_time = ? WHERE user_email = ?";
+        String query = "UPDATE \"user\" SET user_tmp_code_time = ?, user_tmp_code = ? WHERE user_email = ?";
         PreparedStatement stm;
         try {
             stm = connection.prepareStatement(query);
             try {
                 stm.setTimestamp(1, new Timestamp(time.getTime()));
-                stm.setString(2, email);
+                stm.setString(2, code);
+                stm.setString(3, email);
                 stm.executeUpdate();
             } finally {
                 stm.close();
@@ -1117,7 +1098,7 @@ public class DBManager implements Serializable {
                 stm.setString(1, email);
                 try (ResultSet res = stm.executeQuery()) {
                     res.next();
-                    time = res.getDate("user_last_time");
+                    time = new Date (res.getTimestamp("user_tmp_code_time").getTime());
                 }
             } finally {
                 stm.close();

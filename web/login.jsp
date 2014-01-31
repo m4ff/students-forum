@@ -22,9 +22,16 @@
             </div>
             <div data-role="content">
                 <c:if test="${error != null}">
-                    <c:out value="${error}"/>
+                    <div class="ui-body ui-body-b ui-corner-all">
+                        ${error}
+                    </div>
                 </c:if>
-                <form method="post" data-ajax="false">
+                <c:if test="${confirmation && error == null}">
+                    <div class="ui-body ui-body-b ui-corner-all">
+                        La tua password è stata cambiata con successo
+                    </div>
+                </c:if>
+                <form action="/login" method="post" data-ajax="false">
                     <ul data-role="listview" data-inset="true">
                         <li data-role="fieldcontain">
                             <label for="login-username">User name</label>

@@ -63,6 +63,7 @@ public class GroupManager extends HttpServlet {
             request.setAttribute("otherUsers", otherUsers);
             request.setAttribute("nameString", nameString);
             request.setAttribute("groupId", groupId);
+            request.setAttribute("group", groupToEdit);
             request.getRequestDispatcher("/groupManager.jsp").forward(request, response);
         } catch (ServletException | IOException ex) {
             Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
@@ -84,9 +85,9 @@ public class GroupManager extends HttpServlet {
         }
         if (groupId > 0) {
             if("true".equals(request.getParameter("group-public"))) {
-                manager.setPublicFlag(groupToEdit, true);
+                manager.setPublicFlag(groupId, true);
             } else {
-                manager.setPublicFlag(groupToEdit, false);
+                manager.setPublicFlag(groupId, false);
             }
             Map<String, String[]> m = request.getParameterMap();
             try {
