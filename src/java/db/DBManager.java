@@ -192,6 +192,31 @@ public class DBManager implements Serializable {
         return g;
     }
 
+    public LinkedList<Group> getPublicGroups() {
+        LinkedList<Group> g = new LinkedList<>();
+        try {
+            String query = "SELECT * FROM (SELECT group_id, COUNT(post_id) AS post_count, COUNT(DISTINCT user_id) AS user_count  FROM \"group\" NATURAL JOIN \"user_group\" NATURAL LEFT OUTER JOIN \"post\" GROUP BY group_id) t NATURAL JOIN \"group\" WHERE group_public = TRUE";
+            PreparedStatement stm = connection.prepareStatement(query);
+            ResultSet res = stm.executeQuery();
+            while (res.next()) {
+                g.add(
+                        new Group(
+                                res.getInt("group_id"),
+                                res.getString("group_name"),
+                                res.getInt("creator_id"),
+                                res.getInt("post_count"),
+                                res.getInt("user_count"),
+                                res.getBoolean("group_public"),
+                                res.getBoolean("group_closed")
+                        )
+                );
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return g;
+    }
+
     /**
      * Ritorna un LinkedList di {@link Group} di cui user è membro
      *
@@ -258,28 +283,27 @@ public class DBManager implements Serializable {
         }
         return p;
     }
-    
-    /*
-    public int getPostsNumber(Group g, User logged) {
-        int count = 0;
-        try {
-            String query = "SELECT COUNT(post_id) AS count FROM \"post\" NATURAL JOIN \"group\" WHERE group_id = ? AND user_id = ?";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setInt(1, g.getId());
-                stm.setInt(2, logged.getId());
-                try (ResultSet res = stm.executeQuery()) {
-                    while (res.next()) {
-                        count = res.getInt("count");
-                    }
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return count;
-    }
-    */
 
+    /*
+     public int getPostsNumber(Group g, User logged) {
+     int count = 0;
+     try {
+     String query = "SELECT COUNT(post_id) AS count FROM \"post\" NATURAL JOIN \"group\" WHERE group_id = ? AND user_id = ?";
+     try (PreparedStatement stm = connection.prepareStatement(query)) {
+     stm.setInt(1, g.getId());
+     stm.setInt(2, logged.getId());
+     try (ResultSet res = stm.executeQuery()) {
+     while (res.next()) {
+     count = res.getInt("count");
+     }
+     }
+     }
+     } catch (SQLException ex) {
+     Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+     }
+     return count;
+     }
+     */
     /**
      * Ritorna una HashMap con i nomi dei file come chiavi e {@link GroupFile}
      * come valore, i file sono relativi al {@link Post} passato come paramentro
@@ -786,9 +810,10 @@ public class DBManager implements Serializable {
         }
         return postId;
     }
-    
+
     /**
      * Accetta l'invito al gruppo
+     *
      * @param group ID del gruppo
      * @param user ID dell'utente invitato
      */
@@ -804,9 +829,10 @@ public class DBManager implements Serializable {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
      * Rifiuta l'invito al gruppo
+     *
      * @param group ID del gruppo
      * @param user ID dell'utente invitato
      */
@@ -823,11 +849,13 @@ public class DBManager implements Serializable {
                     .getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
-     * Ritorna l'utliva volta che l'utente ha visualizzato il quick display sulla home
+     * Ritorna l'utliva volta che l'utente ha visualizzato il quick display
+     * sulla home
+     *
      * @param user
-     * @return 
+     * @return
      */
     public Date getLastQickDisplayTime(int user) {
         Date time = null;
@@ -849,10 +877,12 @@ public class DBManager implements Serializable {
         }
         return time;
     }
-    
+
     /**
-     * Aggiorna data e ora dell'ultimo quick display (quando l'utente visualizza la home)
-     * @param user 
+     * Aggiorna data e ora dell'ultimo quick display (quando l'utente visualizza
+     * la home)
+     *
+     * @param user
      */
     public void updateQuickDisplayTime(int user) {
         Date time = new Date();
@@ -871,11 +901,13 @@ public class DBManager implements Serializable {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
-     * Ritorna l'istanza di {@link User}  con l'ID passato come parametro, null se l'ID non esiste
+     * Ritorna l'istanza di {@link User} con l'ID passato come parametro, null
+     * se l'ID non esiste
+     *
      * @param userId
-     * @return 
+     * @return
      */
     public User getUser(int userId) {
         User user = null;
@@ -899,16 +931,17 @@ public class DBManager implements Serializable {
         }
         return user;
     }
-    
+
     /**
      * Overload del metodo {@link #getUser(java.lang.String) }
+     *
      * @param userId
-     * @return 
+     * @return
      */
     public User getUser(String userId) {
         return getUser(Integer.parseInt(userId));
     }
-    
+
     public boolean checkIfUserCanAccessGroup(int userId, int groupId) {
         boolean x = false;
         try {
