@@ -52,7 +52,8 @@ public class DBManager implements Serializable {
     }
 
     /**
-     * Applica la funzione hash SHA256 e ritorna una rappresentazione esadecimale dell'hash
+     * Applica la funzione hash SHA256 e ritorna una rappresentazione
+     * esadecimale dell'hash
      *
      * @param password
      * @return Hash
@@ -81,7 +82,8 @@ public class DBManager implements Serializable {
      *
      * @param userName
      * @param password
-     * @return Istanza di {@link User} se l'utente viene trovato, null altrimenti
+     * @return Istanza di {@link User} se l'utente viene trovato, null
+     * altrimenti
      */
     public User authenticate(String userName, String password) {
         User u = null;
@@ -173,7 +175,8 @@ public class DBManager implements Serializable {
     }
 
     /**
-     * Ritorna una LinkedList di {@link Group} che contiene tutti i gruppi del forum
+     * Ritorna una LinkedList di {@link Group} che contiene tutti i gruppi del
+     * forum
      *
      * @return
      */
@@ -317,7 +320,8 @@ public class DBManager implements Serializable {
      }
      */
     /**
-     * Ritorna una HashMap con i nomi dei file come chiavi e {@link GroupFile} come valore, i file sono relativi al {@link Post} passato come paramentro
+     * Ritorna una HashMap con i nomi dei file come chiavi e {@link GroupFile}
+     * come valore, i file sono relativi al {@link Post} passato come paramentro
      *
      * @param p
      * @return
@@ -348,7 +352,8 @@ public class DBManager implements Serializable {
     }
 
     /**
-     * Ritorna una HashMap con i nomi dei file come chiavi e {@link GroupFile} come valore, i file sono relativi al gruppo passato come paramentro
+     * Ritorna una HashMap con i nomi dei file come chiavi e {@link GroupFile}
+     * come valore, i file sono relativi al gruppo passato come paramentro
      *
      * @param g
      * @return
@@ -368,6 +373,29 @@ public class DBManager implements Serializable {
                                         res.getString("file_mime"),
                                         res.getInt("file_size")
                                 )
+                        );
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return f;
+    }
+
+    public GroupFile getFile(int g, String fileName) {
+        GroupFile f = null;
+        try {
+            String query = "SELECT * FROM \"file\" NATURAL JOIN \"post\" NATURAL JOIN \"group\" WHERE group_id = ? AND file_name = ?";
+            try (PreparedStatement stm = connection.prepareStatement(query)) {
+                stm.setInt(1, g);
+                stm.setString(2, fileName);
+                try (ResultSet res = stm.executeQuery()) {
+                    if(res.next()) {
+                        f = new GroupFile(
+                                res.getString("file_name"),
+                                res.getString("file_mime"),
+                                res.getInt("file_size")
                         );
                     }
                 }
@@ -402,7 +430,8 @@ public class DBManager implements Serializable {
     }
 
     /**
-     * Ritorna un'istanza di {@link Group} con ID groupId, null se groupId non è l'ID di alcun gruppo
+     * Ritorna un'istanza di {@link Group} con ID groupId, null se groupId non è
+     * l'ID di alcun gruppo
      *
      * @param groupId
      * @return
@@ -410,7 +439,7 @@ public class DBManager implements Serializable {
     public Group getGroup(int groupId) {
         Group target = null;
         try {
-            String query = "SELECT group_id, group_name, creator_id FROM \"group\" WHERE group_id = ?";
+            String query = "SELECT * FROM (SELECT group_id, COUNT(post_id) AS post_count, COUNT(DISTINCT user_id) AS user_count  FROM \"group\" NATURAL JOIN \"user_group\" NATURAL LEFT OUTER JOIN \"post\" GROUP BY group_id) t NATURAL JOIN \"group\" WHERE group_id = ?";
             try (PreparedStatement stm = connection.prepareStatement(query)) {
                 stm.setInt(1, groupId);
 
@@ -419,7 +448,11 @@ public class DBManager implements Serializable {
                         target = new Group(
                                 res.getInt("group_id"),
                                 res.getString("group_name"),
-                                res.getInt("creator_id")
+                                res.getInt("creator_id"),
+                                res.getInt("post_count"),
+                                res.getInt("user_count"),
+                                res.getBoolean("group_public"),
+                                res.getBoolean("group_closed")
                         );
                     }
                 }
@@ -432,7 +465,8 @@ public class DBManager implements Serializable {
     }
 
     /**
-     * Ritorna una LinkedList di {@link Group} a cui lo user è stato invitato e che non ha ancora accettato
+     * Ritorna una LinkedList di {@link Group} a cui lo user è stato invitato e
+     * che non ha ancora accettato
      *
      * @param user
      * @return
@@ -464,7 +498,8 @@ public class DBManager implements Serializable {
     }
 
     /**
-     * Ritorna una LinkedList di {@link User} visibili nel gruppo (che non sono stati bloccati dall'amministratore)
+     * Ritorna una LinkedList di {@link User} visibili nel gruppo (che non sono
+     * stati bloccati dall'amministratore)
      *
      * @param group
      * @param creatorId
@@ -497,7 +532,8 @@ public class DBManager implements Serializable {
     }
 
     /**
-     * Ritorna una LinkedList di {@link User} bloccati dall'amministratore del gruppo
+     * Ritorna una LinkedList di {@link User} bloccati dall'amministratore del
+     * gruppo
      *
      * @param group
      * @param creatorId
@@ -652,7 +688,9 @@ public class DBManager implements Serializable {
      * Aggiorna i membri del gruppo (invita, aggiunge, toglie)
      *
      * @param group ID del gruppo
-     * @param m Mappa che ha come chiave l'ID dell'utente e come valore una array di string che contiene "member", "invisible", "visible" a seconda dell'azione da svolgere
+     * @param m Mappa che ha come chiave l'ID dell'utente e come valore una
+     * array di string che contiene "member", "invisible", "visible" a seconda
+     * dell'azione da svolgere
      */
     public void updateGroupMembers(int group, Map<String, String[]> m) {
         try {
@@ -946,10 +984,28 @@ public class DBManager implements Serializable {
         return getUser(Integer.parseInt(userId));
     }
 
-    public boolean checkIfUserCanAccessGroup(int userId, int groupId) {
+    public boolean canRead(int userId, int groupId) {
         boolean x = false;
         try {
-            String query = "SELECT * FROM \"user_group\" WHERE user_id = ? AND group_id = ? AND visible = FALSE";
+            String query = "SELECT * FROM \"user_group\" NATURAL JOIN \"group\" WHERE (user_id = ? AND group_id = ? AND visible = TRUE) OR group_public = TRUE";
+            try (PreparedStatement stm = connection.prepareStatement(query)) {
+                stm.setInt(1, userId);
+                stm.setInt(2, groupId);
+                ResultSet res = stm.executeQuery();
+                x = res.next();
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+        return x;
+    }
+
+    public boolean canWrite(int userId, int groupId) {
+        boolean x = false;
+        try {
+            String query = "SELECT * FROM \"user_group\" WHERE user_id = ? AND group_id = ? AND visible = TRUE";
             try (PreparedStatement stm = connection.prepareStatement(query)) {
                 stm.setInt(1, userId);
                 stm.setInt(2, groupId);

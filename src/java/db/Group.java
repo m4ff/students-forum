@@ -75,7 +75,7 @@ public class Group {
     }
     
     public String getFilePath(String fileName) {
-        return "/file/" + id + "-" + fileName;
+        return "/files/" + id + "-" + fileName;
     }
     
     public boolean hasFileNamed(ServletContext context, String name) {

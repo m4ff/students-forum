@@ -8,6 +8,7 @@ package servlet;
 import db.DBManager;
 import db.Group;
 import db.Post;
+import db.User;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -34,19 +35,32 @@ public class GroupPosts extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         DBManager dbmanager = (DBManager) request.getServletContext().getAttribute("dbmanager");
         try {
             String groupIdParam = request.getParameter("id");
-            int groupId = groupIdParam != null ? Integer.parseInt(groupIdParam) : 0;
+            int groupId;
+            try {
+                groupId = Integer.parseInt(groupIdParam);
+            } catch(NumberFormatException e) {
+                response.sendError(404);
+                return;
+            }
             Group viewing = dbmanager.getGroup(groupId);
+            if(viewing == null) {
+                response.sendError(404);
+                return;
+            }
             LinkedList<Post> groupPosts = dbmanager.getGroupPosts(viewing);
+            User user = (User) request.getAttribute("user");
+            int userId = user != null ? user.getId() : 0;
             String groupName = viewing.getName();
             request.setAttribute("dbmanager", dbmanager);
             request.setAttribute("posts", groupPosts);
             request.setAttribute("groupId", groupId);
+            request.setAttribute("isClosed", viewing.isClosed());
             request.setAttribute("groupName", groupName);
+            request.setAttribute("isPublic", !dbmanager.canWrite(userId, groupId));
             request.getRequestDispatcher("groupPosts.jsp").forward(request, response);
         } catch (ServletException | IOException ex) {
             Logger.getLogger(GroupPage.class.getName()).log(Level.SEVERE, null, ex);
@@ -62,8 +76,8 @@ public class GroupPosts extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doGet(request, response);
     }
 
 }

@@ -24,16 +24,16 @@
                 <form action="/post?id=${groupId}" data-ajax="false" method="post" enctype="multipart/form-data">
                     <ul data-role="listview" data-inset="true">
                         <li data-role="fieldcontain">
-                            <label for="text">Post text:</label>
-                            <textarea id="text" placeholder="Bla bal bla" name="text"></textarea>
+                            <label for="post-text">Post text:</label>
+                            <textarea id="post-text" placeholder="Bla bal bla" name="text" style="position: relative"></textarea>
                         </li>
                         <li data-role="fieldcontain">
-                            <label for="button">Add more files:</label>
-                            <button type="button" id="button" data-inline="true" data-mini="true" onclick="duplicate('#file-li')">Add one more file</button>
+                            <label for="post-more-files-button">Add more files:</label>
+                            <button type="button" id="post-more-files-button" data-inline="true" data-mini="true" onclick="duplicate('#file-li')">Add one more file</button>
                         </li>
                         <li data-role="fieldcontain" id="file-li">
-                            <label for="file">File:</label>
-                            <input type="file" id="file" name="file">
+                            <label for="post-file">File:</label>
+                            <input type="file" id="post-file" name="file">
                         </li>
                     </ul>
                     <button data-inline="true" data-theme="b" type="submit">Post it</button>

@@ -19,7 +19,9 @@
             <div data-role="header">
                 <a href="#panel" data-icon="bars">Menu</a>
                 <h2>Student's Forum | ${groupName}</h2>
-                <a href="/post?id=${groupId}" data-role="button" data-icon="plus" type="submit" data-iconpos="notext">Add Post</a>
+                <c:if test="${!isPublic && !isClosed}">
+                    <a href="/post?id=${groupId}" data-role="button" data-icon="plus" type="submit">Add Post</a>
+                </c:if>
             </div>
             <div data-role="content">
                 <ul data-role="listview">
@@ -28,7 +30,7 @@
                             <div class="ui-corner-all ui-body ${s.index % 2 == 1 ? "ui-body-a" : "ui-body-b"}">
                                 <p><b>${p.getCreator().getName()}</b> wrote:</p>
                                 <p style="white-space: normal">
-                                    ${p.getText()}
+                                    ${p.getText(isPublic)}
                                 </p>
                                 <p>
                                     <c:forEach var="f" items="${dbmanager.getPostFiles(p)}">

@@ -28,6 +28,7 @@ public class Post {
         text = text.replaceAll("<", "&lt;");
         text = text.replaceAll(">", "&gt;");
         String pattern = "\\$\\$([^\\s]+)\\$\\$";
+        //Find links
         Pattern p = Pattern.compile(pattern);
         Matcher m = p.matcher(text);
         while(m.find()) {
@@ -44,6 +45,7 @@ public class Post {
             }
             text = text.replaceFirst(pattern, rep);
         }
+        //Find emails
         
         this.id = id;
         this.text = text;
@@ -60,8 +62,23 @@ public class Post {
         return this.id;
     }
     
+    public String getText(boolean isPublic) {
+        String _text = text;
+        if(isPublic) {
+            //hide email domain
+            String pattern = "[^\\s]+@(([a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9]|[a-zA-Z0-9])(\\.([a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9]|[a-zA-Z0-9]))+)";
+            Pattern p = Pattern.compile(pattern);
+            Matcher m = p.matcher(text);
+            while (m.find()) {
+                String g = m.group(1);
+                _text = _text.replaceFirst(g, "xxxxxx");
+            }
+        }
+        return _text;
+    }
+    
     public String getText() {
-        return text;
+        return getText(true);
     }
     
     public Date getDate() {

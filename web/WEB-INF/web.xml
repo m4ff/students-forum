@@ -4,9 +4,15 @@
         <description>contextListener</description>
         <listener-class>listener.ContextListener</listener-class>
     </listener>
+    
+    
+    
     <welcome-file-list>
         <welcome-file>forum</welcome-file>
     </welcome-file-list>
+    
+    
+    
     <servlet>
         <servlet-name>Home</servlet-name>
         <servlet-class>servlet.Home</servlet-class>
@@ -63,6 +69,14 @@
         <servlet-name>GroupPosts</servlet-name>
         <servlet-class>servlet.GroupPosts</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>FileServlet</servlet-name>
+        <servlet-class>servlet.FileServlet</servlet-class>
+    </servlet>
+    
+    
+    
+    
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/forum</url-pattern>
@@ -95,6 +109,37 @@
         <servlet-name>Moderation</servlet-name>
         <url-pattern>/moderation</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FileServlet</servlet-name>
+        <url-pattern>/files/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Invites</servlet-name>
+        <url-pattern>/invites</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PostPage</servlet-name>
+        <url-pattern>/post</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PasswordResetRequest</servlet-name>
+        <url-pattern>/password-reset-request</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PasswordResetConfirmation</servlet-name>
+        <url-pattern>/password-reset-confirmation</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GroupPosts</servlet-name>
+        <url-pattern>/group-posts</url-pattern>
+    </servlet-mapping>
+    
+    
+    
     <filter>
         <filter-name>
             LoginFilter
@@ -143,30 +188,55 @@
             GroupManager
         </servlet-name>
     </filter-mapping>
-    <servlet-mapping>
-        <servlet-name>Logout</servlet-name>
-        <url-pattern>/logout</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>Invites</servlet-name>
-        <url-pattern>/invites</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>PostPage</servlet-name>
-        <url-pattern>/post</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>PasswordResetRequest</servlet-name>
-        <url-pattern>/password-reset-request</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>PasswordResetConfirmation</servlet-name>
-        <url-pattern>/password-reset-confirmation</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>GroupPosts</servlet-name>
-        <url-pattern>/group-posts</url-pattern>
-    </servlet-mapping>
+    <filter>
+        <filter-name>
+            GroupReadFilter
+        </filter-name>
+        <filter-class>
+            filter.GroupReadFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>
+            GroupReadFilter
+        </filter-name>
+        <servlet-name>
+            GroupPosts
+        </servlet-name>
+    </filter-mapping>
+    <filter>
+        <filter-name>
+            GroupFileFilter
+        </filter-name>
+        <filter-class>
+            filter.GroupFileFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>
+            GroupFileFilter
+        </filter-name>
+        <servlet-name>
+            FileServlet
+        </servlet-name>
+    </filter-mapping>
+    <filter>
+        <filter-name>
+            GroupWriteFilter
+        </filter-name>
+        <filter-class>
+            filter.GroupWriteFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>
+            GroupWriteFilter
+        </filter-name>
+        <servlet-name>
+            PostPage
+        </servlet-name>
+    </filter-mapping>
+
     <session-config>
         <session-timeout>
             30
