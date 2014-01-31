@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package filter;
 
 import db.DBManager;
@@ -25,11 +24,18 @@ public class AdministrationFilter extends HttpFilter {
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         DBManager dbmanager = (DBManager) request.getServletContext().getAttribute("dbmanager");
         User user = (User) request.getAttribute("user");
-        int groupId = Integer.parseInt(request.getParameter("id"));
-        if(user != null) {
+        String param = request.getParameter("id");
+        
+        if (param == null || "0".equals(param)) {
+            chain.doFilter(request, response);
+            return;
+        }
+        
+        int groupId = Integer.parseInt(param);
+        if (user != null) {
             Group g = dbmanager.getGroup(groupId);
-            if(g != null) {
-                if(g.getCreator() == user.getId()) {
+            if (g != null) {
+                if (g.getCreator() == user.getId()) {
                     chain.doFilter(request, response);
                     return;
                 }
@@ -37,5 +43,5 @@ public class AdministrationFilter extends HttpFilter {
         }
         response.sendError(403);
     }
-    
+
 }

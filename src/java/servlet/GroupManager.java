@@ -29,28 +29,28 @@ public class GroupManager extends HttpServlet {
      *
      * @param request servlet request
      * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         try {
             //SHOW USERS FOLLOWING THE GROUP BUT INVISIBLE 
             DBManager manager = (DBManager) getServletContext().getAttribute("dbmanager");
+            User user = (User) request.getAttribute("user");
             String groupParam = request.getParameter("id");
             Group groupToEdit = null;
             if (groupParam != null) {
-                groupToEdit = manager.getGroup(Integer.parseInt(request.getParameter("id")));
+                groupToEdit = manager.getGroup(Integer.parseInt(groupParam));
 
                 if (groupToEdit == null) {
+                    response.sendError(404);
                     return;
                 }
             }
             int groupId = groupToEdit == null ? 0 : groupToEdit.getId();
 
-            LinkedList<User> visibleFollowinUsers = manager.getUsersForGroupAndVisible(groupId);
-            LinkedList<User> notVisibleFollowinUsers = manager.getUsersForGroupAndNotVisible(groupId);
-            LinkedList<User> otherUsers = manager.getUsersNotInGroup(groupId);
+            LinkedList<User> visibleFollowinUsers = manager.getUsersForGroupAndVisible(groupId, user.getId());
+            LinkedList<User> notVisibleFollowinUsers = manager.getUsersForGroupAndNotVisible(groupId, user.getId());
+            LinkedList<User> otherUsers = manager.getUsersNotInGroup(groupId, user.getId());
 
             //SETTING GROUP NAME TABLE
             String titleString = "Create New Group";
@@ -81,7 +81,7 @@ public class GroupManager extends HttpServlet {
         String newName = request.getParameter("change_group_name");
         if (groupToEdit == null) {
             groupId = manager.createGroup(logged.getId(), newName);
-            Group.createFilesDirectory(request.getServletContext(), groupId);
+            Group.createFilesDirectory(getServletContext(), groupId);
         } else {
             groupId = groupToEdit.getId();
         }
@@ -92,7 +92,7 @@ public class GroupManager extends HttpServlet {
                 if (groupToEdit != null) {
                     manager.changeGroupName(groupId, newName);
                 }
-                manager.updateMyGroupValues(groupId, m);
+                manager.updateGroupMembers(groupId, m);
             } catch (Exception e) {
                 Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
             }

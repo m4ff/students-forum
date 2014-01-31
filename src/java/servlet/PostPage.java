@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "PostPage", urlPatterns = {"/post"})
 public class PostPage extends HttpServlet {
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -62,17 +61,12 @@ public class PostPage extends HttpServlet {
         String groupIdParam = request.getParameter("id");
         int groupId = groupIdParam != null ? Integer.parseInt(groupIdParam) : 0;
         Group group = dbmanager.getGroup(groupId);
-        MultipartRequest multipart = new MultipartRequest(request, group.getFilesRealPath(request), 10 * 1024 * 1024, "UTF-8", new DefaultFileRenamePolicy());
+        MultipartRequest multipart = new MultipartRequest(request, group.getFilesRealPath(getServletContext()), 10 * 1024 * 1024, "UTF-8", new DefaultFileRenamePolicy());
         String text = multipart.getParameter("text");
-        dbmanager.addGroupFiles(group, multipart);
-        dbmanager.addPost(groupId, user.getId(), text);
+        int postId = dbmanager.addPost(groupId, user.getId(), text, multipart);
+        
         response.sendRedirect("/forum/group?id=" + groupId);
         request.getRequestDispatcher("post.jsp");
     }
-
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
 
 }

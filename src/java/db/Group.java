@@ -71,18 +71,18 @@ public class Group {
         return postsCount;
     }
     
-    public String getFilesRealPath(HttpServletRequest request) {
-        return request.getServletContext().getRealPath("/static/files/" + id);
+    public String getFilesRealPath(ServletContext context) {
+        return context.getAttribute("filesDir") + File.separator + id;
     }
     
-    public boolean hasFileNamed(HttpServletRequest request, String name) {
-        String groupFilesPath = getFilesRealPath(request);
+    public boolean hasFileNamed(ServletContext context, String name) {
+        String groupFilesPath = getFilesRealPath(context);
         return new File(groupFilesPath + File.separator + name).exists();
     }
     
     //create the directory where to store the uploaded files
     public static boolean createFilesDirectory(ServletContext context, int groupId) {
-        String filesPath = context.getRealPath("/static/files");
+        String filesPath = (String) context.getAttribute("filesDir");
         return new File(filesPath + File.separator + groupId).mkdir();
     }
 }

@@ -27,6 +27,11 @@
         </li>
         <c:if test="${user != null}">
         <li>
+            <a href="/group-manager">
+                Create new group
+            </a>
+        </li>
+        <li>
             <a href="/account">
                 My account
             </a>

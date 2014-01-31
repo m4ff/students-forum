@@ -25,10 +25,10 @@
 
                     <ul data-role="listview" data-inset="true">
                         <li data-role="fieldcontain">
-                            <label for="group-name" type="text"  value="<c:out value="${nameString}"/>">
-                                <c:out value="${titleString}"/>
+                            <label for="group-name" type="text"  value="${nameString}">
+                                ${titleString}
                             </label>
-                            <input name="change_group_name" type="text" id="group-name" value="<c:out value="${nameString}"/>">
+                            <input name="change_group_name" type="text" id="group-name" value="${nameString}">
                         </li>
                     </ul>
 
@@ -39,42 +39,35 @@
                         <c:forEach items="${visibleFollowinUsers}" var="userObject">
                             <li data-role="fieldcontain">
                                 <fieldset data-role="controlgroup" data-type="horizontal">
-                                    <legend><c:out value="${userObject.getName()}"/></legend>
-                                    <%--<label for="invite-<c:out value="${userObject.getId()}"/>">
-                                        Invite
-                                    </label>
-                                    <input id="invite-<c:out value="${userObject.getId()}"/>" name="<c:out value="${userObject.getId()}"/>" value="member" type="checkbox" checked disabled>
-                                    --%>
-                                    <label for="visible-<c:out value="${userObject.getId()}"/>">
+                                    <legend>${userObject.getName()}</legend>
+                                    <label for="visible-${userObject.getId()}">
                                         Visible
                                     </label>
-                                    <input id="visible-<c:out value="${userObject.getId()}"/>" name="<c:out value="${userObject.getId()}"/>" value="visible" type="radio" checked>
+                                    <input id="visible-${userObject.getId()}" name="${userObject.getId()}" value="visible" type="radio" checked>
 
-                                    <label for="invisible-<c:out value="${userObject.getId()}"/>">
+                                    <label for="invisible-${userObject.getId()}">
                                         Invisible
                                     </label>
-                                    <input id="invisible-<c:out value="${userObject.getId()}"/>" name="<c:out value="${userObject.getId()}"/>" value="invisible" type="radio">
+                                    <input id="invisible-${userObject.getId()}" name="${userObject.getId()}" value="invisible" type="radio">
                                 </fieldset>
                             </li>
                         </c:forEach>
                         <c:forEach items="${notVisibleFollowinUsers}" var="userObject">
                             <li data-role="fieldcontain">
                                 <fieldset data-role="controlgroup" data-type="horizontal">
-                                    <legend><c:out value="${userObject.getName()}"/></legend>
-                                    <label for="invite-<c:out value="${userObject.getId()}"/>">
+                                    <legend>${userObject.getName()}</legend>
+                                    <label for="invite-${userObject.getId()}">
                                         Invite
                                     </label>
-                                    <input id="invite-<c:out value="${userObject.getId()}"/>" name="<c:out value="${userObject.getId()}"/>" value="member" type="checkbox" checked disabled>
-
-                                    <label for="visible-<c:out value="${userObject.getId()}"/>">
+                                    <label for="visible-${userObject.getId()}">
                                         Visible
                                     </label>
-                                    <input id="visible-<c:out value="${userObject.getId()}"/>" name="<c:out value="${userObject.getId()}"/>" value="visible" type="radio">
+                                    <input id="visible-${userObject.getId()}" name="${userObject.getId()}" value="visible" type="radio">
 
-                                    <label for="invisible-<c:out value="${userObject.getId()}"/>">
+                                    <label for="invisible-${userObject.getId()}">
                                         Invisible
                                     </label>
-                                    <input id="invisible-<c:out value="${userObject.getId()}"/>" name="<c:out value="${userObject.getId()}"/>" value="invisible" type="radio" checked>
+                                    <input id="invisible-${userObject.getId()}" name="${userObject.getId()}" value="invisible" type="radio" checked>
                                 </fieldset>
                             </li>
                         </c:forEach>
@@ -84,116 +77,15 @@
                         <c:forEach items="${otherUsers}" var="userObject">
                             <li data-role="fieldcontain">
                                 <fieldset data-role="controlgroup" data-type="horizontal">
-                                    <legend><c:out value="${userObject.getName()}"/></legend>
-                                    <label for="invite-<c:out value="${userObject.getId()}"/>">
+                                    <legend>${userObject.getName()}</legend>
+                                    <label for="invite-${userObject.getId()}">
                                         Invite
                                     </label>
-                                    <input id="invite-<c:out value="${userObject.getId()}"/>" name="<c:out value="${userObject.getId()}"/>" value="member" type="checkbox">
-                                    <%--
-                                    <label for="visible-<c:out value="${userObject.getId()}"/>">
-                                        Visible
-                                    </label>
-                                    <input id="visible-<c:out value="${userObject.getId()}"/>" name="<c:out value="${userObject.getId()}"/>" value="visible" type="radio" disabled>
-
-                                    <label for="invisible-<c:out value="${userObject.getId()}"/>">
-                                        Invisible
-                                    </label>
-                                    <input id="invisible-<c:out value="${userObject.getId()}"/>" name="<c:out value="${userObject.getId()}"/>" value="invisible" type="radio" disabled>
-                                    --%>
+                                    <input id="invite-${userObject.getId()}" name="${userObject.getId()}" value="member" type="checkbox">
                                 </fieldset>
                             </li>
                         </c:forEach>
                     </ul>
-
-                     <%--
-                    <table data-role="table" id="user-table" class="ui-responsive">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Invite</th>
-                                <th>Visible</th>
-                                <th>Invisible</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach items="${visibleFollowinUsers}" var="userObject"> 
-                                <tr>
-                                    <th>
-                                        <c:out value="${userObject.getName()}"/>
-                                    </th>
-                                    <td>
-                                        <label>
-                                            Invite
-                                            <input name="<c:out value="${userObject.getId()}"/>" value="member" type="checkbox" checked disabled>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <label>
-                                            Visible
-                                            <input name="<c:out value="${userObject.getId()}"/>" value="visible" type="radio" checked>
-                                        </label>
-                                    </td> 
-                                    <td>
-                                        <label>
-                                            Invisible
-                                            <input name="<c:out value="${userObject.getId()}"/>" value="invisible" type="radio">
-                                        </label>
-                                    </td> 
-                                </tr>
-                            </c:forEach>
-                            <c:forEach items="${otherUsers}" var="userObject"> 
-                                <tr>
-                                    <th>
-                                        <c:out value="${userObject.getName()}"/>
-                                    </th>
-                                    <td>
-                                        <label>
-                                            Invite
-                                            <input name="<c:out value="${userObject.getId()}"/>" value="member" type="checkbox" checked disabled>
-                                        </label>
-                                    </td> 
-                                    <td>
-                                        <label>
-                                            Visible
-                                            <input name="<c:out value="${userObject.getId()}"/>" value="visible" type="radio">
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <label>
-                                            Invisible
-                                            <input name="<c:out value="${userObject.getId()}"/>" value="invisible" type="radio" checked>
-                                        </label>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                            <c:forEach items="${otherUsers}" var="userObject"> 
-                                <tr>
-                                    <th>
-                                        <c:out value="${userObject.getName()}"/>
-                                    </th>
-                                    <td>
-                                        <label style="display: inline">
-                                            Invite
-                                            <input name="<c:out value="${userObject.getId()}"/>" value="member" type="checkbox">
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <label>
-                                            Visible
-                                            <input name="<c:out value="${v.getId()}"/>" value="visible" type="radio"disabled>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <label>
-                                            Invisible
-                                            <input name="<c:out value="${userObject.getId()}"/>" value="invisible" type="radio" disabled>
-                                        </label>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-
-                        </tbody>
-                    </table>--%>
                     <button type="submit" data-inline="true" data-theme="b">Submit</button>
                 </form>
             </div>

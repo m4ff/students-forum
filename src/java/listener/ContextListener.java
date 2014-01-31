@@ -11,7 +11,6 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -30,12 +29,15 @@ public class ContextListener implements ServletContextListener{
             Logger.getLogger(ContextListener.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        //Creates the directory where to store the uploaded files
         String projectDir = sce.getServletContext().getRealPath("/") + ".." + File.separator + ".." + File.separator;
+        
         String avatarsDir = projectDir + "avatars";
         String avatarsTmpDir = projectDir + "avatarsTmp";
+        String filesDir = projectDir + "files";
+        
         sce.getServletContext().setAttribute("avatarsDir", avatarsDir);
         sce.getServletContext().setAttribute("avatarsTmpDir", avatarsTmpDir);
+        sce.getServletContext().setAttribute("filesDir", filesDir);
     }
 
     @Override

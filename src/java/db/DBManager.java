@@ -35,16 +35,29 @@ public class DBManager implements Serializable {
 
     private final Connection connection;
 
+    /**
+     * Apre una connessione al database
+     *
+     * @throws SQLException
+     */
     public DBManager() throws SQLException {
         try {
-            Class.forName("org.apache.derby.jdbc.ClientDriver", true, getClass().getClassLoader());
-        } catch (ClassNotFoundException ex) {
+            //Class.forName("org.apache.derby.jdbc.EmbeddedDriver", true, getClass().getClassLoader());
+            Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         this.connection = DriverManager.getConnection("jdbc:derby://localhost:1527/students_forum", "students_forum", "password");
     }
-    
+
+    /**
+     * Applica la funzione hash SHA256 e ritorna una rappresentazione
+     * esadecimale dell'hash
+     *
+     * @param password
+     * @return Hash
+     */
     public static String hashPassword(String password) {
         try {
             return new BigInteger(1, MessageDigest.getInstance("SHA-256").digest(password.getBytes("UTF-8"))).toString(16);
@@ -54,14 +67,24 @@ public class DBManager implements Serializable {
         }
     }
 
+    /**
+     * Chiude la connessione al database
+     */
     public static void shutdown() {
         try {
             DriverManager.getConnection("jdbc:derby:;shutdown=true");
         } catch (SQLException ex) {
-            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
+    /**
+     * Verifica se username e password esistono nel database e corrispondono
+     *
+     * @param userName
+     * @param password
+     * @return Istanza di {@link User} se l'utente viene trovato, null
+     * altrimenti
+     */
     public User authenticate(String userName, String password) {
         User u = null;
         try {
@@ -82,6 +105,14 @@ public class DBManager implements Serializable {
         return u;
     }
 
+    /**
+     * Aggiunge un utente al database
+     *
+     * @param email
+     * @param username
+     * @param password
+     * @return Id dell'utente appena inserito, 0 se l'inserimento fallisce
+     */
     public int addUser(String email, String username, String password) {
         int userId = 0;
         try {
@@ -104,7 +135,14 @@ public class DBManager implements Serializable {
         }
         return userId;
     }
-    
+
+    /**
+     * Aggiorna la password dell'utente
+     *
+     * @param user
+     * @param password
+     * @return
+     */
     public boolean updateUserPassword(User user, String password) {
         int userId = 0;
         password = hashPassword(password);
@@ -120,11 +158,17 @@ public class DBManager implements Serializable {
         }
         return false;
     }
-    
+
+    /**
+     * Ritorna una LinkedList di {@link Group} che contiene tutti i gruppi del
+     * forum
+     *
+     * @return
+     */
     public LinkedList<Group> getGroups() {
         LinkedList<Group> g = new LinkedList<>();
         try {
-            String query = "SELECT * FROM (SELECT group_id, COUNT(post_id) AS post_count, COUNT(DISTINCT user_id) AS user_count  FROM \"group\" NATURAL JOIN \"post\" GROUP BY group_id) t NATURAL JOIN \"group\"";
+            String query = "SELECT DISTINCT * FROM (SELECT DISTINCT group_id, COUNT(DISTINCT post_id) AS post_count, COUNT(DISTINCT user_id) AS user_count  FROM \"group\" NATURAL JOIN \"user_group\" NATURAL LEFT OUTER JOIN \"post\" GROUP BY group_id) t NATURAL JOIN \"group\"";
             try (PreparedStatement stm = connection.prepareStatement(query)) {
                 try (ResultSet res = stm.executeQuery()) {
                     while (res.next()) {
@@ -148,34 +192,45 @@ public class DBManager implements Serializable {
         return g;
     }
 
-    public LinkedList<Group> getUserGroups(User u) {
+    /**
+     * Ritorna un LinkedList di {@link Group} di cui user è membro
+     *
+     * @param user
+     * @return
+     */
+    public LinkedList<Group> getUserGroups(User user) {
         LinkedList<Group> g = new LinkedList<>();
         try {
-            String query = "SELECT * FROM (SELECT group_id, COUNT(post_id) AS post_count, COUNT(DISTINCT user_id) AS user_count  FROM \"group\" NATURAL JOIN \"post\" GROUP BY group_id) t NATURAL JOIN \"group\" NATURAL JOIN \"user_group\" WHERE user_id = ? AND group_accepted = TRUE";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setInt(1, u.getId());
-                try (ResultSet res = stm.executeQuery()) {
-                    while (res.next()) {
-                        g.add(
-                                new Group(
-                                        res.getInt("group_id"),
-                                        res.getString("group_name"),
-                                        res.getInt("creator_id"),
-                                        res.getInt("post_count"),
-                                        res.getInt("user_count"),
-                                        res.getBoolean("group_public"),
-                                        res.getBoolean("group_closed")
-                                )
-                        );
-                    }
-                }
+            String query = "SELECT DISTINCT * FROM (SELECT DISTINCT group_id, COUNT(post_id) AS post_count, COUNT(DISTINCT user_id) AS user_count  FROM \"group\" NATURAL JOIN \"user_group\" NATURAL LEFT OUTER JOIN \"post\" GROUP BY group_id) t NATURAL JOIN \"group\" NATURAL JOIN \"user_group\" WHERE user_id = ? AND group_accepted = TRUE";
+            PreparedStatement stm = connection.prepareStatement(query);
+            stm.setInt(1, user.getId());
+            ResultSet res = stm.executeQuery();
+            while (res.next()) {
+                g.add(
+                        new Group(
+                                res.getInt("group_id"),
+                                res.getString("group_name"),
+                                res.getInt("creator_id"),
+                                res.getInt("post_count"),
+                                res.getInt("user_count"),
+                                res.getBoolean("group_public"),
+                                res.getBoolean("group_closed")
+                        )
+                );
             }
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return g;
     }
 
+    /**
+     * Ritorna una LinkedList di {@link Post} del gruppo passato come parametro
+     *
+     * @param g
+     * @return
+     */
     public LinkedList<Post> getGroupPosts(Group g) {
         LinkedList<Post> p = new LinkedList<>();
         try {
@@ -203,8 +258,7 @@ public class DBManager implements Serializable {
         }
         return p;
     }
-    
-    
+
     public int getPostsNumber(Group g, User logged) {
         int count = 0;
         try {
@@ -224,6 +278,13 @@ public class DBManager implements Serializable {
         return count;
     }
 
+    /**
+     * Ritorna una HashMap con i nomi dei file come chiavi e {@link GroupFile}
+     * come valore, i file sono relativi al {@link Post} passato come paramentro
+     *
+     * @param p
+     * @return
+     */
     public HashMap<String, GroupFile> getPostFiles(Post p) {
         HashMap<String, GroupFile> f = new HashMap<>();
         try {
@@ -249,6 +310,13 @@ public class DBManager implements Serializable {
         return f;
     }
 
+    /**
+     * Ritorna una HashMap con i nomi dei file come chiavi e {@link GroupFile}
+     * come valore, i file sono relativi al gruppo passato come paramentro
+     *
+     * @param g
+     * @return
+     */
     public HashMap<String, GroupFile> getGroupFiles(Group g) {
         HashMap<String, GroupFile> f = new HashMap<>();
         try {
@@ -274,6 +342,12 @@ public class DBManager implements Serializable {
         return f;
     }
 
+    /**
+     * Ritorna la data dell'ultimo post del gruppo passato come parametro
+     *
+     * @param group
+     * @return
+     */
     public Timestamp getLatestPost(Group group) {
         Timestamp date = null;
         try {
@@ -291,6 +365,13 @@ public class DBManager implements Serializable {
         return date;
     }
 
+    /**
+     * Ritorna un'istanza di {@link Group} con ID groupId, null se groupId non è
+     * l'ID di alcun gruppo
+     *
+     * @param groupId
+     * @return
+     */
     public Group getGroup(int groupId) {
         Group target = null;
         try {
@@ -315,6 +396,13 @@ public class DBManager implements Serializable {
         return target;
     }
 
+    /**
+     * Ritorna una LinkedList di {@link Group} a cui lo user è stato invitato e
+     * che non ha ancora accettato
+     *
+     * @param user
+     * @return
+     */
     public LinkedList<Group> getInvites(User user) {
         LinkedList<Group> u = new LinkedList<>();
         try {
@@ -341,13 +429,22 @@ public class DBManager implements Serializable {
         return u;
     }
 
-    public LinkedList<User> getUsersForGroupAndVisible(int group) {
+    /**
+     * Ritorna una LinkedList di {@link User} visibili nel gruppo (che non sono
+     * stati bloccati dall'amministratore)
+     *
+     * @param group
+     * @param creatorId
+     * @return
+     */
+    public LinkedList<User> getUsersForGroupAndVisible(int group, int creatorId) {
         LinkedList<User> u = new LinkedList<>();
         try {
             //togliere il creatore del gruppo dalla richiesta
-            String query = "SELECT * FROM (SELECT * FROM \"group\" NATURAL JOIN \"user_group\" WHERE group_id = ? AND visible = TRUE) t natural join \"user\"";
+            String query = "SELECT * FROM (SELECT * FROM \"group\" NATURAL JOIN \"user_group\" WHERE group_id = ? AND visible = TRUE) t NATURAL JOIN \"user\" WHERE user_id != ?";
             try (PreparedStatement stm = connection.prepareStatement(query)) {
                 stm.setInt(1, group);
+                stm.setInt(2, creatorId);
                 try (ResultSet res = stm.executeQuery()) {
                     while (res.next()) {
                         u.add(
@@ -366,12 +463,21 @@ public class DBManager implements Serializable {
         return u;
     }
 
-    public LinkedList<User> getUsersForGroupAndNotVisible(int group) {
+    /**
+     * Ritorna una LinkedList di {@link User} bloccati dall'amministratore del
+     * gruppo
+     *
+     * @param group
+     * @param creatorId
+     * @return
+     */
+    public LinkedList<User> getUsersForGroupAndNotVisible(int group, int creatorId) {
         LinkedList<User> u = new LinkedList<>();
         try {
-            String query = "SELECT * FROM (SELECT * FROM \"group\" NATURAL JOIN \"user_group\" WHERE group_id = ? AND visible = FALSE) t natural join \"user\"";
+            String query = "SELECT * FROM (SELECT * FROM \"group\" NATURAL JOIN \"user_group\" WHERE group_id = ? AND visible = FALSE) t NATURAL JOIN \"user\" WHERE user_id != ?";
             try (PreparedStatement stm = connection.prepareStatement(query)) {
                 stm.setInt(1, group);
+                stm.setInt(2, creatorId);
                 try (ResultSet res = stm.executeQuery()) {
                     while (res.next()) {
                         u.add(
@@ -390,12 +496,20 @@ public class DBManager implements Serializable {
         return u;
     }
 
-    public LinkedList<User> getUsersNotInGroup(int group) {
+    /**
+     * Ritorna una LinkedList di {@link User} che non appartengono al gruppo
+     *
+     * @param group
+     * @param creatorId
+     * @return
+     */
+    public LinkedList<User> getUsersNotInGroup(int group, int creatorId) {
         LinkedList<User> u = new LinkedList<>();
         try {
-            String query = "select * from (select * from \"user_group\" natural join \"group\" where group_id = ?) t natural right outer join \"user\" where t.user_id IS NULL";
+            String query = "select * from (select * from \"user_group\" natural join \"group\" where group_id = ?) t natural right outer join \"user\" where t.user_id IS NULL AND user_id != ?";
             try (PreparedStatement stm = connection.prepareStatement(query)) {
                 stm.setInt(1, group);
+                stm.setInt(2, creatorId);
                 try (ResultSet res = stm.executeQuery()) {
                     while (res.next()) {
                         u.add(
@@ -414,6 +528,12 @@ public class DBManager implements Serializable {
         return u;
     }
 
+    /**
+     * Ritorna il gruppo di cui lo user è il creatore
+     *
+     * @param user
+     * @return
+     */
     public Group getGroupMadeByUser(int user) {
         Group u = null;
         try {
@@ -435,19 +555,33 @@ public class DBManager implements Serializable {
         return u;
     }
 
-    public void changeGroupName(int group, String name) {
+    /**
+     * Assegna un nuovo nome al group
+     *
+     * @param group Gruppo da aggiornare
+     * @param name Nuovo nome
+     * @return
+     */
+    public boolean changeGroupName(int group, String name) {
         try {
             String query = "UPDATE \"group\" SET group_name = ? WHERE group_id = ?";
             try (PreparedStatement stm = connection.prepareStatement(query)) {
                 stm.setString(1, name);
                 stm.setInt(2, group);
-                stm.executeUpdate();
+                return stm.executeUpdate() == 1;
             }
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return false;
     }
-    
+
+    /**
+     * Chiude il gruppo (non sara più possibile aggiungere post o file
+     *
+     * @param group
+     * @return
+     */
     public boolean closeGroup(Group group) {
         try {
             String query = "UPDATE \"group\" SET group_closed = TRUE WHERE group_id = ?";
@@ -461,7 +595,15 @@ public class DBManager implements Serializable {
         return false;
     }
 
-    public void updateMyGroupValues(int group, Map<String, String[]> m) {
+    /**
+     * Aggiorna i membri del gruppo (invita, aggiunge, toglie)
+     *
+     * @param group ID del gruppo
+     * @param m Mappa che ha come chiave l'ID dell'utente e come valore una
+     * array di string che contiene "member", "invisible", "visible" a seconda
+     * dell'azione da svolgere
+     */
+    public void updateGroupMembers(int group, Map<String, String[]> m) {
         try {
             String query = "UPDATE \"user_group\" SET visible = ? WHERE group_id = ? AND user_id = ?";
             PreparedStatement stm = connection.prepareStatement(query);
@@ -470,8 +612,13 @@ public class DBManager implements Serializable {
             try {
                 for (Map.Entry<String, String[]> entry : m.entrySet()) {
                     String key = entry.getKey();
+                    int userId;
                     try {
-                        int userId = Integer.parseInt(key);
+                        userId = Integer.parseInt(key);
+                    } catch (NumberFormatException e) {
+                        continue;
+                    }
+                    try {
                         String[] value = entry.getValue();
 
                         switch (value[0]) {
@@ -495,7 +642,7 @@ public class DBManager implements Serializable {
                                 stm.executeUpdate();
 
                         }
-                    } catch (NumberFormatException | SQLException e) {
+                    } catch (SQLException e) {
                         Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
                     }
 
@@ -508,45 +655,82 @@ public class DBManager implements Serializable {
         }
     }
 
+    /**
+     * Crea un nuovo gruppo e aggiunge il creatore al gruppo appena creato
+     *
+     * @param creator ID dell'utente creatore
+     * @param name Nome del gruppo
+     * @return ID del nuovo gruppo, 0 se si verifica un errore
+     */
     public int createGroup(int creator, String name) {
         int groupId = 0;
         try {
+            connection.setAutoCommit(false);
             String query = "INSERT INTO \"group\"(creator_id, group_name) VALUES(?, ?)";
-            try (PreparedStatement stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-                stm.setInt(1, creator);
-                stm.setString(2, name);
-                stm.executeUpdate();
-                ResultSet rs = stm.getGeneratedKeys();
-                if (rs != null) {
-                    if (rs.next()) {
-                        groupId = rs.getInt(1);
-                    }
+            PreparedStatement stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            stm.setInt(1, creator);
+            stm.setString(2, name);
+            stm.executeUpdate();
+            ResultSet rs = stm.getGeneratedKeys();
+            if (rs != null) {
+                if (rs.next()) {
+                    groupId = rs.getInt(1);
                 }
+            }
+            stm.close();
+            if (groupId > 0) {
+                query = "INSERT INTO \"user_group\"(group_accepted, group_id, visible, user_id) VALUES(TRUE, ?, TRUE, ?)";
+                stm = connection.prepareStatement(query);
+                stm.setInt(1, groupId);
+                stm.setInt(2, creator);
+                if (stm.executeUpdate() == 1) {
+                    connection.commit();
+                } else {
+                    connection.rollback();
+                    groupId = 0;
+                }
+                stm.close();
             }
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (groupId > 0) {
-            try {
-                String query = "INSERT INTO \"user_group\"(group_accepted, group_id, visible, user_id) VALUES(?, ?, ?, ?)";
-                try (PreparedStatement stm = connection.prepareStatement(query)) {
-                    stm.setBoolean(1, true);
-                    stm.setInt(2, groupId);
-                    stm.setBoolean(3, true);
-                    stm.setInt(4, creator);
-                    stm.executeUpdate();
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        try {
+            connection.setAutoCommit(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return groupId;
     }
 
-    public void addGroupFiles(Group group, MultipartRequest multipart) {
+    /**
+     * Aggiunge il testo del post e i dati dei relativi file al database
+     *
+     * @param groupId ID del gruppo a cui appartiene il post
+     * @param userId Utente che scrive il post
+     * @param text Testo del post
+     * @param multipart
+     * @return ID del post appena creato, 0 in caso di errore
+     */
+    public int addPost(int groupId, int userId, String text, MultipartRequest multipart) {
+        int postId = 0;
         Enumeration<String> files = multipart.getFileNames();
         try {
-            String query = "INSERT INTO \"file\"(post_id, file_name, file_mime, file_size) VALUES(?, ?, ?, ?)";
+            connection.setAutoCommit(false);
+            String query = "INSERT INTO \"post\"(user_id, group_id, post_text) VALUES(?, ?, ?)";
+            try (PreparedStatement stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+                stm.setInt(1, userId);
+                stm.setInt(2, groupId);
+                stm.setString(3, text);
+                stm.executeUpdate();
+                ResultSet rs = stm.getGeneratedKeys();
+                if (rs != null) {
+                    if (rs.next()) {
+                        postId = rs.getInt(1);
+                    }
+                }
+            }
+
+            query = "INSERT INTO \"file\"(post_id, file_name, file_mime, file_size) VALUES(?, ?, ?, ?)";
             try (PreparedStatement stm = connection.prepareStatement(query)) {
                 while (files.hasMoreElements()) {
                     String name = files.nextElement();
@@ -557,31 +741,28 @@ public class DBManager implements Serializable {
                     System.out.println(type);
                     File f = multipart.getFile(name);
                     if (f != null) {
-                        stm.setInt(1, group.getId());
+                        stm.setInt(1, postId);
                         stm.setString(2, filename);
                         stm.setString(3, type);
                         stm.setLong(4, f.length());
-                        stm.executeUpdate();
+                        if (1 != stm.executeUpdate()) {
+                            connection.rollback();
+                            postId = 0;
+                            break;
+                        }
                     }
                 }
             }
+            connection.commit();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    public void addPost(int groupId, int userId, String text) {
         try {
-            String query = "INSERT INTO \"post\"(user_id, group_id, post_text) VALUES(?, ?, ?)";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setInt(1, userId);
-                stm.setInt(2, groupId);
-                stm.setString(3, text);
-                stm.executeUpdate();
-            }
+            connection.setAutoCommit(true);
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return postId;
     }
 
     public void acceptInvitesFromGroups(int group, int user) {
@@ -619,7 +800,7 @@ public class DBManager implements Serializable {
             stm = connection.prepareStatement(query);
             try {
                 stm.setInt(1, user);
-                try(ResultSet res = stm.executeQuery()) {
+                try (ResultSet res = stm.executeQuery()) {
                     res.next();
                     time = res.getDate("user_last_time");
                 }
@@ -631,8 +812,7 @@ public class DBManager implements Serializable {
         }
         return time;
     }
-    
-    
+
     public void updateTime(int user) {
         Date time = new Date();
         String query = "UPDATE \"user\" SET user_last_time = ? WHERE user_id = ?";
@@ -696,7 +876,7 @@ public class DBManager implements Serializable {
         return x;
     }
 
-public LinkedList<Post> getPostsFromDate(Date d, User user) {
+    public LinkedList<Post> getPostsFromDate(Date d, User user) {
         LinkedList<Post> p = new LinkedList<>();
         try {
             String query = "SELECT * FROM (SELECT * FROM (SELECT post_id, group_id, post_text, post_date, user_id AS poster_id FROM \"post\") t NATURAL JOIN \"user_group\" WHERE user_id = ? AND group_accepted = TRUE AND post_date >= ? ORDER BY group_id ASC, post_date DESC) t1 JOIN \"user\" ON \"user\".user_id = poster_id";
@@ -725,7 +905,7 @@ public LinkedList<Post> getPostsFromDate(Date d, User user) {
         return p;
     }
 
- public boolean emailInDatabase(String email) {
+    public boolean emailInDatabase(String email) {
         boolean exists = false;
         try {
             String query = "SELECT * FROM \"user\" WHERE user_email = ?";
@@ -743,6 +923,4 @@ public LinkedList<Post> getPostsFromDate(Date d, User user) {
         }
         return exists;
     }
-
-
 }
