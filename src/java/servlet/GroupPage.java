@@ -40,7 +40,9 @@ public class GroupPage extends HttpServlet {
         User logged = (User) request.getAttribute("user");
         try {
             LinkedList<Group> groups = logged != null ? manager.getUserGroups(logged): null;
+            LinkedList<Group> publicGroups = manager.getPublicGroups();
             request.setAttribute("groupList", groups);
+            request.setAttribute("publicGroupList", publicGroups);
             request.getRequestDispatcher("groups.jsp").forward(request, response);
         } catch (ServletException | IOException ex) {
             Logger.getLogger(GroupPage.class.getName()).log(Level.SEVERE, null, ex);

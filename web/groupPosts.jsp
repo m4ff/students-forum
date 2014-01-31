@@ -17,7 +17,7 @@
     <body>
         <div id="login-page" data-role="page">
             <div data-role="header">
-                <a href="#panel" data-icon="bars" data-iconpos="notext">Menu</a>
+                <a href="#panel" data-icon="bars">Menu</a>
                 <h2>Student's Forum | ${groupName}</h2>
                 <a href="/post?id=${groupId}" data-role="button" data-icon="plus" type="submit" data-iconpos="notext">Add Post</a>
             </div>
@@ -30,6 +30,10 @@
                                 <p style="white-space: normal">
                                     ${p.getText()}
                                 </p>
+                                <p><b>Files added:</b></p>
+                                <c:forEach var="f" items="${dbmanager.getPostFiles(p)}">
+                                    <a href="${p.getGroup().getFilePath(f.getName())}">${f.getName()} (${f.getSize()/1024}KB)<br></a>
+                                </c:forEach>
                             </div>
                         </li>
                     </c:forEach>

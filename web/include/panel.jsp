@@ -16,48 +16,48 @@
             </li>
         </c:if>
         <li>
-            <a href="/">
+            <a href="/" data-ajax="false">
                 Home
             </a>
         </li>
         <li>
-            <a href="/groups">
+            <a href="/groups"  data-ajax="false">
                 My groups
             </a>
         </li>
         <c:if test="${user != null}">
         <li>
-            <a href="/group-manager">
+            <a href="/group-manager"  data-ajax="false">
                 Create new group
             </a>
         </li>
         <li>
-            <a href="/account">
+            <a href="/account"  data-ajax="false">
                 My account
             </a>
         </li>
         </c:if>
         <c:if test="${isModerator == true}">
             <li>
-                <a href="/moderation">
+                <a href="/moderation"  data-ajax="false">
                     Moderation
                 </a>
             </li>
         </c:if>
         <c:if test="${user == null}">
             <li data-theme="b">
-                <a href="/login">
+                <a href="/login"  data-ajax="false">
                     Log in
                 </a>
             </li>
             <li data-theme="b">
-                <a href="/register">
+                <a href="/register"  data-ajax="false">
                     Register
                 </a>
             </li>
         </c:if>
         <c:if test="${user != null}">
-            <li data-theme="b">
+            <li data-theme="b"  data-ajax="false">
                 <a href="/logout" data-ajax="false">
                     Log out
                 </a>

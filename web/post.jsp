@@ -21,7 +21,7 @@
                 <h2>Student's Forum | Create Post</h2>
             </div>
             <div data-role="content">
-                <form action="/forum/post?id=%" data-ajax="false" method="post" enctype="multipart/form-data">
+                <form action="/post?id=${groupId}" data-ajax="false" method="post" enctype="multipart/form-data">
                     <ul data-role="listview" data-inset="true">
                         <li data-role="fieldcontain">
                             <label for="text">Post text:</label>

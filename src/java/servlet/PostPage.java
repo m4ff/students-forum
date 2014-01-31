@@ -40,12 +40,13 @@ public class PostPage extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         DBManager manager = (DBManager) getServletContext().getAttribute("dbmanager");
-        User logged = (User) request.getServletContext().getAttribute("user");
+        User logged = (User) request.getAttribute("user");
         try {
             String groupIdParam = request.getParameter("id");
             int groupId = groupIdParam != null ? Integer.parseInt(groupIdParam) : 0;
             Group viewing = manager.getGroup(groupId);
             LinkedList<Post> groupPosts = manager.getGroupPosts(viewing);
+            request.setAttribute("groupId", groupIdParam);
             request.setAttribute("posts", groupPosts);
             request.getRequestDispatcher("post.jsp").forward(request, response);
         } catch (ServletException | IOException ex) {
@@ -57,7 +58,7 @@ public class PostPage extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         DBManager dbmanager = (DBManager) getServletContext().getAttribute("dbmanager");
-        User user = (User) request.getSession().getAttribute("user_id");
+        User user = (User) request.getAttribute("user");
         String groupIdParam = request.getParameter("id");
         int groupId = groupIdParam != null ? Integer.parseInt(groupIdParam) : 0;
         Group group = dbmanager.getGroup(groupId);
@@ -65,8 +66,7 @@ public class PostPage extends HttpServlet {
         String text = multipart.getParameter("text");
         int postId = dbmanager.addPost(groupId, user.getId(), text, multipart);
         
-        response.sendRedirect("/forum/group?id=" + groupId);
-        request.getRequestDispatcher("post.jsp");
+        response.sendRedirect("/group-posts?id=" + groupId);
     }
 
 }

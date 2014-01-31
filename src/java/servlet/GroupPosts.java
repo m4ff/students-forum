@@ -43,6 +43,7 @@ public class GroupPosts extends HttpServlet {
             Group viewing = dbmanager.getGroup(groupId);
             LinkedList<Post> groupPosts = dbmanager.getGroupPosts(viewing);
             String groupName = viewing.getName();
+            request.setAttribute("dbmanager", dbmanager);
             request.setAttribute("posts", groupPosts);
             request.setAttribute("groupId", groupId);
             request.setAttribute("groupName", groupName);

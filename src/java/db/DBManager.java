@@ -204,6 +204,31 @@ public class DBManager implements Serializable {
         return g;
     }
 
+    public LinkedList<Group> getPublicGroups() {
+        LinkedList<Group> g = new LinkedList<>();
+        try {
+            String query = "SELECT * FROM (SELECT group_id, COUNT(post_id) AS post_count, COUNT(DISTINCT user_id) AS user_count  FROM \"group\" NATURAL JOIN \"user_group\" NATURAL LEFT OUTER JOIN \"post\" GROUP BY group_id) t NATURAL JOIN \"group\" WHERE group_public = TRUE";
+            PreparedStatement stm = connection.prepareStatement(query);
+            ResultSet res = stm.executeQuery();
+            while (res.next()) {
+                g.add(
+                        new Group(
+                                res.getInt("group_id"),
+                                res.getString("group_name"),
+                                res.getInt("creator_id"),
+                                res.getInt("post_count"),
+                                res.getInt("user_count"),
+                                res.getBoolean("group_public"),
+                                res.getBoolean("group_closed")
+                        )
+                );
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return g;
+    }
+
     /**
      * Ritorna un LinkedList di {@link Group} di cui user è membro
      *
@@ -830,7 +855,8 @@ public class DBManager implements Serializable {
     }
 
     /**
-     * Ritorna l'utliva volta che l'utente ha visualizzato il quick display sulla home
+     * Ritorna l'utliva volta che l'utente ha visualizzato il quick display
+     * sulla home
      *
      * @param user
      * @return
@@ -857,7 +883,8 @@ public class DBManager implements Serializable {
     }
 
     /**
-     * Aggiorna data e ora dell'ultimo quick display (quando l'utente visualizza la home)
+     * Aggiorna data e ora dell'ultimo quick display (quando l'utente visualizza
+     * la home)
      *
      * @param user
      */
@@ -880,7 +907,8 @@ public class DBManager implements Serializable {
     }
 
     /**
-     * Ritorna l'istanza di {@link User} con l'ID passato come parametro, null se l'ID non esiste
+     * Ritorna l'istanza di {@link User} con l'ID passato come parametro, null
+     * se l'ID non esiste
      *
      * @param userId
      * @return
