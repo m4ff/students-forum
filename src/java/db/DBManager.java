@@ -168,7 +168,7 @@ public class DBManager implements Serializable {
     public LinkedList<Group> getGroups() {
         LinkedList<Group> g = new LinkedList<>();
         try {
-            String query = "SELECT DISTINCT * FROM (SELECT DISTINCT group_id, COUNT(DISTINCT post_id) AS post_count, COUNT(DISTINCT user_id) AS user_count  FROM \"group\" NATURAL JOIN \"user_group\" NATURAL LEFT OUTER JOIN \"post\" GROUP BY group_id) t NATURAL JOIN \"group\"";
+            String query = "SELECT * FROM (SELECT group_id, COUNT(post_id) AS post_count, COUNT(DISTINCT user_id) AS user_count  FROM \"group\" NATURAL JOIN \"user_group\" NATURAL LEFT OUTER JOIN \"post\" GROUP BY group_id) t NATURAL JOIN \"group\"";
             try (PreparedStatement stm = connection.prepareStatement(query)) {
                 try (ResultSet res = stm.executeQuery()) {
                     while (res.next()) {
@@ -201,7 +201,7 @@ public class DBManager implements Serializable {
     public LinkedList<Group> getUserGroups(User user) {
         LinkedList<Group> g = new LinkedList<>();
         try {
-            String query = "SELECT DISTINCT * FROM (SELECT DISTINCT group_id, COUNT(post_id) AS post_count, COUNT(DISTINCT user_id) AS user_count  FROM \"group\" NATURAL JOIN \"user_group\" NATURAL LEFT OUTER JOIN \"post\" GROUP BY group_id) t NATURAL JOIN \"group\" NATURAL JOIN \"user_group\" WHERE user_id = ? AND group_accepted = TRUE";
+            String query = "SELECT * FROM (SELECT group_id, COUNT(post_id) AS post_count, COUNT(DISTINCT user_id) AS user_count  FROM \"group\" NATURAL JOIN \"user_group\" NATURAL LEFT OUTER JOIN \"post\" GROUP BY group_id) t NATURAL JOIN \"group\" NATURAL JOIN \"user_group\" WHERE user_id = ? AND group_accepted = TRUE";
             PreparedStatement stm = connection.prepareStatement(query);
             stm.setInt(1, user.getId());
             ResultSet res = stm.executeQuery();
