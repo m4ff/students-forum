@@ -11,14 +11,14 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Student's Forum | Password Reset</title>
+        <title>Student's Forum | Confirm Password</title>
         <%@include file="include/head.jsp" %>
     </head>
     <body>
         <div id="login-page" data-role="page">
             <div data-role="header">
                 <a href="/" data-icon="home">Home</a>
-                <h2>Student's Forum | Password Reset</h2>
+                <h2>Student's Forum | Confirm Password</h2>
             </div>
             <div data-role="content">
                 <c:if test="${error != null}">
@@ -28,18 +28,21 @@
                 </c:if>
                 <div class="ui-body ui-body-a ui-corner-all">
                     <p>
-                        Please insert the email you used as you registered. We will send you and email with the instructions to reset your password
+                        Please insert your new password
                     </p>
                 </div>
-                <form method="post" data-ajax="false">
+                <form method="post" data-ajax="false" onsubmit="var c = $('#reset-password').val() == $('#reset-password-confirm').val(); if(!c) alert('Passwords don\'t match'); return c">
                     <ul data-role="listview" data-inset="true">
                         <li data-role="fieldcontain">
-                            <label for="email">Email</label>
-                            <input type="text" id="email" name="email-field">
+                            <label for="reset-password">New password</label>
+                            <input type="password" id="reset-password" name="password">
+                        </li>
+                        <li data-role="fieldcontain">
+                            <label for="reset-password-confirm">Confirm new password</label>
+                            <input type="password" id="reset-password-confirm" name="password-confirm">
                         </li>
                     </ul>
-                    <button data-inline="true" type="submit" data-theme="b">Send Email</button>
-                    <a href="/login">Back</a>
+                    <button data-inline="true" type="submit" data-theme="b">Confirm</button>
                 </form>
             </div>
         </div>

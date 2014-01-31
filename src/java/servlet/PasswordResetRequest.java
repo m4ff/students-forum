@@ -71,7 +71,7 @@ public class PasswordResetRequest extends HttpServlet {
             Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(from, "d@tective17");
+                    return new PasswordAuthentication(from, "nonrompere1234");
                 }
             });
 
@@ -92,7 +92,7 @@ public class PasswordResetRequest extends HttpServlet {
                 String hexBytes = new BigInteger(bytes).toString(16);
                 
                 //Salvare nel DB sta roba con la data (aggiungere un campo) per il confronto
-                
+                manager.updateVerificationCodeTime(email);
                 String link = "http://" + request.getLocalName() + ":" + request.getLocalPort() + "/password-reset-confirmation?email=" + email + "&x=" + hexBytes;
                 
                 // Now set the actual message
@@ -100,6 +100,7 @@ public class PasswordResetRequest extends HttpServlet {
                 // Send message
                 Transport.send(message);
                 error = "We just sent you an email, please check your inbox";
+                
             } catch (MessagingException mex) {
                 //error
                 Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, mex);
