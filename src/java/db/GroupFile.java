@@ -11,9 +11,9 @@ package db;
  * @author paolo
  */
 public class GroupFile {
-    private String name;
-    private String mime;
-    private int size;
+    private final String name;
+    private final String mime;
+    private final int size;
     
     public GroupFile(String name, String mime, int size) {
         this.name = name;
