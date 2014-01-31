@@ -970,13 +970,14 @@ public class DBManager implements Serializable {
                 try (ResultSet res = stm.executeQuery()) {
                     while (res.next()) {
                         Group g = getGroup(res.getInt("group_id"));
+                        HashMap<String, GroupFile> files = getGroupFiles(g);
                         p.add(
                                 new Post(
                                         res.getInt("post_id"),
                                         res.getString("post_text"),
                                         res.getDate("post_date"),
                                         new User(res.getInt("poster_id"), res.getString("user_name"), res.getBoolean("user_moderator")),
-                                        null,
+                                        files,
                                         g
                                 )
                         );

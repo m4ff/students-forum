@@ -30,10 +30,11 @@
                                 <p style="white-space: normal">
                                     ${p.getText()}
                                 </p>
-                                <p><b>Files added:</b></p>
-                                <c:forEach var="f" items="${dbmanager.getPostFiles(p)}">
-                                    <a href="${p.getGroup().getFilePath(f.getName())}">${f.getName()} (${f.getSize()/1024}KB)<br></a>
-                                </c:forEach>
+                                <p>
+                                    <c:forEach var="f" items="${dbmanager.getPostFiles(p)}">
+                                        <a target="_blank" href="${p.getGroup().getFilePath(f.key)}">${f.key} (${f.value.getSizeString()})</a><br>
+                                    </c:forEach>
+                                </p>
                             </div>
                         </li>
                     </c:forEach>
