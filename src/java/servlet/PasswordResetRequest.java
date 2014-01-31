@@ -89,10 +89,14 @@ public class PasswordResetRequest extends HttpServlet {
                 SecureRandom rand = new SecureRandom();
                 byte[] bytes = new byte[8];
                 rand.nextBytes(bytes);
-                String hexBytes = new BigInteger(bytes).toString(16);
+                BigInteger bi = new BigInteger(bytes);
+                if(bi.signum() == -1) {
+                    bi = bi.negate();
+                }
+                String hexBytes = bi.toString(16);
                 
                 //Salvare nel DB sta roba con la data (aggiungere un campo) per il confronto
-                manager.updateVerificationCodeTime(email);
+                manager.updateVerificationCodeAndTime(hexBytes,email);
                 String link = "http://" + request.getLocalName() + ":" + request.getLocalPort() + "/password-reset-confirmation?email=" + email + "&x=" + hexBytes;
                 
                 // Now set the actual message

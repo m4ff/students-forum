@@ -1037,15 +1037,16 @@ public class DBManager implements Serializable {
         return exists;
     }
 
-    public void updateVerificationCodeTime(String email) {
+    public void updateVerificationCodeAndTime(String code, String email) {
         Date time = new Date();
-        String query = "UPDATE \"user\" SET user_tmp_code_time = ? WHERE user_email = ?";
+        String query = "UPDATE \"user\" SET user_tmp_code_time = ?, user_tmp_code = ? WHERE user_email = ?";
         PreparedStatement stm;
         try {
             stm = connection.prepareStatement(query);
             try {
                 stm.setTimestamp(1, new Timestamp(time.getTime()));
-                stm.setString(2, email);
+                stm.setString(2, code);
+                stm.setString(3, email);
                 stm.executeUpdate();
             } finally {
                 stm.close();
@@ -1065,7 +1066,7 @@ public class DBManager implements Serializable {
                 stm.setString(1, email);
                 try (ResultSet res = stm.executeQuery()) {
                     res.next();
-                    time = res.getDate("user_last_time");
+                    time = new Date (res.getTimestamp("user_tmp_code_time").getTime());
                 }
             } finally {
                 stm.close();

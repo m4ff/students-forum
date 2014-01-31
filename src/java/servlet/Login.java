@@ -29,6 +29,12 @@ public class Login extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         try {
+            boolean confirmation = false;
+            String changed = (String) request.getParameter("changed");
+            if(changed != null){
+                confirmation = true;
+            }
+            request.setAttribute("confirmation", confirmation);
             request.getRequestDispatcher("/login.jsp").forward(request, response);
         } catch (ServletException | IOException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);

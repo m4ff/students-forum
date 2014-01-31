@@ -7,18 +7,11 @@ package servlet;
 
 import db.DBManager;
 import java.io.IOException;
-import java.math.BigInteger;
-import java.security.SecureRandom;
-import java.sql.Timestamp;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.mail.*;
-import javax.mail.internet.*;
 
 /**
  *
@@ -44,8 +37,8 @@ public class PasswordResetConfirmation extends HttpServlet {
         if (manager.emailAndCodeInDatabase(email, hex)) {
             Date lastTime = manager.getLastVerificationCodeTime(email);
             Date now = new Date();
-            
-            if(now.getTime()-lastTime.getTime()<=30000){
+            long timeDifference = now.getTime() - lastTime.getTime();
+            if (timeDifference <= 90000) {
                 correct = true;
             }
         }
@@ -67,7 +60,7 @@ public class PasswordResetConfirmation extends HttpServlet {
         String password = request.getParameter("password");
         String email = request.getParameter("email");
         manager.updateUserPassword(email, password);
-        response.sendRedirect("/");
+        response.sendRedirect("/login?changed=yes");
     }
 
 }
