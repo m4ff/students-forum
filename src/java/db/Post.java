@@ -36,7 +36,11 @@ public class Post {
             if(groupFiles.get(g) != null) {
                 rep = "<a target=\"_blank\" href=\"" + group.getFilePath(g) + "\">" + g + "</a>";
             } else {
-                rep = "<a target=\"_blank\" href=\"" + g + "\">" + g + "</a>";
+                if(g.startsWith("http://") || g.startsWith("https://") || g.startsWith("ftp://") || g.startsWith("ftp://") || g.startsWith("ftps://")) {
+                    rep = "<a target=\"_blank\" href=\"" + g + "\">" + g + "</a>";
+                } else {
+                    rep = "<a target=\"_blank\" href=\"http://" + g + "\">" + g + "</a>";
+                }
             }
             text = text.replaceFirst(pattern, rep);
         }

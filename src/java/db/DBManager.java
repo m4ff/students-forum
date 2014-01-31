@@ -52,8 +52,7 @@ public class DBManager implements Serializable {
     }
 
     /**
-     * Applica la funzione hash SHA256 e ritorna una rappresentazione
-     * esadecimale dell'hash
+     * Applica la funzione hash SHA256 e ritorna una rappresentazione esadecimale dell'hash
      *
      * @param password
      * @return Hash
@@ -82,8 +81,7 @@ public class DBManager implements Serializable {
      *
      * @param userName
      * @param password
-     * @return Istanza di {@link User} se l'utente viene trovato, null
-     * altrimenti
+     * @return Istanza di {@link User} se l'utente viene trovato, null altrimenti
      */
     public User authenticate(String userName, String password) {
         User u = null;
@@ -159,9 +157,23 @@ public class DBManager implements Serializable {
         return false;
     }
 
+    public boolean updateUserPassword(String email, String password) {
+        password = hashPassword(password);
+        try {
+            String query = "UPDATE \"user\" SET user_password = ? WHERE user_email = ?";
+            try (PreparedStatement stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+                stm.setString(1, password);
+                stm.setString(2, email);
+                return stm.executeUpdate() == 1;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
     /**
-     * Ritorna una LinkedList di {@link Group} che contiene tutti i gruppi del
-     * forum
+     * Ritorna una LinkedList di {@link Group} che contiene tutti i gruppi del forum
      *
      * @return
      */
@@ -305,8 +317,7 @@ public class DBManager implements Serializable {
      }
      */
     /**
-     * Ritorna una HashMap con i nomi dei file come chiavi e {@link GroupFile}
-     * come valore, i file sono relativi al {@link Post} passato come paramentro
+     * Ritorna una HashMap con i nomi dei file come chiavi e {@link GroupFile} come valore, i file sono relativi al {@link Post} passato come paramentro
      *
      * @param p
      * @return
@@ -337,8 +348,7 @@ public class DBManager implements Serializable {
     }
 
     /**
-     * Ritorna una HashMap con i nomi dei file come chiavi e {@link GroupFile}
-     * come valore, i file sono relativi al gruppo passato come paramentro
+     * Ritorna una HashMap con i nomi dei file come chiavi e {@link GroupFile} come valore, i file sono relativi al gruppo passato come paramentro
      *
      * @param g
      * @return
@@ -392,8 +402,7 @@ public class DBManager implements Serializable {
     }
 
     /**
-     * Ritorna un'istanza di {@link Group} con ID groupId, null se groupId non è
-     * l'ID di alcun gruppo
+     * Ritorna un'istanza di {@link Group} con ID groupId, null se groupId non è l'ID di alcun gruppo
      *
      * @param groupId
      * @return
@@ -423,8 +432,7 @@ public class DBManager implements Serializable {
     }
 
     /**
-     * Ritorna una LinkedList di {@link Group} a cui lo user è stato invitato e
-     * che non ha ancora accettato
+     * Ritorna una LinkedList di {@link Group} a cui lo user è stato invitato e che non ha ancora accettato
      *
      * @param user
      * @return
@@ -456,8 +464,7 @@ public class DBManager implements Serializable {
     }
 
     /**
-     * Ritorna una LinkedList di {@link User} visibili nel gruppo (che non sono
-     * stati bloccati dall'amministratore)
+     * Ritorna una LinkedList di {@link User} visibili nel gruppo (che non sono stati bloccati dall'amministratore)
      *
      * @param group
      * @param creatorId
@@ -490,8 +497,7 @@ public class DBManager implements Serializable {
     }
 
     /**
-     * Ritorna una LinkedList di {@link User} bloccati dall'amministratore del
-     * gruppo
+     * Ritorna una LinkedList di {@link User} bloccati dall'amministratore del gruppo
      *
      * @param group
      * @param creatorId
@@ -646,9 +652,7 @@ public class DBManager implements Serializable {
      * Aggiorna i membri del gruppo (invita, aggiunge, toglie)
      *
      * @param group ID del gruppo
-     * @param m Mappa che ha come chiave l'ID dell'utente e come valore una
-     * array di string che contiene "member", "invisible", "visible" a seconda
-     * dell'azione da svolgere
+     * @param m Mappa che ha come chiave l'ID dell'utente e come valore una array di string che contiene "member", "invisible", "visible" a seconda dell'azione da svolgere
      */
     public void updateGroupMembers(int group, Map<String, String[]> m) {
         try {
@@ -1007,5 +1011,64 @@ public class DBManager implements Serializable {
                     .getName()).log(Level.SEVERE, null, ex);
         }
         return exists;
+    }
+
+    public boolean emailAndCodeInDatabase(String email, String code) {
+        boolean exists = false;
+        try {
+            String query = "SELECT * FROM \"user\" WHERE user_email = ? AND user_tmp_code = ?";
+            try (PreparedStatement stm = connection.prepareStatement(query)) {
+                stm.setString(1, email);
+                stm.setString(2, code);
+                try (ResultSet res = stm.executeQuery()) {
+                    if (res.next()) {
+                        exists = true;
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+        return exists;
+    }
+
+    public void updateVerificationCodeTime(String email) {
+        Date time = new Date();
+        String query = "UPDATE \"user\" SET user_tmp_code_time = ? WHERE user_email = ?";
+        PreparedStatement stm;
+        try {
+            stm = connection.prepareStatement(query);
+            try {
+                stm.setTimestamp(1, new Timestamp(time.getTime()));
+                stm.setString(2, email);
+                stm.executeUpdate();
+            } finally {
+                stm.close();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public Date getLastVerificationCodeTime(String email) {
+        Date time = null;
+        String query = "SELECT user_tmp_code_time FROM \"user\" WHERE user_email = ?";
+        PreparedStatement stm;
+        try {
+            stm = connection.prepareStatement(query);
+            try {
+                stm.setString(1, email);
+                try (ResultSet res = stm.executeQuery()) {
+                    res.next();
+                    time = res.getDate("user_last_time");
+                }
+            } finally {
+                stm.close();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return time;
     }
 }
