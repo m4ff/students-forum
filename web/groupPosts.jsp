@@ -30,6 +30,10 @@
                                 <p style="white-space: normal">
                                     ${p.getText()}
                                 </p>
+                                <p><b>Files added:</b></p>
+                                <c:forEach var="f" items="${dbmanager.getPostFiles(p)}">
+                                    <a href="${p.getGroup().getFilePath(f.getName())}">${f.getName()} (${f.getSize()/1024}KB)<br></a>
+                                </c:forEach>
                             </div>
                         </li>
                     </c:forEach>
