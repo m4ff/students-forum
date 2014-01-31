@@ -3,4 +3,6 @@ build/*
 build.xml
 dist/*
 nbproject/*
-avatarsTmp/*
+avatarsTmp/*.jpg
+avatars/*.jpg
+files/*/*
