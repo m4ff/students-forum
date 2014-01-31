@@ -258,7 +258,8 @@ public class DBManager implements Serializable {
         }
         return p;
     }
-
+    
+    /*
     public int getPostsNumber(Group g, User logged) {
         int count = 0;
         try {
@@ -277,6 +278,7 @@ public class DBManager implements Serializable {
         }
         return count;
     }
+    */
 
     /**
      * Ritorna una HashMap con i nomi dei file come chiavi e {@link GroupFile}
