@@ -6,7 +6,6 @@
 
 package db;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import javax.servlet.ServletContext;
 
@@ -73,6 +72,10 @@ public class Group {
     
     public String getFilesRealPath(ServletContext context) {
         return context.getAttribute("filesDir") + File.separator + id;
+    }
+    
+    public String getFilePath(String fileName) {
+        return "/file/" + id + "-" + fileName;
     }
     
     public boolean hasFileNamed(ServletContext context, String name) {

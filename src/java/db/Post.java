@@ -16,11 +16,11 @@ import java.util.regex.Pattern;
  * @author paolo
  */
 public class Post {
-    private int id;
-    private String text;
-    private Date date;
-    private User creator;
-    private Group group;
+    private final int id;
+    private final String text;
+    private final Date date;
+    private final User creator;
+    private final Group group;
 
    
     
@@ -30,12 +30,11 @@ public class Post {
         String pattern = "\\$\\$([^\\s]+)\\$\\$";
         Pattern p = Pattern.compile(pattern);
         Matcher m = p.matcher(text);
-        String filesPath = "/static/files/" + group.getId() + "/";
         while(m.find()) {
             String g = m.group(1);
             String rep;
             if(groupFiles.get(g) != null) {
-                rep = "<a target=\"_blank\" href=\"" + filesPath + g + "\">" + g + "</a>";
+                rep = "<a target=\"_blank\" href=\"" + group.getFilePath(g) + "\">" + g + "</a>";
             } else {
                 rep = "<a target=\"_blank\" href=\"" + g + "\">" + g + "</a>";
             }
