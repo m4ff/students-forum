@@ -15,22 +15,29 @@
         <%@include file="include/head.jsp" %>
     </head>
     <body>
-        <form action="/forum/post?id=%" data-ajax="false" method="post" enctype="multipart/form-data">
-            <ul data-role="listview" data-inset="true">
-                <li data-role="fieldcontain">
-                    <label for="text">Post text:</label>
-                    <textarea id="text" placeholder="Bla bal bla" name="text"></textarea>
-                </li>
-                <li data-role="fieldcontain">
-                    <label for="button">Add more files:</label>
-                    <button type="button" id="button" data-inline="true" data-mini="true" onclick="duplicate('#file-li')">Add one more file</button>
-                </li>
-                <li data-role="fieldcontain" id="file-li">
-                    <label for="file">File:</label>
-                    <input type="file" id="file" name="file">
-                </li>
-            </ul>
-            <button data-inline="true" data-theme="b" type="submit">Post it</button>
-        </form>
+        <div id="moderation-page" data-role="page">
+            <div data-role="header">
+                <a href="#panel" data-icon="bars">Menu</a>
+                <h2>Student's Forum | Create Post</h2>
+            </div>
+            <div data-role="content">
+                <form action="/forum/post?id=%" data-ajax="false" method="post" enctype="multipart/form-data">
+                    <ul data-role="listview" data-inset="true">
+                        <li data-role="fieldcontain">
+                            <label for="text">Post text:</label>
+                            <textarea id="text" placeholder="Bla bal bla" name="text"></textarea>
+                        </li>
+                        <li data-role="fieldcontain">
+                            <label for="button">Add more files:</label>
+                            <button type="button" id="button" data-inline="true" data-mini="true" onclick="duplicate('#file-li')">Add one more file</button>
+                        </li>
+                        <li data-role="fieldcontain" id="file-li">
+                            <label for="file">File:</label>
+                            <input type="file" id="file" name="file">
+                        </li>
+                    </ul>
+                    <button data-inline="true" data-theme="b" type="submit">Post it</button>
+                </form> <%@include file="include/panel.jsp" %>
+            </div>
     </body>
 </html>
