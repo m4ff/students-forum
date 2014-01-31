@@ -34,7 +34,7 @@
 
                     <label>
                         This group is public
-                        <input type="checkbox" name="group-public" value="true">
+                        <input type="checkbox" name="group-public" value="true" ${group.isPublic() ? "checked" : ""}>
                     </label>
 
                     <ul data-role="listview" data-inset="true">

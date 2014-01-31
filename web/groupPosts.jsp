@@ -22,23 +22,28 @@
                 <a href="/post?id=${groupId}" data-role="button" data-icon="plus" type="submit" data-iconpos="notext">Add Post</a>
             </div>
             <div data-role="content">
-                <ul data-role="listview">
-                    <c:forEach var="p" items="${posts}" varStatus="s">
-                        <li style="padding-left: 6em; background-image: url(${p.getCreator().getAvatar()}); background-position: 0.5em 1em; background-size: 5em; background-repeat: no-repeat">
-                            <div class="ui-corner-all ui-body ${s.index % 2 == 1 ? "ui-body-a" : "ui-body-b"}">
-                                <p><b>${p.getCreator().getName()}</b> wrote:</p>
-                                <p style="white-space: normal">
-                                    ${p.getText()}
-                                </p>
-                                <p>
-                                    <c:forEach var="f" items="${dbmanager.getPostFiles(p)}">
-                                        <a target="_blank" href="${p.getGroup().getFilePath(f.key)}">${f.key} (${f.value.getSizeString()})</a><br>
-                                    </c:forEach>
-                                </p>
-                            </div>
-                        </li>
-                    </c:forEach>
-                </ul>
+                <c:if test="${posts.size() != 0}">
+                    <ul data-role="listview">
+                        <c:forEach var="p" items="${posts}" varStatus="s">
+                            <li style="padding-left: 6em; background-image: url(${p.getCreator().getAvatar()}); background-position: 0.5em 1em; background-size: 5em; background-repeat: no-repeat">
+                                <div class="ui-corner-all ui-body ${s.index % 2 == 1 ? "ui-body-a" : "ui-body-b"}">
+                                    <p><b>${p.getCreator().getName()}</b> wrote:</p>
+                                    <p style="white-space: normal">
+                                        ${p.getText()}
+                                    </p>
+                                    <p>
+                                        <c:forEach var="f" items="${dbmanager.getPostFiles(p)}">
+                                            <a target="_blank" href="${p.getGroup().getFilePath(f.key)}">${f.key} (${f.value.getSizeString()})</a><br>
+                                        </c:forEach>
+                                    </p>
+                                </div>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </c:if>
+                <c:if test="${posts.size() == 0}">
+                    <div class="ui-body ui-body-b ui-corner-all"><h3>The discussion thread is empty!</h3></div>
+                </c:if>
                 <%@include file="include/panel.jsp" %>
             </div>
     </body>

@@ -410,7 +410,7 @@ public class DBManager implements Serializable {
     public Group getGroup(int groupId) {
         Group target = null;
         try {
-            String query = "SELECT group_id, group_name, creator_id FROM \"group\" WHERE group_id = ?";
+            String query = "SELECT * FROM \"group\" WHERE group_id = ?";
             try (PreparedStatement stm = connection.prepareStatement(query)) {
                 stm.setInt(1, groupId);
 
@@ -419,7 +419,11 @@ public class DBManager implements Serializable {
                         target = new Group(
                                 res.getInt("group_id"),
                                 res.getString("group_name"),
-                                res.getInt("creator_id")
+                                res.getInt("creator_id"),
+                                0,
+                                0,
+                                res.getBoolean("group_public"),
+                                res.getBoolean("group_closed")
                         );
                     }
                 }
@@ -630,16 +634,16 @@ public class DBManager implements Serializable {
     /**
      * Cambia il flag del gruppo a pubblico o privato
      *
-     * @param group
+     * @param groupId
      * @param isPublic
      * @return
      */
-    public boolean setPublicFlag(Group group, boolean isPublic) {
+    public boolean setPublicFlag(int groupId, boolean isPublic) {
         try {
             String query = "UPDATE \"group\" SET group_public = ? WHERE group_id = ?";
             try (PreparedStatement stm = connection.prepareStatement(query)) {
                 stm.setBoolean(1, isPublic);
-                stm.setInt(2, group.getId());
+                stm.setInt(2, groupId);
                 return stm.executeUpdate() == 1;
             }
         } catch (SQLException ex) {
