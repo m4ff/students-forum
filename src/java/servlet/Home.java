@@ -29,13 +29,17 @@ public class Home extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         DBManager manager = (DBManager) getServletContext().getAttribute("dbmanager");
         User logged = (User) request.getAttribute("user");
-        LinkedList<Group> invitingGroups = new LinkedList();
         String notificationsTitle = "You are not logged in";
         boolean isLogged = false;
         if (logged != null) {
             isLogged = true;
-            LinkedList<Post> postFromLastTime = manager.getPostsFromDate((Date) request.getAttribute("lastTime"), logged);
-            invitingGroups = manager.getInvites(logged);
+            Date lastTime = manager.getLastQickDisplayTime(logged.getId());
+            if (lastTime == null) {
+                lastTime = new Date();
+            }
+            LinkedList<Post> postFromLastTime = manager.getPostsFromDate(lastTime, logged);
+            manager.updateQuickDisplayTime(logged.getId());
+            LinkedList<Group> invitingGroups = manager.getInvites(logged);
             request.setAttribute("postFromLastTime", postFromLastTime);
             request.setAttribute("invitingGroups", invitingGroups);
             request.setAttribute("dbmanager", manager);

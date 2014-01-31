@@ -596,6 +596,27 @@ public class DBManager implements Serializable {
     }
 
     /**
+     * Cambia il flag del gruppo a pubblico o privato
+     *
+     * @param group
+     * @param isPublic
+     * @return
+     */
+    public boolean setPublicFlag(Group group, boolean isPublic) {
+        try {
+            String query = "UPDATE \"group\" SET group_public = ? WHERE group_id = ?";
+            try (PreparedStatement stm = connection.prepareStatement(query)) {
+                stm.setBoolean(1, isPublic);
+                stm.setInt(2, group.getId());
+                return stm.executeUpdate() == 1;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    /**
      * Aggiorna i membri del gruppo (invita, aggiunge, toglie)
      *
      * @param group ID del gruppo
@@ -717,43 +738,42 @@ public class DBManager implements Serializable {
         try {
             connection.setAutoCommit(false);
             String query = "INSERT INTO \"post\"(user_id, group_id, post_text) VALUES(?, ?, ?)";
-            try (PreparedStatement stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-                stm.setInt(1, userId);
-                stm.setInt(2, groupId);
-                stm.setString(3, text);
-                stm.executeUpdate();
-                ResultSet rs = stm.getGeneratedKeys();
-                if (rs != null) {
-                    if (rs.next()) {
-                        postId = rs.getInt(1);
-                    }
+            PreparedStatement stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            stm.setInt(1, userId);
+            stm.setInt(2, groupId);
+            stm.setString(3, text);
+            stm.executeUpdate();
+            ResultSet rs = stm.getGeneratedKeys();
+            if (rs != null) {
+                if (rs.next()) {
+                    postId = rs.getInt(1);
                 }
             }
-
+            stm.close();
             query = "INSERT INTO \"file\"(post_id, file_name, file_mime, file_size) VALUES(?, ?, ?, ?)";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                while (files.hasMoreElements()) {
-                    String name = files.nextElement();
-                    System.out.println(name);
-                    String filename = multipart.getFilesystemName(name);
-                    System.out.println(filename);
-                    String type = multipart.getContentType(name);
-                    System.out.println(type);
-                    File f = multipart.getFile(name);
-                    if (f != null) {
-                        stm.setInt(1, postId);
-                        stm.setString(2, filename);
-                        stm.setString(3, type);
-                        stm.setLong(4, f.length());
-                        if (1 != stm.executeUpdate()) {
-                            connection.rollback();
-                            postId = 0;
-                            break;
-                        }
+            stm = connection.prepareStatement(query);
+            while (files.hasMoreElements()) {
+                String name = files.nextElement();
+                System.out.println(name);
+                String filename = multipart.getFilesystemName(name);
+                System.out.println(filename);
+                String type = multipart.getContentType(name);
+                System.out.println(type);
+                File f = multipart.getFile(name);
+                if (f != null) {
+                    stm.setInt(1, postId);
+                    stm.setString(2, filename);
+                    stm.setString(3, type);
+                    stm.setLong(4, f.length());
+                    if (1 != stm.executeUpdate()) {
+                        connection.rollback();
+                        postId = 0;
+                        break;
                     }
                 }
             }
             connection.commit();
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -764,7 +784,12 @@ public class DBManager implements Serializable {
         }
         return postId;
     }
-
+    
+    /**
+     * Accetta l'invito al gruppo
+     * @param group ID del gruppo
+     * @param user ID dell'utente invitato
+     */
     public void acceptInvitesFromGroups(int group, int user) {
         try {
             String query = "UPDATE \"user_group\" SET group_accepted = TRUE WHERE group_id = ? AND user_id = ?";
@@ -777,7 +802,12 @@ public class DBManager implements Serializable {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
+    /**
+     * Rifiuta l'invito al gruppo
+     * @param group ID del gruppo
+     * @param user ID dell'utente invitato
+     */
     public void declineInvitesFromGroups(int group, int user) {
         try {
             String query = "DELETE FROM \"user_group\" WHERE group_id = ? AND user_id = ?";
@@ -791,8 +821,13 @@ public class DBManager implements Serializable {
                     .getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    public Date getTime(int user) {
+    
+    /**
+     * Ritorna l'utliva volta che l'utente ha visualizzato il quick display sulla home
+     * @param user
+     * @return 
+     */
+    public Date getLastQickDisplayTime(int user) {
         Date time = null;
         String query = "SELECT user_last_time FROM \"user\" WHERE user_id = ?";
         PreparedStatement stm;
@@ -812,8 +847,12 @@ public class DBManager implements Serializable {
         }
         return time;
     }
-
-    public void updateTime(int user) {
+    
+    /**
+     * Aggiorna data e ora dell'ultimo quick display (quando l'utente visualizza la home)
+     * @param user 
+     */
+    public void updateQuickDisplayTime(int user) {
         Date time = new Date();
         String query = "UPDATE \"user\" SET user_last_time = ? WHERE user_id = ?";
         PreparedStatement stm;
@@ -830,7 +869,12 @@ public class DBManager implements Serializable {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
+    /**
+     * Ritorna l'istanza di {@link User}  con l'ID passato come parametro, null se l'ID non esiste
+     * @param userId
+     * @return 
+     */
     public User getUser(int userId) {
         User user = null;
         try {
@@ -853,11 +897,16 @@ public class DBManager implements Serializable {
         }
         return user;
     }
-
+    
+    /**
+     * Overload del metodo {@link #getUser(java.lang.String) }
+     * @param userId
+     * @return 
+     */
     public User getUser(String userId) {
         return getUser(Integer.parseInt(userId));
     }
-
+    
     public boolean checkIfUserCanAccessGroup(int userId, int groupId) {
         boolean x = false;
         try {

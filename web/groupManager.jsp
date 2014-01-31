@@ -25,12 +25,17 @@
 
                     <ul data-role="listview" data-inset="true">
                         <li data-role="fieldcontain">
-                            <label for="group-name" type="text"  value="${nameString}">
-                                ${titleString}
+                            <label for="group-name" type="text">
+                                Name
                             </label>
                             <input name="change_group_name" type="text" id="group-name" value="${nameString}">
                         </li>
                     </ul>
+
+                    <label>
+                        This group is public
+                        <input type="checkbox" name="group-public" value="true">
+                    </label>
 
                     <ul data-role="listview" data-inset="true">
                         <li data-role="list-divider">
@@ -38,7 +43,7 @@
                         </li>
                         <c:forEach items="${visibleFollowinUsers}" var="userObject">
                             <li data-role="fieldcontain">
-                                <fieldset data-role="controlgroup" data-type="horizontal">
+                                <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
                                     <legend>${userObject.getName()}</legend>
                                     <label for="visible-${userObject.getId()}">
                                         Visible
@@ -54,7 +59,7 @@
                         </c:forEach>
                         <c:forEach items="${notVisibleFollowinUsers}" var="userObject">
                             <li data-role="fieldcontain">
-                                <fieldset data-role="controlgroup" data-type="horizontal">
+                                <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
                                     <legend>${userObject.getName()}</legend>
                                     <label for="invite-${userObject.getId()}">
                                         Invite
@@ -76,7 +81,7 @@
                         </li>
                         <c:forEach items="${otherUsers}" var="userObject">
                             <li data-role="fieldcontain">
-                                <fieldset data-role="controlgroup" data-type="horizontal">
+                                <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
                                     <legend>${userObject.getName()}</legend>
                                     <label for="invite-${userObject.getId()}">
                                         Invite

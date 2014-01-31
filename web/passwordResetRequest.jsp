@@ -26,6 +26,11 @@
                         ${error}
                     </div>
                 </c:if>
+                <div class="ui-body ui-body-a ui-corner-all">
+                    <p>
+                        Please insert the email you used as you registered. We will send you and email with the instructions to reset your password
+                    </p>
+                </div>
                 <form method="post" data-ajax="false">
                     <ul data-role="listview" data-inset="true">
                         <li data-role="fieldcontain">
@@ -34,6 +39,7 @@
                         </li>
                     </ul>
                     <button data-inline="true" type="submit" data-theme="b">Send Email</button>
+                    <a href="/login">Back</a>
                 </form>
             </div>
         </div>

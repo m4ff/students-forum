@@ -21,7 +21,20 @@
                 <h2>Student's Forum | Home</h2>
             </div>
             <div data-role="content">
-                <c:if test="${!invitingGroups.isEmpty()}">
+                <c:if test="${isLogged}">
+                    <div class="ui-body ui-body-a ui-corner-all">
+                        <h3>You logged in ${loginTime}</h3>
+                    </div>
+                </c:if>
+                <c:if test="${!isLogged}">
+                    <div class="ui-body ui-body-b ui-corner-all">
+                        <h3>You are not logged in</h3>
+                        <p>
+                            You can still access public groups from the side menu
+                        </p>
+                    </div>
+                </c:if>
+                <c:if test="${isLogged}">
                     <ul data-role="listview" data-inset="true" data-split-icon="gear">
                         <li data-role="list-divider" data-theme="b">
                             ${notificationsTitle}

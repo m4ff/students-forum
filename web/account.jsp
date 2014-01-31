@@ -45,10 +45,11 @@
                             <input type="password" id="account-old-password" name="current-password">
                         </li>
                     </ul>
-                    <button data-inline="true" type="submit" data-theme="b">Update</button>
-                    <span>
+                    <p>
                         Fields marked with * are required. The avatar must be a JPEG file and must not exceed 1MB
-                    </span>
+                    </p>
+                    <button data-inline="true" type="submit" data-theme="b">Update</button>
+                    
                 </form>
             </div>
             

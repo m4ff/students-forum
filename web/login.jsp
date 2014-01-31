@@ -41,7 +41,7 @@
                     </label>
                     <button data-inline="true" type="submit" data-theme="b">Login</button>
                     <a href="/register">Register</a>
-                    <a href="/password-reset-request">I forgot my password</a>
+                    <a style="margin-left: 15px" href="/password-reset-request">I forgot my password</a>
 
                     <c:if test="${redirect != null}">
                         <input type="hidden" name="redirect" value="<c:out value="${redirect}"/>">

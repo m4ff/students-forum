@@ -8,6 +8,7 @@ package filter;
 import db.DBManager;
 import db.User;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.Date;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -34,15 +35,11 @@ public class LoginFilter extends HttpFilter {
                         user = dbmanager.getUser(cookie.getValue());
                         if (user != null) {
                             isModerator = user.getIfModerator();
-                            Date lastTime = dbmanager.getTime(user.getId());
-                            if(lastTime == null) {
-                                lastTime = new Date();
-                            }
-                            request.setAttribute("lastTime", lastTime);
-                            dbmanager.updateTime(user.getId());
                         }  break;
                     case "loginTime":
-                        request.setAttribute("loginTime", new Date(Long.parseLong(cookie.getValue())));
+                        long time = Long.parseLong(cookie.getValue());
+                        
+                        request.setAttribute("loginTime", new Date(time).toString());
                         break;
                 }
             }

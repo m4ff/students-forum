@@ -53,17 +53,14 @@ public class GroupManager extends HttpServlet {
             LinkedList<User> otherUsers = manager.getUsersNotInGroup(groupId, user.getId());
 
             //SETTING GROUP NAME TABLE
-            String titleString = "Create New Group";
             String nameString = "";
             if (groupToEdit != null) {
-                titleString = "Edit Name";
                 nameString = groupToEdit.getName();
             }
 
             request.setAttribute("visibleFollowinUsers", visibleFollowinUsers);
             request.setAttribute("notVisibleFollowinUsers", notVisibleFollowinUsers);
             request.setAttribute("otherUsers", otherUsers);
-            request.setAttribute("titleString", titleString);
             request.setAttribute("nameString", nameString);
             request.setAttribute("groupId", groupId);
             request.getRequestDispatcher("/groupManager.jsp").forward(request, response);
@@ -86,7 +83,11 @@ public class GroupManager extends HttpServlet {
             groupId = groupToEdit.getId();
         }
         if (groupId > 0) {
-
+            if("true".equals(request.getParameter("group-public"))) {
+                manager.setPublicFlag(groupToEdit, true);
+            } else {
+                manager.setPublicFlag(groupToEdit, false);
+            }
             Map<String, String[]> m = request.getParameterMap();
             try {
                 if (groupToEdit != null) {
