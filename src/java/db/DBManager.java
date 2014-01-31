@@ -111,7 +111,7 @@ public class DBManager implements Serializable {
      * @param email
      * @param username
      * @param password
-     * @return Id dell'utente appena inserito, 0 se l'inserimento fallisce
+     * @return ID dell'utente appena inserito, 0 se l'inserimento fallisce
      */
     public int addUser(String email, String username, String password) {
         int userId = 0;
