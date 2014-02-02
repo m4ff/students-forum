@@ -48,7 +48,7 @@
                                         <b>${dbmanager.getUser(g.getCreator()).getName()}</b>
                                     </td>
                                     <td>
-                                        <a href="#">${g.getName()}</a>
+                                        <a href="/group-posts?id=${g.getId()}">${g.getName()}</a>
                                     </td>
                                     <td style="width: 3em">
                                         ${g.isPublic() ? "Yes" : "No"}

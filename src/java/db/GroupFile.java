@@ -31,9 +31,9 @@ public class GroupFile {
     
     public String getSizeString() {
         if(size >= 1024 * 1024) {
-            return String.format("%.2g%n", (float) size / 1024 / 1024) + " MB";
+            return String.format("%.2f%n", (float) size / 1024 / 1024) + " MB";
         } else if(size >= 1024) {
-            return String.format("%.2g%n", (float) size / 1024) + " KB";
+            return String.format("%.2f%n", (float) size / 1024) + " KB";
         } else {
             return size + " bytes";
         }
