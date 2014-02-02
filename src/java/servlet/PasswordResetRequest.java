@@ -49,7 +49,7 @@ public class PasswordResetRequest extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         DBManager manager = (DBManager) getServletContext().getAttribute("dbmanager");
-        String error = null;
+        String error;
         String email = request.getParameter("email-field");
         if (manager.emailInDatabase(email)) {
             // Recipient's email ID needs to be mentioned.
@@ -86,6 +86,7 @@ public class PasswordResetRequest extends HttpServlet {
                 // Set Subject: header field
                 message.setSubject("Password reset request");
                 
+                //Generate a random code to validate the request
                 SecureRandom rand = new SecureRandom();
                 byte[] bytes = new byte[8];
                 rand.nextBytes(bytes);
@@ -96,7 +97,7 @@ public class PasswordResetRequest extends HttpServlet {
                 String hexBytes = bi.toString(16);
                 
                 //Salvare nel DB sta roba con la data (aggiungere un campo) per il confronto
-                manager.updateVerificationCodeAndTime(hexBytes,email);
+                manager.updateVerificationCodeAndTime(hexBytes, email);
                 String link = "http://" + request.getLocalName() + ":" + request.getLocalPort() + "/password-reset-confirmation?email=" + email + "&x=" + hexBytes;
                 
                 // Now set the actual message

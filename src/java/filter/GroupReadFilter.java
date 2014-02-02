@@ -24,6 +24,14 @@ public class GroupReadFilter extends HttpFilter {
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         DBManager dbmanager = (DBManager) request.getServletContext().getAttribute("dbmanager");
         User user = (User) request.getAttribute("user");
+        
+        //Moderators have complete read access
+        if(user != null && user.isModerator()) {
+            chain.doFilter(request, response);
+            return;
+        }
+        
+        //For normal users
         int userId = user != null ? user.getId() : 0;
         int groupId;
         try {

@@ -36,7 +36,7 @@ public class User implements Serializable{
         return "/avatar?id=" + this.id;
     }
     
-    public boolean getIfModerator() {
+    public boolean isModerator() {
         return isModerator;
     }
 }
