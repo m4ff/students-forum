@@ -49,6 +49,7 @@ public class Post {
             text = text.replaceFirst(linkPattern, rep);
         }
         int qrId = 0;
+        String qrDivs = "";
         while(mQR.find()) {
             String g = mQR.group(1);
             String rep;
@@ -62,13 +63,14 @@ public class Post {
                 }
             }
             rep += " (<a href=\"#post-qr-" + qrId + "\" data-rel=\"popup\" data-position-to=\"window\" data-transition=\"fade\">QR</a>)";
-            rep += "<div data-role=\"popup\" id=\"post-qr-" + qrId + "\" data-overlay-theme=\"b\" data-theme=\"b\" data-corners=\"false\">\n" +
+            qrDivs += "<div data-role=\"popup\" id=\"post-qr-" + qrId + "\" data-overlay-theme=\"b\" data-theme=\"b\" data-corners=\"false\">\n" +
                     "<a href=\"#\" data-rel=\"back\" class=\"ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right\">Close</a>" +
                     "<img style=\"width: 250px; height: 250px\" src=\"/qr-gen?qrtext=" + g +"\">\n" +
                     "</div>";
             text = text.replaceFirst(QRPattern, rep);
             qrId++;
         }
+        text += qrDivs;
         //Find emails
         
         this.id = id;
