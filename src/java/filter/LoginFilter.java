@@ -34,7 +34,7 @@ public class LoginFilter extends HttpFilter {
                     case "userId":
                         user = dbmanager.getUser(cookie.getValue());
                         if (user != null) {
-                            isModerator = user.getIfModerator();
+                            isModerator = user.isModerator();
                         }  break;
                     case "loginTime":
                         long time = Long.parseLong(cookie.getValue());
