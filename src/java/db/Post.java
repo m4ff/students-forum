@@ -27,10 +27,13 @@ public class Post {
     public Post(int id, String text, Date date, User creator, HashMap<String, GroupFile> groupFiles, Group group) {
         text = text.replaceAll("<", "&lt;");
         text = text.replaceAll(">", "&gt;");
-        String pattern = "\\$\\$([^\\s]+)\\$\\$";
-        //Find links
-        Pattern p = Pattern.compile(pattern);
+        String linkPattern = "\\$\\$([^\\s]+)\\$\\$";
+        String QRPattern = "\\$QR\\$([^\\s]+)\\$\\$";
+        //Find links & QRlinks
+        Pattern p = Pattern.compile(linkPattern);
         Matcher m = p.matcher(text);
+        Pattern pQR = Pattern.compile(QRPattern);
+        Matcher mQR = pQR.matcher(text);
         while(m.find()) {
             String g = m.group(1);
             String rep;
@@ -43,7 +46,21 @@ public class Post {
                     rep = "<a target=\"_blank\" href=\"http://" + g + "\">" + g + "</a>";
                 }
             }
-            text = text.replaceFirst(pattern, rep);
+            text = text.replaceFirst(linkPattern, rep);
+        }
+        while(mQR.find()) {
+            String g = mQR.group(1);
+            String rep;
+            if(groupFiles.get(g) != null) {
+                rep = "<a target=\"_blank\" href=\"" + group.getFilePath(g) + "\">" + g + "</a>";
+            } else {
+                if(g.startsWith("http://") || g.startsWith("https://") || g.startsWith("ftp://") || g.startsWith("ftp://") || g.startsWith("ftps://")) {
+                    rep = "<a target=\"_blank\" href=\"" + g + "\">" + g + "</br></a>" + "<img src=\"/qr-gen?qrtext=" + g +"\"></br></img>";
+                } else {
+                    rep = "<a target=\"_blank\" href=\"http://" + g + "\">" + g + "</br></a>" + "<img src=\"/qr-gen?qrtext=" + g +"\"></br></img>";
+                }
+            }
+            text = text.replaceFirst(QRPattern, rep);
         }
         //Find emails
         

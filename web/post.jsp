@@ -25,7 +25,7 @@
                     <ul data-role="listview" data-inset="true">
                         <li data-role="fieldcontain">
                             <label for="post-text">Post text:</label>
-                            <textarea id="post-text" placeholder="Bla bal bla" name="text" style="position: relative"></textarea>
+                            <textarea id="post-text" placeholder="Type you're post" name="text" style="position: relative"></textarea>
                         </li>
                         <li data-role="fieldcontain">
                             <label for="post-more-files-button">Add more files:</label>

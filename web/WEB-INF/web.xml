@@ -73,6 +73,10 @@
         <servlet-name>FileServlet</servlet-name>
         <servlet-class>servlet.FileServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>QRServlet</servlet-name>
+        <servlet-class>servlet.QRServlet</servlet-class>
+    </servlet>
     
     
     
@@ -137,7 +141,10 @@
         <servlet-name>GroupPosts</servlet-name>
         <url-pattern>/group-posts</url-pattern>
     </servlet-mapping>
-    
+    <servlet-mapping>
+        <servlet-name>QRServlet</servlet-name>
+        <url-pattern>/qr-gen</url-pattern>
+    </servlet-mapping>
     
     
     <filter>

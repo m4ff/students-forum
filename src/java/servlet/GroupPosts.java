@@ -55,6 +55,7 @@ public class GroupPosts extends HttpServlet {
             User user = (User) request.getAttribute("user");
             int userId = user != null ? user.getId() : 0;
             String groupName = viewing.getName();
+            request.getAttribute("qrtext");
             request.setAttribute("dbmanager", dbmanager);
             request.setAttribute("posts", groupPosts);
             request.setAttribute("groupId", groupId);
