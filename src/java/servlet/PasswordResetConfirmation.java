@@ -59,8 +59,13 @@ public class PasswordResetConfirmation extends HttpServlet {
         DBManager manager = (DBManager) getServletContext().getAttribute("dbmanager");
         String password = request.getParameter("password");
         String email = request.getParameter("email");
-        manager.updateUserPassword(email, password);
-        response.sendRedirect("/login?changed=yes");
+        String hex = (String) request.getParameter("x");
+        if(manager.emailAndCodeInDatabase(email, hex)){
+            manager.updateUserPassword(email, password);
+            response.sendRedirect("/login?changed=yes");
+        } else {
+            response.sendRedirect("/login?changed=no");
+        }
     }
 
 }

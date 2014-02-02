@@ -29,10 +29,14 @@ public class Login extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         try {
-            boolean confirmation = false;
+            int confirmation = 0;
             String changed = (String) request.getParameter("changed");
             if(changed != null){
-                confirmation = true;
+                if(changed.equals("yes")){
+                    confirmation = 1;
+                } else if (changed.equals("no")){
+                    confirmation = 2;
+                }
             }
             request.setAttribute("confirmation", confirmation);
             request.getRequestDispatcher("/login.jsp").forward(request, response);

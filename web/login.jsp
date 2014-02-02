@@ -26,9 +26,14 @@
                         ${error}
                     </div>
                 </c:if>
-                <c:if test="${confirmation && error == null}">
+                <c:if test="${confirmation == 1 && error == null}">
                     <div class="ui-body ui-body-b ui-corner-all">
-                        La tua password è stata cambiata con successo
+                        Your password has been changed succesfully
+                    </div>
+                </c:if>
+                <c:if test="${confirmation == 2 && error == null}">
+                    <div class="ui-body ui-body-b ui-corner-all">
+                        There was an error in the password recovery procedure. Please retry
                     </div>
                 </c:if>
                 <form action="/login" method="post" data-ajax="false">
