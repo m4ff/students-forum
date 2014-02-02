@@ -48,6 +48,7 @@ public class Post {
             }
             text = text.replaceFirst(linkPattern, rep);
         }
+        int qrId = 0;
         while(mQR.find()) {
             String g = mQR.group(1);
             String rep;
@@ -55,12 +56,18 @@ public class Post {
                 rep = "<a target=\"_blank\" href=\"" + group.getFilePath(g) + "\">" + g + "</a>";
             } else {
                 if(g.startsWith("http://") || g.startsWith("https://") || g.startsWith("ftp://") || g.startsWith("ftp://") || g.startsWith("ftps://")) {
-                    rep = "<a target=\"_blank\" href=\"" + g + "\">" + g + "</br></a>" + "<img src=\"/qr-gen?qrtext=" + g +"\"></br></img>";
+                    rep = "<a target=\"_blank\" href=\"" + g + "\">" + g + "</a>";
                 } else {
-                    rep = "<a target=\"_blank\" href=\"http://" + g + "\">" + g + "</br></a>" + "<img src=\"/qr-gen?qrtext=" + g +"\"></br></img>";
+                    rep = "<a target=\"_blank\" href=\"http://" + g + "\">" + g + "</a>";
                 }
             }
+            rep += " (<a href=\"#post-qr-" + qrId + "\" data-rel=\"popup\" data-position-to=\"window\" data-transition=\"fade\">QR</a>)";
+            rep += "<div data-role=\"popup\" id=\"post-qr-" + qrId + "\" data-overlay-theme=\"b\" data-theme=\"b\" data-corners=\"false\">\n" +
+                    "<a href=\"#\" data-rel=\"back\" class=\"ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right\">Close</a>" +
+                    "<img style=\"width: 250px; height: 250px\" src=\"/qr-gen?qrtext=" + g +"\">\n" +
+                    "</div>";
             text = text.replaceFirst(QRPattern, rep);
+            qrId++;
         }
         //Find emails
         
