@@ -241,7 +241,7 @@ public class DBManager implements Serializable {
     public LinkedList<Group> getUserGroups(User user) {
         LinkedList<Group> g = new LinkedList<>();
         try {
-            String query = "SELECT * FROM (SELECT group_id, COUNT(post_id) AS post_count, COUNT(DISTINCT user_id) AS user_count  FROM \"group\" NATURAL JOIN \"user_group\" NATURAL LEFT OUTER JOIN \"post\" GROUP BY group_id) t NATURAL JOIN \"group\" NATURAL JOIN \"user_group\" WHERE user_id = ? AND group_accepted = TRUE";
+            String query = "SELECT * FROM (SELECT group_id, COUNT(post_id) AS post_count, COUNT(DISTINCT user_id) AS user_count  FROM \"group\" NATURAL JOIN \"user_group\" NATURAL LEFT OUTER JOIN \"post\" GROUP BY group_id) t NATURAL JOIN \"group\" NATURAL JOIN \"user_group\" WHERE user_id = ? AND group_accepted = TRUE AND visible = TRUE";
             PreparedStatement stm = connection.prepareStatement(query);
             stm.setInt(1, user.getId());
             ResultSet res = stm.executeQuery();
@@ -1003,10 +1003,11 @@ public class DBManager implements Serializable {
     public LinkedList<Post> getPostsFromDate(Date d, User user) {
         LinkedList<Post> p = new LinkedList<>();
         try {
-            String query = "SELECT * FROM (SELECT * FROM (SELECT post_id, group_id, post_text, post_date, user_id AS poster_id FROM \"post\") t NATURAL JOIN \"user_group\" WHERE user_id = ? AND group_accepted = TRUE AND post_date >= ? ORDER BY group_id ASC, post_date DESC) t1 JOIN \"user\" ON \"user\".user_id = poster_id";
+            String query = "SELECT * FROM (SELECT * FROM (SELECT post_id, group_id, post_text, post_date, user_id AS poster_id FROM \"post\" WHERE user_id != ?) t NATURAL JOIN \"user_group\" WHERE user_id = ? AND group_accepted = TRUE AND visible = TRUE AND post_date >= ? ORDER BY group_id ASC, post_date DESC) t1 JOIN \"user\" ON \"user\".user_id = poster_id";
             try (PreparedStatement stm = connection.prepareStatement(query)) {
                 stm.setInt(1, user.getId());
-                stm.setTimestamp(2, new Timestamp(d.getTime()));
+                stm.setInt(2, user.getId());
+                stm.setTimestamp(3, new Timestamp(d.getTime()));
                 try (ResultSet res = stm.executeQuery()) {
                     while (res.next()) {
                         Group g = getGroup(res.getInt("group_id"));
