@@ -889,7 +889,7 @@ public class DBManager implements Serializable {
                 stm.setInt(1, user);
                 try (ResultSet res = stm.executeQuery()) {
                     res.next();
-                    time = res.getDate("user_last_time");
+                    time = new Date(res.getTimestamp("user_last_time").getTime());
                 }
             } finally {
                 stm.close();

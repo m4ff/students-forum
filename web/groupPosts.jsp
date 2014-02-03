@@ -25,20 +25,20 @@
             </div>
             <div data-role="content">
                 <c:if test="${posts.size() != 0}">
-                    <ul data-role="listview">
+                    <ul data-role="listview" data-inset="true">
                         <c:forEach var="p" items="${posts}" varStatus="s">
                             <li style="padding-left: 6em; background-image: url(${p.getCreator().getAvatar()}); background-position: 0.5em 1em; background-size: 5em; background-repeat: no-repeat">
+                                <b>${p.getCreator().getName()}</b>
                                 <div class="ui-corner-all ui-body ${s.index % 2 == 1 ? "ui-body-a" : "ui-body-b"}">
-                                    <p><b>${p.getCreator().getName()}</b> wrote:</p>
                                     <p style="white-space: normal">
                                         ${p.getText(isPublic)}
                                     </p>
-                                    <p>
-                                        <c:forEach var="f" items="${dbmanager.getPostFiles(p)}">
-                                            <a target="_blank" href="${p.getGroup().getFilePath(f.key)}">${f.key} (${f.value.getSizeString()})</a><br>
-                                        </c:forEach>
-                                    </p>
                                 </div>
+                                <p>
+                                    <c:forEach var="f" items="${dbmanager.getPostFiles(p)}">
+                                        <a target="_blank" href="${p.getGroup().getFilePath(f.key)}">${f.key} (${f.value.getSizeString()})</a><br>
+                                    </c:forEach>
+                                </p>
                             </li>
                         </c:forEach>
                     </ul>
