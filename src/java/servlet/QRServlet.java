@@ -26,17 +26,6 @@ import java.io.OutputStream;
  */
 @WebServlet(name = "QRServlet", urlPatterns = {"/qr-servlet"})
 public class QRServlet extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-
     /**
      * Handles the HTTP <code>GET</code> method.
      *

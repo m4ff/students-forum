@@ -31,7 +31,7 @@
                                 <div class="ui-corner-all ui-body ${s.index % 2 == 1 ? "ui-body-a" : "ui-body-b"}">
                                     <p><b>${p.getCreator().getName()}</b> wrote:</p>
                                     <p style="white-space: normal">
-                                        ${p.getText()}
+                                        ${p.getText(isPublic)}
                                     </p>
                                     <p>
                                         <c:forEach var="f" items="${dbmanager.getPostFiles(p)}">
