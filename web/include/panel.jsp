@@ -57,7 +57,7 @@
             </li>
         </c:if>
         <c:if test="${user != null}">
-            <li data-theme="b"  data-ajax="false">
+            <li data-theme="b">
                 <a href="/logout" data-ajax="false">
                     Log out
                 </a>

@@ -1,0 +1,13 @@
+@media all and (min-width: 850px) {
+    div[data-role="header"] {
+        max-width: 800px;
+        margin: auto;
+    }
+    div[data-role="content"] {
+        max-width: 800px;
+        margin: auto;
+    }
+    div[data-role="page"] {
+        background-color: #e9e9e9;
+    }
+}
