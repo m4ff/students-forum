@@ -29,16 +29,18 @@
                         <c:forEach var="p" items="${posts}" varStatus="s">
                             <li style="padding-left: 6em; background-image: url(${p.getCreator().getAvatar()}); background-position: 0.5em 1em; background-size: 5em; background-repeat: no-repeat">
                                 <b>${p.getCreator().getName()}</b>
-                                <div class="ui-corner-all ui-body ${s.index % 2 == 1 ? "ui-body-a" : "ui-body-b"}">
-                                    <p style="white-space: normal">
+                                <div class="ui-corner-all ui-body ui-body-${s.index % 2 == 1 ? "a" : "a"}" style="background-color: #${s.index % 2 == 1 ? "8be88b" : "e8e88b"}">
+                                    <p style="white-space: normal; font-size: 0.9em">
                                         ${p.getText(isPublic)}
                                     </p>
                                 </div>
-                                <p>
+                                <ul style="font-size: 0.7em; padding-top: 0.7em">
                                     <c:forEach var="f" items="${dbmanager.getPostFiles(p)}">
-                                        <a target="_blank" href="${p.getGroup().getFilePath(f.key)}">${f.key} (${f.value.getSizeString()})</a><br>
+                                        <li>
+                                            <a target="_blank" href="${p.getGroup().getFilePath(f.key)}">${f.key} (${f.value.getSizeString()})</a>
+                                        </li>
                                     </c:forEach>
-                                </p>
+                                </ul>
                             </li>
                         </c:forEach>
                     </ul>
