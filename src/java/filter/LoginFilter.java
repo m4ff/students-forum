@@ -9,6 +9,7 @@ import db.DBManager;
 import db.User;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -39,7 +40,7 @@ public class LoginFilter extends HttpFilter {
                     case "loginTime":
                         long time = Long.parseLong(cookie.getValue());
                         
-                        request.setAttribute("loginTime", new Date(time).toString());
+                        request.setAttribute("loginTime", new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date(time)));
                         break;
                 }
             }

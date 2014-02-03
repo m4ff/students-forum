@@ -17,7 +17,7 @@
     <body>
         <div id="moderation-page" data-role="page">
             <div data-role="header">
-                <a href="#panel" data-icon="bars">Menu</a>
+                <a href="#" data-icon="arrow-l" data-rel="back">Back</a>
                 <h2>Student's Forum | Create Post</h2>
             </div>
             <div data-role="content">
