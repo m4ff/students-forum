@@ -89,16 +89,15 @@ public class DBManager implements Serializable {
         User u = null;
         try {
             String query = "SELECT * FROM \"user\" WHERE user_name = ? AND user_password = ?";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                password = hashPassword(password);
-                stm.setString(1, userName);
-                stm.setString(2, password);
-                try (ResultSet res = stm.executeQuery()) {
-                    if (res.next()) {
-                        u = new User(res.getInt("user_id"), res.getString("user_name"), res.getBoolean("user_moderator"));
-                    }
-                }
+            PreparedStatement stm = connection.prepareStatement(query);
+            password = hashPassword(password);
+            stm.setString(1, userName);
+            stm.setString(2, password);
+            ResultSet res = stm.executeQuery();
+            if (res.next()) {
+                u = new User(res.getInt("user_id"), res.getString("user_name"), res.getBoolean("user_moderator"));
             }
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -117,19 +116,19 @@ public class DBManager implements Serializable {
         int userId = 0;
         try {
             String query = "INSERT INTO \"user\"(user_email, user_name, user_password) VALUES(?, ?, ?)";
-            try (PreparedStatement stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-                password = hashPassword(password);
-                stm.setString(1, email);
-                stm.setString(2, username);
-                stm.setString(3, password);
-                stm.executeUpdate();
-                ResultSet rs = stm.getGeneratedKeys();
-                if (rs != null) {
-                    if (rs.next()) {
-                        userId = rs.getInt(1);
-                    }
+            PreparedStatement stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            password = hashPassword(password);
+            stm.setString(1, email);
+            stm.setString(2, username);
+            stm.setString(3, password);
+            stm.executeUpdate();
+            ResultSet rs = stm.getGeneratedKeys();
+            if (rs != null) {
+                if (rs.next()) {
+                    userId = rs.getInt(1);
                 }
             }
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -144,15 +143,15 @@ public class DBManager implements Serializable {
      * @return
      */
     public boolean updateUserPassword(User user, String password) {
-        int userId = 0;
         password = hashPassword(password);
         try {
             String query = "UPDATE \"user\" SET user_password = ? WHERE user_id = ?";
-            try (PreparedStatement stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-                stm.setString(1, password);
-                stm.setInt(2, user.getId());
-                return stm.executeUpdate() == 1;
-            }
+            PreparedStatement stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            stm.setString(1, password);
+            stm.setInt(2, user.getId());
+            boolean ret = stm.executeUpdate() == 1;
+            stm.close();
+            return ret;
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -163,11 +162,12 @@ public class DBManager implements Serializable {
         password = hashPassword(password);
         try {
             String query = "UPDATE \"user\" SET user_password = ? WHERE user_email = ?";
-            try (PreparedStatement stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-                stm.setString(1, password);
-                stm.setString(2, email);
-                return stm.executeUpdate() == 1;
-            }
+            PreparedStatement stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            stm.setString(1, password);
+            stm.setString(2, email);
+            boolean ret = stm.executeUpdate() == 1;
+            stm.close();
+            return ret;
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -184,23 +184,22 @@ public class DBManager implements Serializable {
         LinkedList<Group> g = new LinkedList<>();
         try {
             String query = "SELECT * FROM (SELECT group_id, COUNT(post_id) AS post_count, COUNT(DISTINCT user_id) AS user_count  FROM \"group\" NATURAL JOIN \"user_group\" NATURAL LEFT OUTER JOIN \"post\" GROUP BY group_id) t NATURAL JOIN \"group\"";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                try (ResultSet res = stm.executeQuery()) {
-                    while (res.next()) {
-                        g.add(
-                                new Group(
-                                        res.getInt("group_id"),
-                                        res.getString("group_name"),
-                                        res.getInt("creator_id"),
-                                        res.getInt("post_count"),
-                                        res.getInt("user_count"),
-                                        res.getBoolean("group_public"),
-                                        res.getBoolean("group_closed")
-                                )
-                        );
-                    }
-                }
+            PreparedStatement stm = connection.prepareStatement(query);
+            ResultSet res = stm.executeQuery();
+            while (res.next()) {
+                g.add(
+                        new Group(
+                                res.getInt("group_id"),
+                                res.getString("group_name"),
+                                res.getInt("creator_id"),
+                                res.getInt("post_count"),
+                                res.getInt("user_count"),
+                                res.getBoolean("group_public"),
+                                res.getBoolean("group_closed")
+                        )
+                );
             }
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -226,6 +225,7 @@ public class DBManager implements Serializable {
                         )
                 );
             }
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -275,24 +275,23 @@ public class DBManager implements Serializable {
         LinkedList<Post> p = new LinkedList<>();
         try {
             String query = "SELECT * FROM \"post\" NATURAL JOIN \"user\" WHERE group_id = ?";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setInt(1, g.getId());
-                try (ResultSet res = stm.executeQuery()) {
-                    HashMap<String, GroupFile> files = getGroupFiles(g);
-                    while (res.next()) {
-                        p.add(
-                                new Post(
-                                        res.getInt("post_id"),
-                                        res.getString("post_text"),
-                                        res.getDate("post_date"),
-                                        new User(res.getInt("user_id"), res.getString("user_name"), res.getBoolean("user_moderator")),
-                                        files,
-                                        g
-                                )
-                        );
-                    }
-                }
+            PreparedStatement stm = connection.prepareStatement(query);
+            stm.setInt(1, g.getId());
+            ResultSet res = stm.executeQuery();
+            HashMap<String, GroupFile> files = getGroupFiles(g);
+            while (res.next()) {
+                p.add(
+                        new Post(
+                                res.getInt("post_id"),
+                                res.getString("post_text"),
+                                res.getDate("post_date"),
+                                new User(res.getInt("user_id"), res.getString("user_name"), res.getBoolean("user_moderator")),
+                                files,
+                                g
+                        )
+                );
             }
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -310,21 +309,20 @@ public class DBManager implements Serializable {
         HashMap<String, GroupFile> f = new HashMap<>();
         try {
             String query = "SELECT * FROM \"file\" NATURAL JOIN \"post\" WHERE post_id = ?";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setInt(1, p.getId());
-                try (ResultSet res = stm.executeQuery()) {
-                    while (res.next()) {
-                        f.put(
+            PreparedStatement stm = connection.prepareStatement(query);
+            stm.setInt(1, p.getId());
+            ResultSet res = stm.executeQuery();
+            while (res.next()) {
+                f.put(
+                        res.getString("file_name"),
+                        new GroupFile(
                                 res.getString("file_name"),
-                                new GroupFile(
-                                        res.getString("file_name"),
-                                        res.getString("file_mime"),
-                                        res.getInt("file_size")
-                                )
-                        );
-                    }
-                }
+                                res.getString("file_mime"),
+                                res.getInt("file_size")
+                        )
+                );
             }
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -342,21 +340,20 @@ public class DBManager implements Serializable {
         HashMap<String, GroupFile> f = new HashMap<>();
         try {
             String query = "SELECT * FROM \"file\" NATURAL JOIN \"post\" NATURAL JOIN \"group\" WHERE group_id = ?";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setInt(1, g.getId());
-                try (ResultSet res = stm.executeQuery()) {
-                    while (res.next()) {
-                        f.put(
+            PreparedStatement stm = connection.prepareStatement(query);
+            stm.setInt(1, g.getId());
+            ResultSet res = stm.executeQuery();
+            while (res.next()) {
+                f.put(
+                        res.getString("file_name"),
+                        new GroupFile(
                                 res.getString("file_name"),
-                                new GroupFile(
-                                        res.getString("file_name"),
-                                        res.getString("file_mime"),
-                                        res.getInt("file_size")
-                                )
-                        );
-                    }
-                }
+                                res.getString("file_mime"),
+                                res.getInt("file_size")
+                        )
+                );
             }
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -367,19 +364,18 @@ public class DBManager implements Serializable {
         GroupFile f = null;
         try {
             String query = "SELECT * FROM \"file\" NATURAL JOIN \"post\" NATURAL JOIN \"group\" WHERE group_id = ? AND file_name = ?";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setInt(1, g);
-                stm.setString(2, fileName);
-                try (ResultSet res = stm.executeQuery()) {
-                    if(res.next()) {
-                        f = new GroupFile(
-                                res.getString("file_name"),
-                                res.getString("file_mime"),
-                                res.getInt("file_size")
-                        );
-                    }
-                }
+            PreparedStatement stm = connection.prepareStatement(query);
+            stm.setInt(1, g);
+            stm.setString(2, fileName);
+            ResultSet res = stm.executeQuery();
+            if (res.next()) {
+                f = new GroupFile(
+                        res.getString("file_name"),
+                        res.getString("file_mime"),
+                        res.getInt("file_size")
+                );
             }
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -396,13 +392,12 @@ public class DBManager implements Serializable {
         Timestamp date = null;
         try {
             String query = "SELECT MAX(post_date) AS max_date FROM \"post\" WHERE group_id = ?";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setInt(1, group.getId());
-                try (ResultSet res = stm.executeQuery()) {
-                    res.next();
-                    date = res.getTimestamp("max_date");
-                }
-            }
+            PreparedStatement stm = connection.prepareStatement(query);
+            stm.setInt(1, group.getId());
+            ResultSet res = stm.executeQuery();
+            res.next();
+            date = res.getTimestamp("max_date");
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -420,23 +415,21 @@ public class DBManager implements Serializable {
         Group target = null;
         try {
             String query = "SELECT * FROM (SELECT group_id, COUNT(post_id) AS post_count, COUNT(DISTINCT user_id) AS user_count  FROM \"group\" NATURAL JOIN \"user_group\" NATURAL LEFT OUTER JOIN \"post\" GROUP BY group_id) t NATURAL JOIN \"group\" WHERE group_id = ?";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setInt(1, groupId);
-
-                try (ResultSet res = stm.executeQuery()) {
-                    if (res.next()) {
-                        target = new Group(
-                                res.getInt("group_id"),
-                                res.getString("group_name"),
-                                res.getInt("creator_id"),
-                                res.getInt("post_count"),
-                                res.getInt("user_count"),
-                                res.getBoolean("group_public"),
-                                res.getBoolean("group_closed")
-                        );
-                    }
-                }
+            PreparedStatement stm = connection.prepareStatement(query);
+            stm.setInt(1, groupId);
+            ResultSet res = stm.executeQuery();
+            if (res.next()) {
+                target = new Group(
+                        res.getInt("group_id"),
+                        res.getString("group_name"),
+                        res.getInt("creator_id"),
+                        res.getInt("post_count"),
+                        res.getInt("user_count"),
+                        res.getBoolean("group_public"),
+                        res.getBoolean("group_closed")
+                );
             }
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -453,24 +446,20 @@ public class DBManager implements Serializable {
      */
     public LinkedList<Group> getInvites(User user) {
         LinkedList<Group> u = new LinkedList<>();
-        try {
-            String query = "SELECT * FROM \"user_group\" NATURAL JOIN \"group\" WHERE user_id = ? AND group_accepted = FALSE";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setInt(1, user.getId());
-                try (ResultSet res = stm.executeQuery()) {
-                    while (res.next()) {
-                        u.add(
-                                new Group(
-                                        res.getInt("group_id"),
-                                        res.getString("group_name"),
-                                        res.getInt("creator_id")
-                                )
-                        );
-                    }
-                    res.close();
-                }
-                stm.close();
+        String query = "SELECT * FROM \"user_group\" NATURAL JOIN \"group\" WHERE user_id = ? AND group_accepted = FALSE";
+        try (PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, user.getId());
+            ResultSet res = stm.executeQuery();
+            while (res.next()) {
+                u.add(
+                        new Group(
+                                res.getInt("group_id"),
+                                res.getString("group_name"),
+                                res.getInt("creator_id")
+                        )
+                );
             }
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -487,24 +476,22 @@ public class DBManager implements Serializable {
      */
     public LinkedList<User> getUsersForGroupAndVisible(int group, int creatorId) {
         LinkedList<User> u = new LinkedList<>();
-        try {
+        String query = "SELECT * FROM (SELECT * FROM \"group\" NATURAL JOIN \"user_group\" WHERE group_id = ? AND visible = TRUE) t NATURAL JOIN \"user\" WHERE user_id != ?";
+        try (PreparedStatement stm = connection.prepareStatement(query)) {
             //togliere il creatore del gruppo dalla richiesta
-            String query = "SELECT * FROM (SELECT * FROM \"group\" NATURAL JOIN \"user_group\" WHERE group_id = ? AND visible = TRUE) t NATURAL JOIN \"user\" WHERE user_id != ?";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setInt(1, group);
-                stm.setInt(2, creatorId);
-                try (ResultSet res = stm.executeQuery()) {
-                    while (res.next()) {
-                        u.add(
-                                new User(
-                                        res.getInt("user_id"),
-                                        res.getString("user_name"),
-                                        res.getBoolean("user_moderator")
-                                )
-                        );
-                    }
-                }
+            stm.setInt(1, group);
+            stm.setInt(2, creatorId);
+            ResultSet res = stm.executeQuery();
+            while (res.next()) {
+                u.add(
+                        new User(
+                                res.getInt("user_id"),
+                                res.getString("user_name"),
+                                res.getBoolean("user_moderator")
+                        )
+                );
             }
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -521,23 +508,21 @@ public class DBManager implements Serializable {
      */
     public LinkedList<User> getUsersForGroupAndNotVisible(int group, int creatorId) {
         LinkedList<User> u = new LinkedList<>();
-        try {
-            String query = "SELECT * FROM (SELECT * FROM \"group\" NATURAL JOIN \"user_group\" WHERE group_id = ? AND visible = FALSE) t NATURAL JOIN \"user\" WHERE user_id != ?";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setInt(1, group);
-                stm.setInt(2, creatorId);
-                try (ResultSet res = stm.executeQuery()) {
-                    while (res.next()) {
-                        u.add(
-                                new User(
-                                        res.getInt("user_id"),
-                                        res.getString("user_name"),
-                                        res.getBoolean("user_moderator")
-                                )
-                        );
-                    }
-                }
+        String query = "SELECT * FROM (SELECT * FROM \"group\" NATURAL JOIN \"user_group\" WHERE group_id = ? AND visible = FALSE) t NATURAL JOIN \"user\" WHERE user_id != ?";
+        try (PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, group);
+            stm.setInt(2, creatorId);
+            ResultSet res = stm.executeQuery();
+            while (res.next()) {
+                u.add(
+                        new User(
+                                res.getInt("user_id"),
+                                res.getString("user_name"),
+                                res.getBoolean("user_moderator")
+                        )
+                );
             }
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -553,23 +538,21 @@ public class DBManager implements Serializable {
      */
     public LinkedList<User> getUsersNotInGroup(int group, int creatorId) {
         LinkedList<User> u = new LinkedList<>();
-        try {
-            String query = "select * from (select * from \"user_group\" natural join \"group\" where group_id = ?) t natural right outer join \"user\" where t.user_id IS NULL AND user_id != ?";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setInt(1, group);
-                stm.setInt(2, creatorId);
-                try (ResultSet res = stm.executeQuery()) {
-                    while (res.next()) {
-                        u.add(
-                                new User(
-                                        res.getInt("user_id"),
-                                        res.getString("user_name"),
-                                        res.getBoolean("user_moderator")
-                                )
-                        );
-                    }
-                }
+        String query = "select * from (select * from \"user_group\" natural join \"group\" where group_id = ?) t natural right outer join \"user\" where t.user_id IS NULL AND user_id != ?";
+        try (PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, group);
+            stm.setInt(2, creatorId);
+            ResultSet res = stm.executeQuery();
+            while (res.next()) {
+                u.add(
+                        new User(
+                                res.getInt("user_id"),
+                                res.getString("user_name"),
+                                res.getBoolean("user_moderator")
+                        )
+                );
             }
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -584,19 +567,17 @@ public class DBManager implements Serializable {
      */
     public Group getGroupMadeByUser(int user) {
         Group u = null;
-        try {
-            String query = "SELECT * FROM \"group\" WHERE creator_id = ?";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setInt(1, user);
-                try (ResultSet res = stm.executeQuery()) {
-                    res.next();
-                    u = new Group(
-                            res.getInt("group_id"),
-                            res.getString("group_name"),
-                            res.getInt("creator_id")
-                    );
-                }
-            }
+        String query = "SELECT * FROM \"group\" WHERE creator_id = ?";
+        try (PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, user);
+            ResultSet res = stm.executeQuery();
+            res.next();
+            u = new Group(
+                    res.getInt("group_id"),
+                    res.getString("group_name"),
+                    res.getInt("creator_id")
+            );
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -611,13 +592,11 @@ public class DBManager implements Serializable {
      * @return
      */
     public boolean changeGroupName(int group, String name) {
-        try {
-            String query = "UPDATE \"group\" SET group_name = ? WHERE group_id = ?";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setString(1, name);
-                stm.setInt(2, group);
-                return stm.executeUpdate() == 1;
-            }
+        String query = "UPDATE \"group\" SET group_name = ? WHERE group_id = ?";
+        try (PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setString(1, name);
+            stm.setInt(2, group);
+            return stm.executeUpdate() == 1;
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -631,12 +610,10 @@ public class DBManager implements Serializable {
      * @return
      */
     public boolean closeGroup(Group group) {
-        try {
-            String query = "UPDATE \"group\" SET group_closed = TRUE WHERE group_id = ?";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setInt(1, group.getId());
-                return stm.executeUpdate() == 1;
-            }
+        String query = "UPDATE \"group\" SET group_closed = TRUE WHERE group_id = ?";
+        try (PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, group.getId());
+            return stm.executeUpdate() == 1;
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -651,13 +628,13 @@ public class DBManager implements Serializable {
      * @return
      */
     public boolean setPublicFlag(int groupId, boolean isPublic) {
-        try {
-            String query = "UPDATE \"group\" SET group_public = ? WHERE group_id = ?";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setBoolean(1, isPublic);
-                stm.setInt(2, groupId);
-                return stm.executeUpdate() == 1;
-            }
+        String query = "UPDATE \"group\" SET group_public = ? WHERE group_id = ?";
+        try (PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setBoolean(1, isPublic);
+            stm.setInt(2, groupId);
+            boolean ret = stm.executeUpdate() == 1;
+            stm.close();
+            return ret;
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -678,46 +655,37 @@ public class DBManager implements Serializable {
             PreparedStatement stm = connection.prepareStatement(query);
             query = "INSERT INTO \"user_group\"(group_accepted, group_id, visible, user_id) VALUES(?, ?, ?, ?)";
             PreparedStatement stm2 = connection.prepareStatement(query);
-            try {
-                for (Map.Entry<String, String[]> entry : m.entrySet()) {
-                    String key = entry.getKey();
-                    int userId;
-                    try {
-                        userId = Integer.parseInt(key);
-                    } catch (NumberFormatException e) {
-                        continue;
-                    }
-                    try {
-                        String[] value = entry.getValue();
-
-                        switch (value[0]) {
-                            case "member":
-                                stm2.setInt(2, group);
-                                stm2.setBoolean(1, false);
-                                stm2.setBoolean(3, true);
-                                stm2.setInt(4, userId);
-                                stm2.executeUpdate();
-                                break;
-                            case "invisible":
-                                stm.setInt(2, group);
-                                stm.setBoolean(1, false);
-                                stm.setInt(3, userId);
-                                stm.executeUpdate();
-                                break;
-                            case "visible":
-                                stm.setInt(2, group);
-                                stm.setBoolean(1, true);
-                                stm.setInt(3, userId);
-                                stm.executeUpdate();
-
-                        }
-                    } catch (SQLException e) {
-                        Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
-                    }
-
+            for (Map.Entry<String, String[]> entry : m.entrySet()) {
+                String key = entry.getKey();
+                int userId;
+                try {
+                    userId = Integer.parseInt(key);
+                } catch (NumberFormatException e) {
+                    continue;
                 }
-            } finally {
-                stm.close();
+                String[] value = entry.getValue();
+
+                switch (value[0]) {
+                    case "member":
+                        stm2.setInt(2, group);
+                        stm2.setBoolean(1, false);
+                        stm2.setBoolean(3, true);
+                        stm2.setInt(4, userId);
+                        stm2.executeUpdate();
+                        break;
+                    case "invisible":
+                        stm.setInt(2, group);
+                        stm.setBoolean(1, false);
+                        stm.setInt(3, userId);
+                        stm.executeUpdate();
+                        break;
+                    case "visible":
+                        stm.setInt(2, group);
+                        stm.setBoolean(1, true);
+                        stm.setInt(3, userId);
+                        stm.executeUpdate();
+                }
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -760,10 +728,6 @@ public class DBManager implements Serializable {
                 }
                 stm.close();
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
             connection.setAutoCommit(true);
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -783,9 +747,10 @@ public class DBManager implements Serializable {
     public int addPost(int groupId, int userId, String text, MultipartRequest multipart) {
         int postId = 0;
         Enumeration<String> files = multipart.getFileNames();
+
+        String query = "INSERT INTO \"post\"(user_id, group_id, post_text) VALUES(?, ?, ?)";
         try {
             connection.setAutoCommit(false);
-            String query = "INSERT INTO \"post\"(user_id, group_id, post_text) VALUES(?, ?, ?)";
             PreparedStatement stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             stm.setInt(1, userId);
             stm.setInt(2, groupId);
@@ -820,12 +785,8 @@ public class DBManager implements Serializable {
                     }
                 }
             }
-            connection.commit();
             stm.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
+            connection.commit();
             connection.setAutoCommit(true);
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -840,13 +801,11 @@ public class DBManager implements Serializable {
      * @param user ID dell'utente invitato
      */
     public void acceptInvitesFromGroups(int group, int user) {
-        try {
-            String query = "UPDATE \"user_group\" SET group_accepted = TRUE WHERE group_id = ? AND user_id = ?";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setInt(1, group);
-                stm.setInt(2, user);
-                stm.executeUpdate();
-            }
+        String query = "UPDATE \"user_group\" SET group_accepted = TRUE WHERE group_id = ? AND user_id = ?";
+        try (PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, group);
+            stm.setInt(2, user);
+            stm.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -859,16 +818,13 @@ public class DBManager implements Serializable {
      * @param user ID dell'utente invitato
      */
     public void declineInvitesFromGroups(int group, int user) {
-        try {
-            String query = "DELETE FROM \"user_group\" WHERE group_id = ? AND user_id = ?";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setInt(1, group);
-                stm.setInt(2, user);
-                stm.executeUpdate();
-            }
+        String query = "DELETE FROM \"user_group\" WHERE group_id = ? AND user_id = ?";
+        try (PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, group);
+            stm.setInt(2, user);
+            stm.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(DBManager.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -882,18 +838,12 @@ public class DBManager implements Serializable {
     public Date getLastQickDisplayTime(int user) {
         Date time = null;
         String query = "SELECT user_last_time FROM \"user\" WHERE user_id = ?";
-        PreparedStatement stm;
-        try {
-            stm = connection.prepareStatement(query);
-            try {
-                stm.setInt(1, user);
-                try (ResultSet res = stm.executeQuery()) {
-                    res.next();
-                    time = new Date(res.getTimestamp("user_last_time").getTime());
-                }
-            } finally {
-                stm.close();
-            }
+        try (PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, user);
+            ResultSet res = stm.executeQuery();
+            res.next();
+            time = new Date(res.getTimestamp("user_last_time").getTime());
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -907,18 +857,12 @@ public class DBManager implements Serializable {
      * @param user
      */
     public void updateQuickDisplayTime(int user) {
-        Date time = new Date();
         String query = "UPDATE \"user\" SET user_last_time = ? WHERE user_id = ?";
-        PreparedStatement stm;
-        try {
-            stm = connection.prepareStatement(query);
-            try {
-                stm.setTimestamp(1, new Timestamp(time.getTime()));
-                stm.setInt(2, user);
-                stm.executeUpdate();
-            } finally {
-                stm.close();
-            }
+        try (PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setTimestamp(1, new Timestamp(new Date().getTime()));
+            stm.setInt(2, user);
+            stm.executeUpdate();
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -933,20 +877,18 @@ public class DBManager implements Serializable {
      */
     public User getUser(int userId) {
         User user = null;
-        try {
-            String query = "SELECT * FROM \"user\" WHERE user_id = ?";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setInt(1, userId);
-                try (ResultSet res = stm.executeQuery()) {
-                    if (res.next()) {
-                        user = new User(
-                                res.getInt("user_id"),
-                                res.getString("user_name"),
-                                res.getBoolean("user_moderator")
-                        );
-                    }
-                }
+        String query = "SELECT * FROM \"user\" WHERE user_id = ?";
+        try (PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, userId);
+            ResultSet res = stm.executeQuery();
+            if (res.next()) {
+                user = new User(
+                        res.getInt("user_id"),
+                        res.getString("user_name"),
+                        res.getBoolean("user_moderator")
+                );
             }
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class
                     .getName()).log(Level.SEVERE, null, ex);
@@ -966,33 +908,26 @@ public class DBManager implements Serializable {
 
     public boolean canRead(int userId, int groupId) {
         boolean x = false;
-        try {
-            String query = "SELECT * FROM \"user_group\" NATURAL JOIN \"group\" WHERE (user_id = ? AND group_id = ? AND visible = TRUE) OR group_public = TRUE";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setInt(1, userId);
-                stm.setInt(2, groupId);
-                ResultSet res = stm.executeQuery();
-                x = res.next();
-
-            }
+        String query = "SELECT * FROM \"user_group\" NATURAL JOIN \"group\" WHERE (user_id = ? AND group_id = ? AND visible = TRUE) OR group_public = TRUE";
+        try (PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, userId);
+            stm.setInt(2, groupId);
+            ResultSet res = stm.executeQuery();
+            x = res.next();
         } catch (SQLException ex) {
-            Logger.getLogger(DBManager.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return x;
     }
 
     public boolean canWrite(int userId, int groupId) {
         boolean x = false;
-        try {
-            String query = "SELECT * FROM \"user_group\" WHERE user_id = ? AND group_id = ? AND visible = TRUE";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setInt(1, userId);
-                stm.setInt(2, groupId);
-                ResultSet res = stm.executeQuery();
-                x = res.next();
-
-            }
+        String query = "SELECT * FROM \"user_group\" WHERE user_id = ? AND group_id = ? AND visible = TRUE";
+        try (PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, userId);
+            stm.setInt(2, groupId);
+            ResultSet res = stm.executeQuery();
+            x = res.next();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class
                     .getName()).log(Level.SEVERE, null, ex);
@@ -1002,29 +937,27 @@ public class DBManager implements Serializable {
 
     public LinkedList<Post> getPostsFromDate(Date d, User user) {
         LinkedList<Post> p = new LinkedList<>();
-        try {
-            String query = "SELECT * FROM (SELECT * FROM (SELECT post_id, group_id, post_text, post_date, user_id AS poster_id FROM \"post\" WHERE user_id != ?) t NATURAL JOIN \"user_group\" WHERE user_id = ? AND group_accepted = TRUE AND visible = TRUE AND post_date >= ? ORDER BY group_id ASC, post_date DESC) t1 JOIN \"user\" ON \"user\".user_id = poster_id";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setInt(1, user.getId());
-                stm.setInt(2, user.getId());
-                stm.setTimestamp(3, new Timestamp(d.getTime()));
-                try (ResultSet res = stm.executeQuery()) {
-                    while (res.next()) {
-                        Group g = getGroup(res.getInt("group_id"));
-                        HashMap<String, GroupFile> files = getGroupFiles(g);
-                        p.add(
-                                new Post(
-                                        res.getInt("post_id"),
-                                        res.getString("post_text"),
-                                        res.getDate("post_date"),
-                                        new User(res.getInt("poster_id"), res.getString("user_name"), res.getBoolean("user_moderator")),
-                                        files,
-                                        g
-                                )
-                        );
-                    }
-                }
+        String query = "SELECT * FROM (SELECT * FROM (SELECT post_id, group_id, post_text, post_date, user_id AS poster_id FROM \"post\" WHERE user_id != ?) t NATURAL JOIN \"user_group\" WHERE user_id = ? AND group_accepted = TRUE AND visible = TRUE AND post_date >= ? ORDER BY group_id ASC, post_date DESC) t1 JOIN \"user\" ON \"user\".user_id = poster_id";
+        try (PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setInt(1, user.getId());
+            stm.setInt(2, user.getId());
+            stm.setTimestamp(3, new Timestamp(d.getTime()));
+            ResultSet res = stm.executeQuery();
+            while (res.next()) {
+                Group g = getGroup(res.getInt("group_id"));
+                HashMap<String, GroupFile> files = getGroupFiles(g);
+                p.add(
+                        new Post(
+                                res.getInt("post_id"),
+                                res.getString("post_text"),
+                                res.getDate("post_date"),
+                                new User(res.getInt("poster_id"), res.getString("user_name"), res.getBoolean("user_moderator")),
+                                files,
+                                g
+                        )
+                );
             }
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1033,16 +966,12 @@ public class DBManager implements Serializable {
 
     public boolean emailInDatabase(String email) {
         boolean exists = false;
-        try {
-            String query = "SELECT * FROM \"user\" WHERE user_email = ?";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setString(1, email);
-                try (ResultSet res = stm.executeQuery()) {
-                    if (res.next()) {
-                        exists = true;
-                    }
-                }
-            }
+        String query = "SELECT * FROM \"user\" WHERE user_email = ?";
+        try (PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setString(1, email);
+            ResultSet res = stm.executeQuery();
+            exists = res.next();
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class
                     .getName()).log(Level.SEVERE, null, ex);
@@ -1052,17 +981,15 @@ public class DBManager implements Serializable {
 
     public boolean emailAndCodeInDatabase(String email, String code) {
         boolean exists = false;
-        try {
-            String query = "SELECT * FROM \"user\" WHERE user_email = ? AND user_tmp_code = ?";
-            try (PreparedStatement stm = connection.prepareStatement(query)) {
-                stm.setString(1, email);
-                stm.setString(2, code);
-                try (ResultSet res = stm.executeQuery()) {
-                    if (res.next()) {
-                        exists = true;
-                    }
-                }
+        String query = "SELECT * FROM \"user\" WHERE user_email = ? AND user_tmp_code = ?";
+        try (PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setString(1, email);
+            stm.setString(2, code);
+            ResultSet res = stm.executeQuery();
+            if (res.next()) {
+                exists = true;
             }
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class
                     .getName()).log(Level.SEVERE, null, ex);
@@ -1070,40 +997,31 @@ public class DBManager implements Serializable {
         return exists;
     }
 
-    public void updateVerificationCodeAndTime(String code, String email) {
+    public boolean updateVerificationCodeAndTime(String code, String email) {
         Date time = new Date();
         String query = "UPDATE \"user\" SET user_tmp_code_time = ?, user_tmp_code = ? WHERE user_email = ?";
-        PreparedStatement stm;
-        try {
-            stm = connection.prepareStatement(query);
-            try {
-                stm.setTimestamp(1, new Timestamp(time.getTime()));
-                stm.setString(2, code);
-                stm.setString(3, email);
-                stm.executeUpdate();
-            } finally {
-                stm.close();
-            }
+        try (PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setTimestamp(1, new Timestamp(time.getTime()));
+            stm.setString(2, code);
+            stm.setString(3, email);
+            boolean ret = stm.executeUpdate() == 1;
+            stm.close();
+            return ret;
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return false;
     }
 
     public Date getLastVerificationCodeTime(String email) {
         Date time = null;
         String query = "SELECT user_tmp_code_time FROM \"user\" WHERE user_email = ?";
-        PreparedStatement stm;
-        try {
-            stm = connection.prepareStatement(query);
-            try {
-                stm.setString(1, email);
-                try (ResultSet res = stm.executeQuery()) {
-                    res.next();
-                    time = new Date (res.getTimestamp("user_tmp_code_time").getTime());
-                }
-            } finally {
-                stm.close();
-            }
+        try (PreparedStatement stm = connection.prepareStatement(query)) {
+            stm.setString(1, email);
+            ResultSet res = stm.executeQuery();
+            res.next();
+            time = new Date(res.getTimestamp("user_tmp_code_time").getTime());
+            stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
