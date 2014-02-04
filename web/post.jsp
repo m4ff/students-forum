@@ -26,7 +26,7 @@
                         ${error}
                     </div>
                 </c:if>
-                <form action="/post?id=${groupId}" data-ajax="false" method="post" enctype="multipart/form-data">
+                <form action="/post?id=${groupId}" data-ajax="false" method="post" enctype="multipart/form-data" onsubmit="if($('#post-text').val() == ''){alert('You forgot to write your text');return false;}else return true">
                     <ul data-role="listview" data-inset="true">
                         <li data-role="fieldcontain">
                             <label for="post-text">Post text:</label>
