@@ -29,7 +29,7 @@
                         <div class="post-container" style="background-image: url(${p.getCreator().getAvatar()})">
                             <div class="user-name">${p.getCreator().getName()}</div>
                             <div class="post-text ui-corner-all ui-body ui-body-a">
-                                <p style="white-space: normal; font-size: 0.9em">
+                                <p style="white-space: normal; font-size: 1em">
                                     ${p.getText(isPublic)}
                                 </p>
                             </div>
