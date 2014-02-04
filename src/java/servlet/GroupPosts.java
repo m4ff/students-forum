@@ -64,7 +64,7 @@ public class GroupPosts extends HttpServlet {
             request.setAttribute("isPublic", !dbmanager.canWrite(userId, groupId));
             request.getRequestDispatcher("groupPosts.jsp").forward(request, response);
         } catch (ServletException | IOException ex) {
-            Logger.getLogger(GroupPage.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GroupsPage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

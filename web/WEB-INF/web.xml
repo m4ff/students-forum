@@ -4,15 +4,9 @@
         <description>contextListener</description>
         <listener-class>listener.ContextListener</listener-class>
     </listener>
-    
-    
-    
     <welcome-file-list>
         <welcome-file>forum</welcome-file>
     </welcome-file-list>
-    
-    
-    
     <servlet>
         <servlet-name>Home</servlet-name>
         <servlet-class>servlet.Home</servlet-class>
@@ -38,8 +32,8 @@
         <servlet-class>servlet.Avatar</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>GroupPage</servlet-name>
-        <servlet-class>servlet.GroupPage</servlet-class>
+        <servlet-name>GroupsPage</servlet-name>
+        <servlet-class>servlet.GroupsPage</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>Logout</servlet-name>
@@ -77,10 +71,6 @@
         <servlet-name>QRServlet</servlet-name>
         <servlet-class>servlet.QRServlet</servlet-class>
     </servlet>
-    
-    
-    
-    
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/forum</url-pattern>
@@ -106,7 +96,7 @@
         <url-pattern>/avatar</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>GroupPage</servlet-name>
+        <servlet-name>GroupsPage</servlet-name>
         <url-pattern>/groups</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
@@ -145,8 +135,6 @@
         <servlet-name>QRServlet</servlet-name>
         <url-pattern>/qr-gen</url-pattern>
     </servlet-mapping>
-    
-    
     <filter>
         <filter-name>
             LoginFilter
@@ -243,7 +231,6 @@
             PostPage
         </servlet-name>
     </filter-mapping>
-
     <session-config>
         <session-timeout>
             30

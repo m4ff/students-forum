@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  * @author Pier DAgostino
  */
 @WebServlet(name = "GroupPage", urlPatterns = {"/group"})
-public class GroupPage extends HttpServlet {
+public class GroupsPage extends HttpServlet {
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -45,7 +45,7 @@ public class GroupPage extends HttpServlet {
             request.setAttribute("publicGroupList", publicGroups);
             request.getRequestDispatcher("groups.jsp").forward(request, response);
         } catch (ServletException | IOException ex) {
-            Logger.getLogger(GroupPage.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GroupsPage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

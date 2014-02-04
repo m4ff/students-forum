@@ -49,7 +49,7 @@ public class PostPage extends HttpServlet {
             request.setAttribute("posts", groupPosts);
             request.getRequestDispatcher("post.jsp").forward(request, response);
         } catch (ServletException | IOException ex) {
-            Logger.getLogger(GroupPage.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GroupsPage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
