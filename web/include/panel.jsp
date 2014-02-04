@@ -22,18 +22,18 @@
         </li>
         <li>
             <a href="/groups"  data-ajax="false">
-                My groups
+                Groups
             </a>
         </li>
         <c:if test="${user != null}">
         <li>
             <a href="/group-manager"  data-ajax="false">
-                Create new group
+                New group
             </a>
         </li>
         <li>
             <a href="/account"  data-ajax="false">
-                My account
+                Account
             </a>
         </li>
         </c:if>

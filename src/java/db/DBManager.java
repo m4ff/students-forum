@@ -88,6 +88,7 @@ public class DBManager implements Serializable {
     public User authenticate(String userName, String password) {
         User u = null;
         try {
+            connection.setAutoCommit(true);
             String query = "SELECT * FROM \"user\" WHERE user_name = ? AND user_password = ?";
             PreparedStatement stm = connection.prepareStatement(query);
             password = hashPassword(password);
@@ -115,6 +116,7 @@ public class DBManager implements Serializable {
     public int addUser(String email, String username, String password) {
         int userId = 0;
         try {
+            connection.setAutoCommit(true);
             String query = "INSERT INTO \"user\"(user_email, user_name, user_password) VALUES(?, ?, ?)";
             PreparedStatement stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             password = hashPassword(password);
@@ -145,6 +147,7 @@ public class DBManager implements Serializable {
     public boolean updateUserPassword(User user, String password) {
         password = hashPassword(password);
         try {
+            connection.setAutoCommit(true);
             String query = "UPDATE \"user\" SET user_password = ? WHERE user_id = ?";
             PreparedStatement stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             stm.setString(1, password);
@@ -161,6 +164,7 @@ public class DBManager implements Serializable {
     public boolean updateUserPassword(String email, String password) {
         password = hashPassword(password);
         try {
+            connection.setAutoCommit(true);
             String query = "UPDATE \"user\" SET user_password = ? WHERE user_email = ?";
             PreparedStatement stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             stm.setString(1, password);
@@ -183,6 +187,7 @@ public class DBManager implements Serializable {
     public LinkedList<Group> getGroups() {
         LinkedList<Group> g = new LinkedList<>();
         try {
+            connection.setAutoCommit(true);
             String query = "SELECT * FROM (SELECT group_id, COUNT(post_id) AS post_count, COUNT(DISTINCT user_id) AS user_count  FROM \"group\" NATURAL JOIN \"user_group\" NATURAL LEFT OUTER JOIN \"post\" GROUP BY group_id) t NATURAL JOIN \"group\"";
             PreparedStatement stm = connection.prepareStatement(query);
             ResultSet res = stm.executeQuery();
@@ -209,6 +214,7 @@ public class DBManager implements Serializable {
     public LinkedList<Group> getPublicGroups() {
         LinkedList<Group> g = new LinkedList<>();
         try {
+            connection.setAutoCommit(true);
             String query = "SELECT * FROM (SELECT group_id, COUNT(post_id) AS post_count, COUNT(DISTINCT user_id) AS user_count  FROM \"group\" NATURAL JOIN \"user_group\" NATURAL LEFT OUTER JOIN \"post\" GROUP BY group_id) t NATURAL JOIN \"group\" WHERE group_public = TRUE";
             PreparedStatement stm = connection.prepareStatement(query);
             ResultSet res = stm.executeQuery();
@@ -241,6 +247,7 @@ public class DBManager implements Serializable {
     public LinkedList<Group> getUserGroups(User user) {
         LinkedList<Group> g = new LinkedList<>();
         try {
+            connection.setAutoCommit(true);
             String query = "SELECT * FROM (SELECT group_id, COUNT(post_id) AS post_count, COUNT(DISTINCT user_id) AS user_count  FROM \"group\" NATURAL JOIN \"user_group\" NATURAL LEFT OUTER JOIN \"post\" GROUP BY group_id) t NATURAL JOIN \"group\" NATURAL JOIN \"user_group\" WHERE user_id = ? AND group_accepted = TRUE AND visible = TRUE";
             PreparedStatement stm = connection.prepareStatement(query);
             stm.setInt(1, user.getId());
@@ -274,6 +281,7 @@ public class DBManager implements Serializable {
     public LinkedList<Post> getGroupPosts(Group g) {
         LinkedList<Post> p = new LinkedList<>();
         try {
+            connection.setAutoCommit(true);
             String query = "SELECT * FROM \"post\" NATURAL JOIN \"user\" WHERE group_id = ?";
             PreparedStatement stm = connection.prepareStatement(query);
             stm.setInt(1, g.getId());
@@ -308,6 +316,7 @@ public class DBManager implements Serializable {
     public HashMap<String, GroupFile> getPostFiles(Post p) {
         HashMap<String, GroupFile> f = new HashMap<>();
         try {
+            connection.setAutoCommit(true);
             String query = "SELECT * FROM \"file\" NATURAL JOIN \"post\" WHERE post_id = ?";
             PreparedStatement stm = connection.prepareStatement(query);
             stm.setInt(1, p.getId());
@@ -339,6 +348,7 @@ public class DBManager implements Serializable {
     public HashMap<String, GroupFile> getGroupFiles(Group g) {
         HashMap<String, GroupFile> f = new HashMap<>();
         try {
+            connection.setAutoCommit(true);
             String query = "SELECT * FROM \"file\" NATURAL JOIN \"post\" NATURAL JOIN \"group\" WHERE group_id = ?";
             PreparedStatement stm = connection.prepareStatement(query);
             stm.setInt(1, g.getId());
@@ -363,6 +373,7 @@ public class DBManager implements Serializable {
     public GroupFile getFile(int g, String fileName) {
         GroupFile f = null;
         try {
+            connection.setAutoCommit(true);
             String query = "SELECT * FROM \"file\" NATURAL JOIN \"post\" NATURAL JOIN \"group\" WHERE group_id = ? AND file_name = ?";
             PreparedStatement stm = connection.prepareStatement(query);
             stm.setInt(1, g);
@@ -391,6 +402,7 @@ public class DBManager implements Serializable {
     public Timestamp getLatestPost(Group group) {
         Timestamp date = null;
         try {
+            connection.setAutoCommit(true);
             String query = "SELECT MAX(post_date) AS max_date FROM \"post\" WHERE group_id = ?";
             PreparedStatement stm = connection.prepareStatement(query);
             stm.setInt(1, group.getId());
@@ -414,6 +426,7 @@ public class DBManager implements Serializable {
     public Group getGroup(int groupId) {
         Group target = null;
         try {
+            connection.setAutoCommit(true);
             String query = "SELECT * FROM (SELECT group_id, COUNT(post_id) AS post_count, COUNT(DISTINCT user_id) AS user_count  FROM \"group\" NATURAL JOIN \"user_group\" NATURAL LEFT OUTER JOIN \"post\" GROUP BY group_id) t NATURAL JOIN \"group\" WHERE group_id = ?";
             PreparedStatement stm = connection.prepareStatement(query);
             stm.setInt(1, groupId);
@@ -448,6 +461,7 @@ public class DBManager implements Serializable {
         LinkedList<Group> u = new LinkedList<>();
         String query = "SELECT * FROM \"user_group\" NATURAL JOIN \"group\" WHERE user_id = ? AND group_accepted = FALSE";
         try (PreparedStatement stm = connection.prepareStatement(query)) {
+            connection.setAutoCommit(true);
             stm.setInt(1, user.getId());
             ResultSet res = stm.executeQuery();
             while (res.next()) {
@@ -479,6 +493,7 @@ public class DBManager implements Serializable {
         String query = "SELECT * FROM (SELECT * FROM \"group\" NATURAL JOIN \"user_group\" WHERE group_id = ? AND visible = TRUE) t NATURAL JOIN \"user\" WHERE user_id != ?";
         try (PreparedStatement stm = connection.prepareStatement(query)) {
             //togliere il creatore del gruppo dalla richiesta
+            connection.setAutoCommit(true);
             stm.setInt(1, group);
             stm.setInt(2, creatorId);
             ResultSet res = stm.executeQuery();
@@ -510,6 +525,7 @@ public class DBManager implements Serializable {
         LinkedList<User> u = new LinkedList<>();
         String query = "SELECT * FROM (SELECT * FROM \"group\" NATURAL JOIN \"user_group\" WHERE group_id = ? AND visible = FALSE) t NATURAL JOIN \"user\" WHERE user_id != ?";
         try (PreparedStatement stm = connection.prepareStatement(query)) {
+            connection.setAutoCommit(true);
             stm.setInt(1, group);
             stm.setInt(2, creatorId);
             ResultSet res = stm.executeQuery();
@@ -540,6 +556,7 @@ public class DBManager implements Serializable {
         LinkedList<User> u = new LinkedList<>();
         String query = "select * from (select * from \"user_group\" natural join \"group\" where group_id = ?) t natural right outer join \"user\" where t.user_id IS NULL AND user_id != ?";
         try (PreparedStatement stm = connection.prepareStatement(query)) {
+            connection.setAutoCommit(true);
             stm.setInt(1, group);
             stm.setInt(2, creatorId);
             ResultSet res = stm.executeQuery();
@@ -569,6 +586,7 @@ public class DBManager implements Serializable {
         Group u = null;
         String query = "SELECT * FROM \"group\" WHERE creator_id = ?";
         try (PreparedStatement stm = connection.prepareStatement(query)) {
+            connection.setAutoCommit(true);
             stm.setInt(1, user);
             ResultSet res = stm.executeQuery();
             res.next();
@@ -594,6 +612,7 @@ public class DBManager implements Serializable {
     public boolean changeGroupName(int group, String name) {
         String query = "UPDATE \"group\" SET group_name = ? WHERE group_id = ?";
         try (PreparedStatement stm = connection.prepareStatement(query)) {
+            connection.setAutoCommit(true);
             stm.setString(1, name);
             stm.setInt(2, group);
             return stm.executeUpdate() == 1;
@@ -612,6 +631,7 @@ public class DBManager implements Serializable {
     public boolean closeGroup(Group group) {
         String query = "UPDATE \"group\" SET group_closed = TRUE WHERE group_id = ?";
         try (PreparedStatement stm = connection.prepareStatement(query)) {
+            connection.setAutoCommit(true);
             stm.setInt(1, group.getId());
             return stm.executeUpdate() == 1;
         } catch (SQLException ex) {
@@ -630,6 +650,7 @@ public class DBManager implements Serializable {
     public boolean setPublicFlag(int groupId, boolean isPublic) {
         String query = "UPDATE \"group\" SET group_public = ? WHERE group_id = ?";
         try (PreparedStatement stm = connection.prepareStatement(query)) {
+            connection.setAutoCommit(true);
             stm.setBoolean(1, isPublic);
             stm.setInt(2, groupId);
             boolean ret = stm.executeUpdate() == 1;
@@ -651,6 +672,7 @@ public class DBManager implements Serializable {
      */
     public void updateGroupMembers(int group, Map<String, String[]> m) {
         try {
+            connection.setAutoCommit(true);
             String query = "UPDATE \"user_group\" SET visible = ? WHERE group_id = ? AND user_id = ?";
             PreparedStatement stm = connection.prepareStatement(query);
             query = "INSERT INTO \"user_group\"(group_accepted, group_id, visible, user_id) VALUES(?, ?, ?, ?)";
@@ -767,12 +789,9 @@ public class DBManager implements Serializable {
             stm = connection.prepareStatement(query);
             while (files.hasMoreElements()) {
                 String name = files.nextElement();
-                System.out.println(name);
-                String filename = multipart.getFilesystemName(name);
-                System.out.println(filename);
-                String type = multipart.getContentType(name);
-                System.out.println(type);
                 File f = multipart.getFile(name);
+                String filename = multipart.getFilesystemName(name);
+                String type = multipart.getContentType(name);
                 if (f != null) {
                     stm.setInt(1, postId);
                     stm.setString(2, filename);
@@ -803,6 +822,7 @@ public class DBManager implements Serializable {
     public void acceptInvitesFromGroups(int group, int user) {
         String query = "UPDATE \"user_group\" SET group_accepted = TRUE WHERE group_id = ? AND user_id = ?";
         try (PreparedStatement stm = connection.prepareStatement(query)) {
+            connection.setAutoCommit(true);
             stm.setInt(1, group);
             stm.setInt(2, user);
             stm.executeUpdate();
@@ -820,6 +840,7 @@ public class DBManager implements Serializable {
     public void declineInvitesFromGroups(int group, int user) {
         String query = "DELETE FROM \"user_group\" WHERE group_id = ? AND user_id = ?";
         try (PreparedStatement stm = connection.prepareStatement(query)) {
+            connection.setAutoCommit(true);
             stm.setInt(1, group);
             stm.setInt(2, user);
             stm.executeUpdate();
@@ -839,6 +860,7 @@ public class DBManager implements Serializable {
         Date time = null;
         String query = "SELECT user_last_time FROM \"user\" WHERE user_id = ?";
         try (PreparedStatement stm = connection.prepareStatement(query)) {
+            connection.setAutoCommit(true);
             stm.setInt(1, user);
             ResultSet res = stm.executeQuery();
             res.next();
@@ -859,6 +881,7 @@ public class DBManager implements Serializable {
     public void updateQuickDisplayTime(int user) {
         String query = "UPDATE \"user\" SET user_last_time = ? WHERE user_id = ?";
         try (PreparedStatement stm = connection.prepareStatement(query)) {
+            connection.setAutoCommit(true);
             stm.setTimestamp(1, new Timestamp(new Date().getTime()));
             stm.setInt(2, user);
             stm.executeUpdate();
@@ -879,6 +902,7 @@ public class DBManager implements Serializable {
         User user = null;
         String query = "SELECT * FROM \"user\" WHERE user_id = ?";
         try (PreparedStatement stm = connection.prepareStatement(query)) {
+            connection.setAutoCommit(true);
             stm.setInt(1, userId);
             ResultSet res = stm.executeQuery();
             if (res.next()) {
@@ -910,6 +934,7 @@ public class DBManager implements Serializable {
         boolean x = false;
         String query = "SELECT * FROM \"user_group\" NATURAL JOIN \"group\" WHERE (user_id = ? AND group_id = ? AND visible = TRUE) OR group_public = TRUE";
         try (PreparedStatement stm = connection.prepareStatement(query)) {
+            connection.setAutoCommit(true);
             stm.setInt(1, userId);
             stm.setInt(2, groupId);
             ResultSet res = stm.executeQuery();
@@ -924,6 +949,7 @@ public class DBManager implements Serializable {
         boolean x = false;
         String query = "SELECT * FROM \"user_group\" WHERE user_id = ? AND group_id = ? AND visible = TRUE";
         try (PreparedStatement stm = connection.prepareStatement(query)) {
+            connection.setAutoCommit(true);
             stm.setInt(1, userId);
             stm.setInt(2, groupId);
             ResultSet res = stm.executeQuery();
@@ -939,6 +965,7 @@ public class DBManager implements Serializable {
         LinkedList<Post> p = new LinkedList<>();
         String query = "SELECT * FROM (SELECT * FROM (SELECT post_id, group_id, post_text, post_date, user_id AS poster_id FROM \"post\" WHERE user_id != ?) t NATURAL JOIN \"user_group\" WHERE user_id = ? AND group_accepted = TRUE AND visible = TRUE AND post_date >= ? ORDER BY group_id ASC, post_date DESC) t1 JOIN \"user\" ON \"user\".user_id = poster_id";
         try (PreparedStatement stm = connection.prepareStatement(query)) {
+            connection.setAutoCommit(true);
             stm.setInt(1, user.getId());
             stm.setInt(2, user.getId());
             stm.setTimestamp(3, new Timestamp(d.getTime()));
@@ -968,6 +995,7 @@ public class DBManager implements Serializable {
         boolean exists = false;
         String query = "SELECT * FROM \"user\" WHERE user_email = ?";
         try (PreparedStatement stm = connection.prepareStatement(query)) {
+            connection.setAutoCommit(true);
             stm.setString(1, email);
             ResultSet res = stm.executeQuery();
             exists = res.next();
@@ -983,6 +1011,7 @@ public class DBManager implements Serializable {
         boolean exists = false;
         String query = "SELECT * FROM \"user\" WHERE user_email = ? AND user_tmp_code = ?";
         try (PreparedStatement stm = connection.prepareStatement(query)) {
+            connection.setAutoCommit(true);
             stm.setString(1, email);
             stm.setString(2, code);
             ResultSet res = stm.executeQuery();
@@ -1001,6 +1030,7 @@ public class DBManager implements Serializable {
         Date time = new Date();
         String query = "UPDATE \"user\" SET user_tmp_code_time = ?, user_tmp_code = ? WHERE user_email = ?";
         try (PreparedStatement stm = connection.prepareStatement(query)) {
+            connection.setAutoCommit(true);
             stm.setTimestamp(1, new Timestamp(time.getTime()));
             stm.setString(2, code);
             stm.setString(3, email);
@@ -1017,6 +1047,7 @@ public class DBManager implements Serializable {
         Date time = null;
         String query = "SELECT user_tmp_code_time FROM \"user\" WHERE user_email = ?";
         try (PreparedStatement stm = connection.prepareStatement(query)) {
+            connection.setAutoCommit(true);
             stm.setString(1, email);
             ResultSet res = stm.executeQuery();
             res.next();

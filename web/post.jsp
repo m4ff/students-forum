@@ -21,6 +21,11 @@
                 <h2>Student's Forum | Create Post</h2>
             </div>
             <div data-role="content">
+                <c:if test="${error != null}">
+                    <div class="ui-body ui-body-b ui-corner-all">
+                        ${error}
+                    </div>
+                </c:if>
                 <form action="/post?id=${groupId}" data-ajax="false" method="post" enctype="multipart/form-data">
                     <ul data-role="listview" data-inset="true">
                         <li data-role="fieldcontain">

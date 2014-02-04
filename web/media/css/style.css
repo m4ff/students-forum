@@ -13,14 +13,30 @@
 }
 
 .post-container {
-    background-position: 0.5em 1.2em; 
-    background-size: 6em; 
-    background-repeat: no-repeat;
     padding-left: 7em;
     position: relative;
     box-sizing: border-box;
     min-height: 7.7em;
     margin-bottom: 2em;
+}
+
+.post-container > .user-avatar {
+    width: 6em;
+    height: auto;
+    max-height: 6em;
+    position: absolute;
+    top: 1.2em;
+    left: 0.5em;
+    z-index: 1;
+    border-bottom-left-radius: 0.3125em;
+    border-bottom-right-radius: 0.3125em;
+    overflow: hidden;
+}
+
+.post-container > .user-avatar > img {
+    width: 100%;
+    border-bottom-left-radius: 0.3125em;
+    border-bottom-right-radius: 0.3125em;
 }
 
 .post-container > .user-name {
@@ -39,4 +55,5 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    z-index: 0;
 }

@@ -26,8 +26,11 @@
             <div data-role="content">
                 <c:if test="${posts.size() != 0}">
                     <c:forEach var="p" items="${posts}" varStatus="s">
-                        <div class="post-container" style="background-image: url(${p.getCreator().getAvatar()})">
+                        <div class="post-container">
                             <div class="user-name">${p.getCreator().getName()}</div>
+                            <div class="user-avatar">
+                                <img src="${p.getCreator().getAvatar()}">
+                            </div>
                             <div class="post-text ui-corner-all ui-body ui-body-a">
                                 <p style="white-space: normal; font-size: 1em">
                                     ${p.getText(isPublic)}

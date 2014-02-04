@@ -15,9 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import net.glxn.qrgen.QRCode;
 import net.glxn.qrgen.image.ImageType;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.OutputStream;
 
 /**
@@ -35,12 +32,11 @@ public class QRServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String text = (String) request.getParameter("qrtext");
-        ByteArrayOutputStream out = QRCode.from(text).to(ImageType.JPG).stream();
+        ByteArrayOutputStream out = QRCode.from(text).to(ImageType.PNG).stream();
         
-        response.setContentType("image/jpg");
+        response.setContentType("image/png");
         response.setContentLength(out.size());
         OutputStream outStream = response.getOutputStream();
         outStream.write(out.toByteArray());

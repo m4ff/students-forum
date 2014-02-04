@@ -11,12 +11,12 @@ import db.DBManager;
 import db.Group;
 import db.Post;
 import db.User;
+import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Pier DAgostino
  */
-@WebServlet(name = "PostPage", urlPatterns = {"/post"})
 public class PostPage extends HttpServlet {
 
     /**
@@ -62,11 +61,26 @@ public class PostPage extends HttpServlet {
         String groupIdParam = request.getParameter("id");
         int groupId = groupIdParam != null ? Integer.parseInt(groupIdParam) : 0;
         Group group = dbmanager.getGroup(groupId);
-        MultipartRequest multipart = new MultipartRequest(request, group.getFilesRealPath(getServletContext()), 10 * 1024 * 1024, "UTF-8", new DefaultFileRenamePolicy());
-        String text = multipart.getParameter("text");
-        int postId = dbmanager.addPost(groupId, user.getId(), text, multipart);
-        
+        if (group != null) {
+            MultipartRequest multipart = new MultipartRequest(request, group.getFilesRealPath(getServletContext()), 1024 * 1024 * 1024, "UTF-8", new PostFileRenamePolicy());
+            String text = multipart.getParameter("text");
+            int postId = dbmanager.addPost(groupId, user.getId(), text, multipart);
+        }
         response.sendRedirect("/group-posts?id=" + groupId);
     }
 
+}
+
+class PostFileRenamePolicy extends DefaultFileRenamePolicy {
+    @Override
+    public File rename(File f) {
+        String fileName = f.getName();
+        if(fileName.length() > 45) {
+            int n = fileName.length() - 45;
+            File newFile = new File(f.getParent() + File.separator + fileName.substring(n));
+            f.renameTo(newFile);
+            f = newFile;
+        }
+        return super.rename(f);
+    }
 }
