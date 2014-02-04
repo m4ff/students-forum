@@ -28,7 +28,7 @@
                     <c:forEach var="p" items="${posts}" varStatus="s">
                         <div class="post-container" style="background-image: url(${p.getCreator().getAvatar()})">
                             <div class="user-name">${p.getCreator().getName()}</div>
-                            <div class="post-text ui-corner-all ui-body ui-body-a" style="background-color: #${s.index % 2 == 1 ? "8be88b" : "e8e88b"}">
+                            <div class="post-text ui-corner-all ui-body ui-body-a">
                                 <p style="white-space: normal; font-size: 0.9em">
                                     ${p.getText(isPublic)}
                                 </p>
