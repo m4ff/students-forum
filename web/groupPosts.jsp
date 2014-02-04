@@ -25,25 +25,22 @@
             </div>
             <div data-role="content">
                 <c:if test="${posts.size() != 0}">
-                    <ul data-role="listview" data-inset="true">
-                        <c:forEach var="p" items="${posts}" varStatus="s">
-                            <li style="padding-left: 6em; background-image: url(${p.getCreator().getAvatar()}); background-position: 0.5em 1em; background-size: 5em; background-repeat: no-repeat">
-                                <b>${p.getCreator().getName()}</b>
-                                <div class="ui-corner-all ui-body ui-body-a" style="background-color: #${s.index % 2 == 1 ? "8be88b" : "e8e88b"}">
-                                    <p style="white-space: normal; font-size: 0.9em">
-                                        ${p.getText(isPublic)}
-                                    </p>
-                                </div>
-                                <ul style="font-size: 0.7em; padding-top: 0.7em">
-                                    <c:forEach var="f" items="${dbmanager.getPostFiles(p)}">
-                                        <li>
-                                            <a target="_blank" href="${p.getGroup().getFilePath(f.key)}">${f.key} (${f.value.getSizeString()})</a>
-                                        </li>
-                                    </c:forEach>
-                                </ul>
-                            </li>
-                        </c:forEach>
-                    </ul>
+                    <c:forEach var="p" items="${posts}" varStatus="s">
+                        <div class="post-container" style="background-image: url(${p.getCreator().getAvatar()})">
+                            <div class="user-name">${p.getCreator().getName()}</div>
+                            <div class="post-text ui-corner-all ui-body ui-body-a" style="background-color: #${s.index % 2 == 1 ? "8be88b" : "e8e88b"}">
+                                <p style="white-space: normal; font-size: 0.9em">
+                                    ${p.getText(isPublic)}
+                                </p>
+                            </div>
+                            <div style="font-size: 0.8em; padding-left: 17px; margin-top: 0.5em">
+                                <c:forEach var="f" items="${dbmanager.getPostFiles(p)}">
+                                    <a target="_blank" href="${p.getGroup().getFilePath(f.key)}">${f.key} (${f.value.getSizeString()})</a>
+                                    <br>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </c:forEach>
                 </c:if>
                 <c:if test="${posts.size() == 0}">
                     <div class="ui-body ui-body-b ui-corner-all"><h3>The discussion thread is empty!</h3></div>

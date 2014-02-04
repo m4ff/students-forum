@@ -28,7 +28,7 @@
                 <form method="post" enctype="multipart/form-data" data-ajax="false" onsubmit="var b = $('#account-password').val() == $('#account-password-conf').val(); if(!b) alert('Password check failed'); return b;">
                     <ul data-role="listview" data-inset="true">
                         <li data-role="fieldcontain">
-                            <img src="/avatar?id=${user.getId()}" style="height: 100%; width: auto">
+                            <img src="/avatar?id=${user.getId()}" style="max-width: 5em; height: auto">
                             <label for="account-avatar">Avatar</label>
                             <input type="file" id="account-avatar" name="avatar">
                         </li>
