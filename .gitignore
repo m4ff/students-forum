@@ -5,3 +5,4 @@ dist/*
 nbproject/*
 avatarsTmp/*.jpg
 avatars/*.jpg
+files/*
