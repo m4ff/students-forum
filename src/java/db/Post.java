@@ -28,8 +28,8 @@ public class Post {
     Post(int id, String text, Date date, User creator, HashMap<String, GroupFile> groupFiles, Group group) {
         text = text.replaceAll("<", "&lt;");
         text = text.replaceAll(">", "&gt;");
-        String linkPattern = "\\$\\$([^\\s]+)\\$\\$";
-        String QRPattern = "\\$QR\\$([^\\s]+)\\$\\$";
+        String linkPattern = "\\$\\$(.+?)\\$\\$";
+        String QRPattern = "\\$QR\\$(.+?)\\$\\$";
         //Find links & QRlinks
         Pattern p = Pattern.compile(linkPattern);
         Matcher m = p.matcher(text);

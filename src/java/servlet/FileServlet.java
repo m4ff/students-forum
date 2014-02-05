@@ -31,19 +31,23 @@ public class FileServlet extends HttpServlet {
         int groupId = Integer.parseInt(uri.substring(uri.lastIndexOf('/') + 1, uri.indexOf('-')));
         String fileName = URLDecoder.decode(uri.substring(uri.indexOf('-') + 1), "UTF-8");
         GroupFile f = dbmanager.getFile(groupId, fileName);
-        OutputStream out = response.getOutputStream();
-        byte[] bytes = new byte[1024];
-        int bytesRead;
-        
-        response.setContentType(f.getMime());
-        response.setContentLength(f.getSize());
-        
-        String path = (String) getServletContext().getAttribute("filesDir") + File.separator + groupId + File.separator + fileName;
-        InputStream in = new FileInputStream(path);
-        while ((bytesRead = in.read(bytes)) != -1) {
-            out.write(bytes, 0, bytesRead);
+        if (f != null) {
+            OutputStream out = response.getOutputStream();
+            byte[] bytes = new byte[1024];
+            int bytesRead;
+
+            response.setContentType(f.getMime());
+            response.setContentLength(f.getSize());
+
+            String path = (String) getServletContext().getAttribute("filesDir") + File.separator + groupId + File.separator + fileName;
+            InputStream in = new FileInputStream(path);
+            while ((bytesRead = in.read(bytes)) != -1) {
+                out.write(bytes, 0, bytesRead);
+            }
+            out.close();
+        } else {
+            response.sendError(404);
         }
-        out.close();
     }
 
     @Override

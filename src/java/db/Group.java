@@ -7,6 +7,10 @@
 package db;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 
 /**
@@ -75,7 +79,12 @@ public class Group {
     }
     
     public String getFilePath(String fileName) {
-        return "/files/" + id + "-" + fileName;
+        try {
+            return "/files/" + id + "-" + URLEncoder.encode(fileName, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Group.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
     
     public boolean hasFileNamed(ServletContext context, String name) {
