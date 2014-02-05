@@ -8,7 +8,6 @@ package filter;
 import db.DBManager;
 import db.User;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.servlet.FilterChain;
