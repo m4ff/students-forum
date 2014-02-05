@@ -54,7 +54,7 @@ file_size INTEGER DEFAULT 0,
 PRIMARY KEY (post_id, file_name)
 );
 
-CREATE INDEX post_date_index ON STUDENTS_FORUM."post"(post_date);
+CREATE INDEX post_index ON STUDENTS_FORUM."post"(post_date, user_id, group_id);
 
 INSERT INTO "user"(user_name, user_password, user_email, user_moderator) VALUES('user1', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'paolomaffini@gmail.com', TRUE);
 INSERT INTO "user"(user_name, user_password, user_email, user_moderator) VALUES('user2', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'maffonline@live.com', TRUE);
