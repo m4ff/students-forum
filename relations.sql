@@ -162,27 +162,27 @@ INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 7, 'Id Helvetii ratib
 INSERT INTO "post"(group_id, user_id, post_text) VALUES(5, 6, 'Ubi per exploratores Caesar certior factus est tres iam partes copiarum Helvetios id lumen traduxisse, quartam vero partem citra flumen Ararim reliquam esse, de tertia vigilia cum legionibus tribus e castris profectus ad eam partem pervenit quae nondum flumen transierat.');
 
 /* GROUP FILES */
-INSERT INTO "file"(post_id, file_name, file_mime) VALUES(1, 'img1', 'image/jpeg');
-INSERT INTO "file"(post_id, file_name, file_mime) VALUES(2, 'img2', 'image/jpeg');
-INSERT INTO "file"(post_id, file_name, file_mime) VALUES(3, 'img3', 'image/jpeg');
-INSERT INTO "file"(post_id, file_name, file_mime) VALUES(4, 'img4', 'image/jpeg');
+INSERT INTO "file"(post_id, file_name, file_mime, file_size) VALUES(1, '00introcorso.pdf', 'application/pdf', 679587);
+INSERT INTO "file"(post_id, file_name, file_mime, file_size) VALUES(2, '01_CenniSistemiDistribuiti.pdf', 'application/pdf', 951992);
+INSERT INTO "file"(post_id, file_name, file_mime, file_size) VALUES(3, '02_InterprocessCommunication.pdf', 'application/pdf', 857772);
+INSERT INTO "file"(post_id, file_name, file_mime, file_size) VALUES(4, '04_DDL_SQL.ppt.pdf', 'application/pdf', 2994460);
 
-INSERT INTO "file"(post_id, file_name, file_mime) VALUES(11, 'img1', 'image/jpeg');
-INSERT INTO "file"(post_id, file_name, file_mime) VALUES(12, 'img2', 'image/jpeg');
-INSERT INTO "file"(post_id, file_name, file_mime) VALUES(13, 'img3', 'image/jpeg');
-INSERT INTO "file"(post_id, file_name, file_mime) VALUES(14, 'img4', 'image/jpeg');
+INSERT INTO "file"(post_id, file_name, file_mime, file_size) VALUES(11, '04_WebArchitecture+IntroJ2EE.ppt.pdf', 'application/pdf', 1548095);
+INSERT INTO "file"(post_id, file_name, file_mime, file_size) VALUES(12, '07_JSP_Intro.ppt.pdf', 'application/pdf', 310769);
+INSERT INTO "file"(post_id, file_name, file_mime, file_size) VALUES(13, '08_JSP_IntroJSTL.pdf', 'application/pdf', 551738);
+INSERT INTO "file"(post_id, file_name, file_mime, file_size) VALUES(14, '09_MVC_Patterns.pdf', 'application/pdf', 456553);
 
-INSERT INTO "file"(post_id, file_name, file_mime) VALUES(21, 'img1', 'image/jpeg');
-INSERT INTO "file"(post_id, file_name, file_mime) VALUES(22, 'img2', 'image/jpeg');
-INSERT INTO "file"(post_id, file_name, file_mime) VALUES(23, 'img3', 'image/jpeg');
-INSERT INTO "file"(post_id, file_name, file_mime) VALUES(24, 'img4', 'image/jpeg');
+INSERT INTO "file"(post_id, file_name, file_mime, file_size) VALUES(21, '131010_servlet.zip', 'application/zip', 575185);
+INSERT INTO "file"(post_id, file_name, file_mime, file_size) VALUES(22, 'ese131007_parametri.pdf', 'application/pdf', 192237);
+INSERT INTO "file"(post_id, file_name, file_mime, file_size) VALUES(23, 'ese131014_cookies.pdf', 'application/pdf', 363845);
+INSERT INTO "file"(post_id, file_name, file_mime, file_size) VALUES(24, 'ese131216_jsptable.pdf', 'application/pdf', 262044);
 
-INSERT INTO "file"(post_id, file_name, file_mime) VALUES(31, 'img1', 'image/jpeg');
-INSERT INTO "file"(post_id, file_name, file_mime) VALUES(32, 'img2', 'image/jpeg');
-INSERT INTO "file"(post_id, file_name, file_mime) VALUES(33, 'img3', 'image/jpeg');
-INSERT INTO "file"(post_id, file_name, file_mime) VALUES(34, 'img4', 'image/jpeg');
+INSERT INTO "file"(post_id, file_name, file_mime, file_size) VALUES(31, 'ese131216_mail.pdf', 'application/pdf', 237294);
+INSERT INTO "file"(post_id, file_name, file_mime, file_size) VALUES(32, 'jaf-1_1_1.zip', 'application/zip', 379593);
+INSERT INTO "file"(post_id, file_name, file_mime, file_size) VALUES(33, 'javamail.zip', 'application/zip', 412669);
+INSERT INTO "file"(post_id, file_name, file_mime, file_size) VALUES(34, 'Lab5_Sessions.pdf', 'application/pdf', 648317);
 
-INSERT INTO "file"(post_id, file_name, file_mime) VALUES(41, 'img1', 'image/jpeg');
-INSERT INTO "file"(post_id, file_name, file_mime) VALUES(42, 'img2', 'image/jpeg');
-INSERT INTO "file"(post_id, file_name, file_mime) VALUES(43, 'img3', 'image/jpeg');
-INSERT INTO "file"(post_id, file_name, file_mime) VALUES(44, 'img4', 'image/jpeg');
+INSERT INTO "file"(post_id, file_name, file_mime, file_size) VALUES(41, 'lez130930_bootstrap.pdf', 'application/pdf',327007);
+INSERT INTO "file"(post_id, file_name, file_mime, file_size) VALUES(42, 'PreAppello.pdf', 'application/pdf',24204);
+INSERT INTO "file"(post_id, file_name, file_mime, file_size) VALUES(43, 'primoprogetto.pdf', 'application/pdf', 79079);
+INSERT INTO "file"(post_id, file_name, file_mime, file_size) VALUES(44, 'secondoprogetto2013.pdf', 'application/pdf', 105993);
