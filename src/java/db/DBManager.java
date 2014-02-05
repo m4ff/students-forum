@@ -327,7 +327,7 @@ public class DBManager implements Serializable {
                         new Post(
                                 res.getInt("post_id"),
                                 res.getString("post_text"),
-                                res.getDate("post_date"),
+                                new Date(res.getTimestamp("post_date").getTime()),
                                 new User(res.getInt("user_id"), res.getString("user_name"), res.getBoolean("user_moderator")),
                                 files,
                                 g

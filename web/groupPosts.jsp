@@ -36,6 +36,9 @@
                                     ${p.getText(isPublic)}
                                 </p>
                             </div>
+                            <div style="font-size: 0.8em; padding-left: 1em" class="ui-body">
+                                ${p.getDateString()}
+                            </div>
                             <div style="font-size: 0.8em; padding-left: 17px; margin-top: 0.5em">
                                 <c:forEach var="f" items="${dbmanager.getPostFiles(p)}">
                                     <a target="_blank" href="${p.getGroup().getFilePath(f.key)}">${f.key} (${f.value.getSizeString()})</a>

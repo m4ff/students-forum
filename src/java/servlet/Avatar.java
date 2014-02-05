@@ -23,7 +23,11 @@ public class Avatar extends HttpServlet {
         response.setContentType("image/jpg");
         String id = request.getParameter("id");
         String path = (String) request.getServletContext().getAttribute("avatarsDir");
-        response.getOutputStream().write(Files.toByteArray(new File(path + File.separator + id + ".jpg")));
+        File a = new File(path + File.separator + id + ".jpg");
+        if(!a.exists()) {
+            a = new File(path + File.separator + "0.jpg");
+        }
+        response.getOutputStream().write(Files.toByteArray(a));
     }
 
     @Override

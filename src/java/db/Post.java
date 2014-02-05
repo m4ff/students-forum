@@ -6,7 +6,8 @@
 
 package db;
 
-import java.sql.Date;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -109,6 +110,10 @@ public class Post {
     
     public Date getDate() {
         return date;
+    }
+    
+    public String getDateString() {
+        return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(date);
     }
     
     public User getCreator() {

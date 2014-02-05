@@ -22,7 +22,7 @@
             </div>
             <div data-role="content">
                 <ul data-role="listview" data-inset="true" data-split-icon="gear">
-                    <c:if test="${groupList != null}">
+                    <c:if test="${!groupList.isEmpty()}">
                         <li data-role="list-divider" data-theme="b">
                             Your groups
                         </li>

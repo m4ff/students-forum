@@ -60,11 +60,14 @@ public class Register extends HttpServlet {
             error = "Please provide a user name";
         } else {
             int userId = dbmanager.addUser(email, username, password);
-            if (userId != 0) {
-                Files.move(multipart.getFile("avatar").toPath(), new File(avatarsPath + File.separator + userId + ".jpg").toPath(), StandardCopyOption.REPLACE_EXISTING);
-                response.sendRedirect("/login");
-            } else {
+            File a = multipart.getFile("avatar");
+            if (userId == 0) {
                 error = "An error occured, please try again later";
+            } else {
+                if(a != null) {
+                    Files.move(a.toPath(), new File(avatarsPath + File.separator + userId + ".jpg").toPath(), StandardCopyOption.REPLACE_EXISTING);
+                }
+                response.sendRedirect("/login");
             }
         }
         if (error != null) {
