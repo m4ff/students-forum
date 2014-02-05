@@ -68,11 +68,10 @@
                             <li data-role="list-divider" data-theme="b">
                                 News from your groups
                             </li>
-                            <li data-theme="b" style="padding-top: 0px; padding-bottom: 0px; padding-right: 1em">
+                            <li data-theme="b" style="padding-top: 0px; padding-bottom: 0px">
                                 <div data-role="collapsible-set" data-inset="false" style="margin: 0px">
                                     <div data-role="collapsible" data-theme="b">
                                         <h3 style="margin: 0px">
-                                            <span class="ui-li-count">${postFromLastTime[0].getGroup().getPostsCount()}</span>
                                             ${postFromLastTime[0].getGroup().getName()}
                                         </h3>
                                         <ul data-role="listview" data-theme="a">
@@ -82,7 +81,6 @@
                                             </div>
                                             <div data-role="collapsible" data-theme="b">
                                                 <h3 style="margin: 0px">
-                                                    <span class="ui-li-count">${p.getGroup().getPostsCount()}</span>
                                                     ${p.getGroup().getName()}
                                                 </h3>
                                                 <ul data-role="listview"  data-theme="a">
