@@ -15,7 +15,7 @@ public class GroupFile {
     private final String mime;
     private final int size;
     
-    public GroupFile(String name, String mime, int size) {
+    GroupFile(String name, String mime, int size) {
         this.name = name;
         this.mime = mime;
         this.size = size;

@@ -22,7 +22,7 @@ public class Group {
     private final int userCount;
     private final boolean closed;
     
-    public Group(int id, String name, int creator, int postsCount, int userCount, boolean pub, boolean closed) {
+    Group(int id, String name, int creator, int postsCount, int userCount, boolean pub, boolean closed) {
         this.name = name;
         this.id = id;
         this.creator = creator;

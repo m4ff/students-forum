@@ -18,7 +18,7 @@ public class User implements Serializable{
     private final String name;
     private final boolean isModerator;
     
-    public User(int id, String name, boolean isModerator) {
+    User(int id, String name, boolean isModerator) {
         this.id = id;
         this.name = name;
         this.isModerator = isModerator;

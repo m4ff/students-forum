@@ -9,6 +9,8 @@ package servlet;
 import db.DBManager;
 import db.User;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,6 +54,22 @@ public class Login extends HttpServlet{
         boolean rememberMe = request.getParameter("remember") != null;
         String redirect = (String) request.getAttribute("redirect");
         if(user != null) {
+            
+            SecureRandom rand = new SecureRandom();
+            byte[] bytes = new byte[8];
+            rand.nextBytes(bytes);
+            BigInteger bi = new BigInteger(bytes);
+            if (bi.signum() == -1) {
+                bi = bi.negate();
+            }
+            
+            String loginCode = bi.toString(16);
+            
+            Cookie userCodeCookie = new Cookie("userCode", loginCode);
+            userCodeCookie.setMaxAge(rememberMe ? MAX_COOKIE_AGE : -1);
+            userCodeCookie.setPath("/");
+            userCodeCookie.setHttpOnly(true);
+            
             Cookie loginTime = new Cookie("loginTime", new Date().getTime() + "");
             loginTime.setMaxAge(MAX_LOGIN_TIME_COOKIE_AGE);
             loginTime.setPath("/");
@@ -64,6 +82,10 @@ public class Login extends HttpServlet{
             
             response.addCookie(userCookie);
             response.addCookie(loginTime);
+            response.addCookie(userCodeCookie);
+            
+            dbmanager.updateLogin(user, loginCode);
+            
             try {
                 if(redirect != null) {
                     response.sendRedirect(redirect);

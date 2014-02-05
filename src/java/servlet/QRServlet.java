@@ -34,7 +34,7 @@ public class QRServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String text = (String) request.getParameter("qrtext");
-        ByteArrayOutputStream out = QRCode.from(text).to(ImageType.PNG).stream();
+        ByteArrayOutputStream out = QRCode.from(text).to(ImageType.PNG).withSize(250, 250).stream();
         
         response.setContentType("image/png");
         response.setContentLength(out.size());

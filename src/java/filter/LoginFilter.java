@@ -28,21 +28,30 @@ public class LoginFilter extends HttpFilter {
         DBManager dbmanager = (DBManager) request.getServletContext().getAttribute("dbmanager");
         Cookie[] cookies = request.getCookies();
         User user = null;
+        int userId = 0;
+        String loginCode = null;
         boolean isModerator = false;
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 switch (cookie.getName()) {
+                    case "userCode":
+                        loginCode = cookie.getValue();
+                        break;
                     case "userId":
-                        user = dbmanager.getUser(cookie.getValue());
-                        if (user != null) {
-                            isModerator = user.isModerator();
-                        }  break;
+                        userId = Integer.parseInt(cookie.getValue());
+                        break;
                     case "loginTime":
                         long time = Long.parseLong(cookie.getValue());
                         
                         request.setAttribute("loginTime", new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date(time)));
                         break;
                 }
+            }
+            if(userId != 0 && loginCode != null) {
+                user = dbmanager.authenticate(userId, loginCode);
+            }
+            if(user != null) {
+                isModerator = user.isModerator();
             }
         }
         request.setAttribute("isModerator", isModerator);

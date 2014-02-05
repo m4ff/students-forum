@@ -104,6 +104,41 @@ public class DBManager implements Serializable {
         }
         return u;
     }
+    
+    public boolean updateLogin(User user, String code) {
+        try {
+            connection.setAutoCommit(true);
+            String query = "UPDATE \"user\" SET user_login = ? WHERE user_id = ?";
+            PreparedStatement stm = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            stm.setString(1, code);
+            stm.setInt(2, user.getId());
+            boolean ret = stm.executeUpdate() == 1;
+            stm.close();
+            return ret;
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    public User authenticate(int userId, String code) {
+        User u = null;
+        try {
+            connection.setAutoCommit(true);
+            String query = "SELECT * FROM \"user\" WHERE user_id = ? AND user_login = ?";
+            PreparedStatement stm = connection.prepareStatement(query);
+            stm.setInt(1, userId);
+            stm.setString(2, code);
+            ResultSet res = stm.executeQuery();
+            if (res.next()) {
+                u = new User(res.getInt("user_id"), res.getString("user_name"), res.getBoolean("user_moderator"));
+            }
+            stm.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return u;
+    }
 
     /**
      * Aggiunge un utente al database

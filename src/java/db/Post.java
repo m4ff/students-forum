@@ -24,7 +24,7 @@ public class Post {
 
    
     
-    public Post(int id, String text, Date date, User creator, HashMap<String, GroupFile> groupFiles, Group group) {
+    Post(int id, String text, Date date, User creator, HashMap<String, GroupFile> groupFiles, Group group) {
         text = text.replaceAll("<", "&lt;");
         text = text.replaceAll(">", "&gt;");
         String linkPattern = "\\$\\$([^\\s]+)\\$\\$";
