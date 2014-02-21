@@ -56,7 +56,7 @@
                     <a style="margin-left: 15px" href="/password-reset-request">I forgot my password</a>
 
                     <c:if test="${redirect != null}">
-                        <input type="hidden" name="redirect" value="<c:out value="${redirect}"/>">
+                        <input type="hidden" name="redirect" value="<c:out value="${redirect_url}"/>">
                     </c:if>
                 </form>
             </div>

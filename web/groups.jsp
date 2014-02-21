@@ -22,7 +22,7 @@
             </div>
             <div data-role="content">
                 <ul data-role="listview" data-inset="true" data-split-icon="gear">
-                    <c:if test="${!groupList.isEmpty()}">
+                    <c:if test="${groupList != null}">
                         <li data-role="list-divider" data-theme="b">
                             Your groups
                         </li>
@@ -37,7 +37,7 @@
                                     </a>
                                 </c:if>
                                 <c:if test="${user != null && user.getId() != g.getCreator()}">
-                                    <a href="ciao" class="ui-state-disabled">
+                                    <a href="#" class="ui-state-disabled">
                                     </a>
                                 </c:if>
                             </li>

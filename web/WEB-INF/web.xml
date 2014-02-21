@@ -153,6 +153,22 @@
     </filter-mapping>
     <filter>
         <filter-name>
+            LoginBlockingFilter
+        </filter-name>
+        <filter-class>
+            filter.LoginBlockingFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>
+            LoginBlockingFilter
+        </filter-name>
+        <servlet-name>
+            Account
+        </servlet-name>
+    </filter-mapping>
+    <filter>
+        <filter-name>
             ModerationFilter
         </filter-name>
         <filter-class>

@@ -967,11 +967,12 @@ public class DBManager implements Serializable {
 
     public boolean canRead(int userId, int groupId) {
         boolean x = false;
-        String query = "SELECT * FROM \"user_group\" NATURAL JOIN \"group\" WHERE (user_id = ? AND group_id = ? AND visible = TRUE) OR group_public = TRUE";
+        String query = "SELECT * FROM \"user_group\" NATURAL JOIN \"group\" WHERE (user_id = ? AND group_id = ? AND visible = TRUE) OR (group_id = ? AND group_public = TRUE)";
         try (PreparedStatement stm = connection.prepareStatement(query)) {
             connection.setAutoCommit(true);
             stm.setInt(1, userId);
             stm.setInt(2, groupId);
+            stm.setInt(3, groupId);
             ResultSet res = stm.executeQuery();
             x = res.next();
         } catch (SQLException ex) {
